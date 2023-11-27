@@ -12,22 +12,47 @@
 <body>
   <main>
     <h1>Cards</h1>
-    <div class="tiltable" js-tilt>
-      <div class="card">
-        <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+    <div class="cardlist">
+      <div class="tiltable" js-tilt>
+        <div class="card">
+          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <div class="card-glare"></div>
+        </div>
+      </div>
+      <div class="tiltable" js-tilt>
+        <div class="card">
+          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <div class="card-glare"></div>
+        </div>
       </div>
     </div>
   </main>
 </body>
 </html>
 <style>
+  .cardlist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .cardlist > * {
+    flex: 0 0 300px;
+  }
+</style>
+<style>
   .tiltable {
     perspective: 600px;
+    --pointer-x: 50%;
+    --pointer-y: 50%;
+    --rotate-x: 0deg;
+    --rotate-y: 0deg;
+    --glare-opacity: 0;
+
+    max-width: 300px;
   }
 
   .card {
-    /* Temp thing to keep image small*/
-    max-width: 300px;
     border: 1px solid red;
     transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
     transform-style: preserve-3d;
@@ -36,5 +61,22 @@
     & img {
       width: 100%;
     }
+
+    /* Cause everything to take the full area of the card, and all children keep this going */
+    &, & * {
+      display: grid;
+      grid-area: 1/1;
+    }
+  }
+
+  .card-glare {
+    background: radial-gradient(
+        farthest-corner circle at var(--pointer-x) var(--pointer-y),
+        hsla(0, 0%, 100%, 0.8) 10%,
+        hsla(0, 0%, 100%, 0.65) 20%,
+        hsla(0, 0%, 0%, 0.5) 90%
+    );
+    mix-blend-mode: overlay;
+    opacity: var(--glare-opacity);
   }
 </style>

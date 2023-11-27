@@ -25,6 +25,7 @@ function setupTiltByMouse(element) {
     element.style.setProperty('--pointer-y', `${percent.y}%`);
     element.style.setProperty('--rotate-x', `${Math.round(-center.x / 1.5)}deg`);
     element.style.setProperty('--rotate-y', `${Math.round(center.y / 2)}deg`);
+    element.style.setProperty('--glare-opacity', '1');
   }
 
   function onMouseLeave() {
@@ -32,5 +33,6 @@ function setupTiltByMouse(element) {
     element.style.removeProperty('--pointer-y');
     element.style.removeProperty('--rotate-x');
     element.style.removeProperty('--rotate-y');
+    element.style.removeProperty('--glare-opacity');
   }
 }
