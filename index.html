@@ -1,13 +1,40 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <script type="module" src="/src/main.js"></script>
+  <script src="/src/math.js"></script>
+  <script src="/src/tilt.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Cards</h1>
+    <div class="tiltable">
+      <div class="card">
+        <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+      </div>
+    </div>
+  </main>
+</body>
 </html>
+<style>
+  .tiltable {
+    perspective: 600px;
+  }
+
+  .card {
+    /* Temp thing to keep image small*/
+    max-width: 300px;
+    border: 1px solid red;
+    transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
+    transform-style: preserve-3d;
+    transform-origin: center;
+
+    & img {
+      width: 100%;
+    }
+  }
+</style>
