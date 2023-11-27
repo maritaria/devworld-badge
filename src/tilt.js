@@ -1,4 +1,4 @@
-document.querySelectorAll('.tiltable').forEach(setupTiltByMouse);
+document.querySelectorAll('[js-tilt]').forEach(setupTiltByMouse);
 
 /** @param {HTMLElement} element */
 function setupTiltByMouse(element) {
