@@ -13,23 +13,40 @@
   <main>
     <h1>Cards</h1>
     <div class="cardlist">
-      <div class="card-base card-v1" js-tilt>
-        <div class="card-content">
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-          <div class="card-glare"></div>
-          <div class="card-sparkle"></div>
+      <div class="cardcase">
+        <h2>Base</h2>
+        <div class="card-base" js-tilt>
+          <div class="card-content">
+            <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          </div>
         </div>
       </div>
-      <div class="card-base card-v2" js-tilt>
-        <div class="card-content">
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-          <div class="card-glare"></div>
+      <div class="cardcase">
+        <h2>V1: Cyan+Magenta</h2>
+        <div class="card-base card-v1" js-tilt>
+          <div class="card-content">
+            <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+            <div class="card-glare"></div>
+            <div class="card-sparkle"></div>
+          </div>
         </div>
       </div>
-      <div class="card-base card-matrix" js-tilt>
-        <div class="card-content">
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-          <div class="card-runes" js-runes></div>
+      <div class="cardcase">
+        <h2>V2: Basic glare</h2>
+        <div class="card-base card-v2" js-tilt>
+          <div class="card-content">
+            <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+            <div class="card-glare"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cardcase">
+        <h2>Matrix</h2>
+        <div class="card-base card-matrix" js-tilt>
+          <div class="card-content">
+            <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+            <div class="card-runes" js-runes></div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,6 +63,22 @@
 
   .cardlist > * {
     flex: 0 0 300px;
+  }
+
+  .cardcase {
+    /* Border and spacing */
+    border: 3px solid dimgray;
+    border-radius: 30px;
+    padding: 10px;
+    /* Vertical stack the children */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    & h2 {
+      text-align: center;
+      margin: 0;
+      order: 1; /* Place after the card */
+    }
   }
 </style>
 <style>
