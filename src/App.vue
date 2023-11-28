@@ -4,23 +4,58 @@ import CardV1 from "./components/CardV1.vue";
 import CardV2 from "./components/CardV2.vue";
 import CardV3RainbowShine from "./components/CardV3RainbowShine.vue";
 import MatrixCard from "./components/MatrixCard.vue";
-import {provide, ref} from "vue";
-import {useLocalStorage} from "@vueuse/core";
+import {computed, provide, ref, watchEffect} from "vue";
+import {useInterval, useLocalStorage} from "@vueuse/core";
 
-const autoPointer = useLocalStorage('cards.autoPointer', false);
+const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
-provide('autoPointer', autoPointer);
+const now = useInterval(20);
+const tilt = computed(() => {
+  switch (autoPointer.value) {
+    case 'static':
+      return {x: 70, y: 30};
+    case 'circle': {
+      const r = now.value * 20 / 1000;
+      const x = 50 + Math.cos(r) * 25;
+      const y = 50 + Math.sin(r) * 25;
+      return {
+        x, y
+      };
+    }
+  }
+  return null;
+});
 
+const $list = ref(null);
+watchEffect(() => {
+  if ($list.value) {
+    applyTilt($list.value, tilt.value);
+  }
+});
 
 </script>
 
 <template>
   <main id="app">
     <h1>Cards</h1>
-    <form>
-      <label><input type="checkbox" v-model="autoPointer">Auto pointer {{autoPointer}}</label>
+    <form style="margin-bottom:30px" id="settings">
+      <fieldset name="pointerLogicGroup">
+        <legend>Tilt all cards</legend>
+        <label>
+          <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
+          Tilt on hover
+        </label>
+        <label>
+          <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
+          Tilt with fixed position
+        </label>
+        <label>
+          <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
+          Tilt with circle pattern
+        </label>
+      </fieldset>
     </form>
-    <div class="cardlist">
+    <div class="cardlist" ref="$list">
       <div class="cardcase">
         <h2>Base card</h2>
         <CardBase />

@@ -1,21 +1,11 @@
 <script setup>
-
-import {computed, inject, onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 
 const $el = ref(null);
 
 onMounted(() => {
   setupTiltByMouse($el.value);
 });
-
-const autoPointer = inject('autoPointer');
-
-watch(() => {
-  if (autoPointer && $el.value) {
-    applyTilt($el.value, autoPointer.value ? {x: 70, y: 30} : null);
-  }
-});
-
 </script>
 
 <template>
@@ -28,11 +18,8 @@ watch(() => {
   </div>
 </template>
 
-<style scoped>
-.card-base {
-  /* Start 3D rendering stack */
-  perspective: 600px;
-  /* Defaults for animated / interactive display */
+<style>
+:root {
   --pointer-x: 50%;
   --pointer-y: 50%;
   --rotate-x: 0deg;
@@ -40,6 +27,15 @@ watch(() => {
   --glare-opacity: 0;
   --background-x: 50%;
   --background-y: 50%;
+}
+</style>
+
+<style scoped>
+.card-base {
+  /* Start 3D rendering stack */
+  perspective: 600px;
+  /* Defaults for animated / interactive display */
+
 
   .card-content {
     transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
