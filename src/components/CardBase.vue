@@ -11,9 +11,7 @@ onMounted(() => {
 <template>
   <div class="card-base" js-tilt ref="$el">
     <div class="card-content">
-      <slot>
-        <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-      </slot>
+      <slot></slot>
     </div>
   </div>
 </template>

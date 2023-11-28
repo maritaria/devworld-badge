@@ -1,12 +1,5 @@
-<script setup>
-import CardBase from "./CardBase.vue";
-</script>
-
 <template>
-  <CardBase>
-    <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-    <div class="card-glare"></div>
-  </CardBase>
+  <div class="card-glare"></div>
 </template>
 
 <style scoped>

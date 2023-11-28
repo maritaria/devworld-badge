@@ -1,5 +1,4 @@
 <script setup>
-import CardBase from "./CardBase.vue";
 import {computed, onMounted, reactive, ref} from "vue";
 import {useIntervalFn} from "@vueuse/core";
 
@@ -48,17 +47,13 @@ useIntervalFn(() => {
 </script>
 
 <template>
-  <CardBase>
-    <img src="https://images.pokemontcg.io/sm10/33_hires.png">
-    <div class="card-runes" ref="$el">
+  <div class="card-runes" ref="$el">
       <span v-for="(col, x) in grid" class="rune-col">
         <span v-for="cell in col" class="rune" :class="{fresh:cell.fresh}">
           {{ cell.text }}
         </span>
       </span>
-    </div>
-    <div class="card-glare"></div>
-  </CardBase>
+  </div>
 </template>
 <style scoped>
 .card-runes {
@@ -95,16 +90,5 @@ useIntervalFn(() => {
       color: white;
     }
   }
-}
-
-.card-glare {
-  background: radial-gradient(
-      farthest-corner circle at var(--pointer-x) var(--pointer-y),
-      hsla(0, 0%, 100%, 0.8) 10%,
-      hsla(0, 0%, 100%, 0.65) 20%,
-      hsla(0, 0%, 0%, 0.5) 90%
-  );
-  mix-blend-mode: overlay;
-  opacity: var(--glare-opacity);
 }
 </style>
