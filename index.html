@@ -26,6 +26,12 @@
           <div class="card-glare"></div>
         </div>
       </div>
+      <div class="card-matrix" js-tilt>
+        <div class="card-content">
+          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <div class="card-runes" js-runes></div>
+        </div>
+      </div>
     </div>
   </main>
 </body>
@@ -76,16 +82,17 @@
       }
     }
 
-    .card-glare {
-      background: radial-gradient(
-          farthest-corner circle at var(--pointer-x) var(--pointer-y),
-          hsla(0, 0%, 100%, 0.8) 10%,
-          hsla(0, 0%, 100%, 0.65) 20%,
-          hsla(0, 0%, 0%, 0.5) 90%
-      );
-      mix-blend-mode: overlay;
-      opacity: var(--glare-opacity);
-    }
+  }
+
+  .card-glare {
+    background: radial-gradient(
+        farthest-corner circle at var(--pointer-x) var(--pointer-y),
+        hsla(0, 0%, 100%, 0.8) 10%,
+        hsla(0, 0%, 100%, 0.65) 20%,
+        hsla(0, 0%, 0%, 0.5) 90%
+    );
+    mix-blend-mode: overlay;
+    opacity: var(--glare-opacity);
   }
 
   .card-v1 {
@@ -141,17 +148,16 @@
     }
 
     .card-sparkle {
-      background-image:
-          url("https://assets.codepen.io/13471/sparkles.gif"),
-          url(https://assets.codepen.io/13471/holo.png),
-          linear-gradient(125deg,
+      background-image: url("https://assets.codepen.io/13471/sparkles.gif"),
+      url(https://assets.codepen.io/13471/holo.png),
+      linear-gradient(125deg,
           #ff008450 15%,
           #fca40040 30%,
           #ffff0030 40%,
           #00ff8a20 60%,
           #00cfff40 70%,
           #cc4cfa50 85%
-          );
+      );
       background-position: 50% 50%;
       background-size: 160%;
       background-blend-mode: overlay;
@@ -164,4 +170,120 @@
       background-position-y: calc(100% - var(--pointer-y));*/
     }
   }
+
+  .card-matrix {
+    /* Start 3D rendering stack */
+    perspective: 600px;
+    /* Defaults for animated / interactive display */
+    --pointer-x: 50%;
+    --pointer-y: 50%;
+    --rotate-x: 0deg;
+    --rotate-y: 0deg;
+    --glare-opacity: 0;
+
+    .card-content {
+      transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
+      transform-style: preserve-3d;
+      transform-origin: center;
+
+      /* Clip the corners, otherwise the glare extends over the rounded corners. */
+      border-radius: 4.55% / 3.5%;
+      overflow: hidden;
+
+      /* Size the backing image to the card container */
+
+      & > img {
+        width: 100%;
+      }
+
+      /* Treat immediate children of card-content as layers */
+      display: grid;
+
+      & > * {
+        grid-area: 1/1;
+      }
+    }
+
+    .card-runes {
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      mix-blend-mode: color-dodge;
+      opacity: var(--glare-opacity);
+
+      mask-image: radial-gradient(
+          farthest-corner circle at var(--pointer-x) var(--pointer-y),
+          hsla(0, 0%, 100%, 1) 10%,
+          hsla(0, 0%, 100%, 0.8) 40%,
+          hsla(0, 0%, 0%, 0) 90%
+      );
+
+      .rune-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .rune {
+        color: transparent;
+        text-shadow: rgba(0, 0, 0, 0.1) 0 0 3px;
+        transition: all 1s ease-in-out;
+        flex-grow: 1;
+        flex-basis: 0;
+      }
+
+      .rune.fresh {
+        text-shadow: green 0 0 5px, lightgreen 0 0 10px, lightgreen 0 0 10px, lightgreen 0 0 10px;
+        color: white;
+      }
+    }
+  }
 </style>
+<script>
+  document.querySelectorAll('[js-runes]').forEach(setupRunes);
+
+  /** @param {HTMLElement} container */
+  function setupRunes(container) {
+    const numCols = 10;
+    const numRows = 12;
+    const useRunes = false;
+    const alphabet = useRunes
+      ? ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛜ', 'ᛞ', 'ᛟ']
+      : ['0', '1'];
+
+    const randomRune = () => alphabet[Math.floor(Math.random() * alphabet.length)];
+
+    for (let x = 0; x < numCols; x++) {
+      const column = document.createElement('span');
+      column.classList.add('rune-col');
+      for (let y = 0; y < numRows; y++) {
+        const cell = document.createElement('span');
+        cell.innerText = randomRune();
+        cell.classList.add('rune');
+        if (Math.random() > 0.5) {
+          cell.classList.add('fresh');
+        }
+        column.appendChild(cell);
+      }
+      container.appendChild(column);
+    }
+
+    function changeRunes() {
+      container.querySelectorAll('.rune.fresh').forEach(element => element.classList.remove('fresh'));
+      const total = numCols * numRows;
+      for (let i = 0; i < total / 3; i++) {
+        const randomIndex = Math.floor(Math.random() * total);
+        const row = Math.floor(randomIndex / numCols);
+        const col = randomIndex % numCols;
+        const cell = container.children.item(col).children.item(row);
+        cell.innerText = randomRune();
+        cell.classList.add('fresh');
+      }
+    }
+
+    setInterval(changeRunes, 1_000);
+
+  }
+</script>
