@@ -14,12 +14,43 @@
     <h1>Cards</h1>
     <div class="cardlist">
       <div class="cardcase">
-        <h2>Tilt only</h2>
+        <h2>Base card</h2>
         <div class="card-base" js-tilt>
           <div class="card-content">
             <img src="https://images.pokemontcg.io/sm10/33_hires.png">
           </div>
         </div>
+        <style>
+          .card-base {
+            /* Start 3D rendering stack */
+            perspective: 600px;
+            /* Defaults for animated / interactive display */
+            --pointer-x: 50%;
+            --pointer-y: 50%;
+            --rotate-x: 0deg;
+            --rotate-y: 0deg;
+            --glare-opacity: 0;
+            --background-x: 50%;
+            --background-y: 50%;
+
+            .card-content {
+              transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
+              transform-style: preserve-3d;
+              transform-origin: center;
+
+              /* Clip the corners, otherwise the glare extends over the rounded corners. */
+              border-radius: 4.55% / 3.5%;
+              overflow: hidden;
+
+              /* Size the backing image to the card container */
+              & > img { width: 100%; }
+
+              /* Treat immediate children of card-content as layers */
+              display: grid;
+              & > * { grid-area: 1/1; }
+            }
+          }
+        </style>
       </div>
       <div class="cardcase">
         <h2>V1: Cyan+Magenta</h2>
@@ -30,6 +61,52 @@
             <div class="card-sparkle"></div>
           </div>
         </div>
+        <style>
+
+          .card-v1 {
+            .card-glare {
+              --color1: #00ffff;
+              --color2: #ff00ff;
+              background-image: linear-gradient(
+                  120deg,
+                  transparent 25%,
+                  #00ffff 48%,
+                  #ff00ff 52%,
+                  transparent 75%
+              );
+              /*background-image: linear-gradient(115deg, transparent 0%, var(--color1) 25%, transparent 47%, transparent 53%, var(--color2) 75%, transparent 100%);*/
+              background-position-x: calc(100% - var(--pointer-x));
+              background-position-y: calc(100% - var(--pointer-y));
+              background-size: 250% 250%;
+              mix-blend-mode: color-dodge;
+              opacity: calc(0.8 * var(--glare-opacity));
+              filter: brightness(0.5) contrast(1);
+            }
+
+            .card-sparkle {
+              background-image: url("https://assets.codepen.io/13471/sparkles.gif"),
+              url(https://assets.codepen.io/13471/holo.png),
+              linear-gradient(125deg,
+                  #ff008450 15%,
+                  #fca40040 30%,
+                  #ffff0030 40%,
+                  #00ff8a20 60%,
+                  #00cfff40 70%,
+                  #cc4cfa50 85%
+              );
+              background-position: 50% 50%;
+              background-size: 160%;
+              background-blend-mode: overlay;
+              z-index: 2;
+              filter: brightness(1) contrast(1);
+              /*transition: all 0.33s ease;*/
+              mix-blend-mode: color-dodge;
+              opacity: calc(0.3 + 0.25 * var(--glare-opacity));
+              /*background-position-x: calc(100% - var(--pointer-x));
+              background-position-y: calc(100% - var(--pointer-y));*/
+            }
+          }
+        </style>
       </div>
       <div class="cardcase">
         <h2>V2: Basic glare</h2>
@@ -39,6 +116,20 @@
             <div class="card-glare"></div>
           </div>
         </div>
+        <style>
+          .card-v2 {
+            .card-glare {
+              background: radial-gradient(
+                  farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                  hsla(0, 0%, 100%, 0.8) 10%,
+                  hsla(0, 0%, 100%, 0.65) 20%,
+                  hsla(0, 0%, 0%, 0.5) 90%
+              );
+              mix-blend-mode: overlay;
+              opacity: var(--glare-opacity);
+            }
+          }
+        </style>
       </div>
       <div class="cardcase">
         <h2>V3: Rainbow Shine</h2>
@@ -49,6 +140,139 @@
             <div class="card-glare"></div>
           </div>
         </div>
+        <style>
+          .card-v3 {
+            --sunpillar-1: hsl(2, 100%, 73%);
+            --sunpillar-2: hsl(53, 100%, 69%);
+            --sunpillar-3: hsl(93, 100%, 69%);
+            --sunpillar-4: hsl(176, 100%, 76%);
+            --sunpillar-5: hsl(228, 100%, 74%);
+            --sunpillar-6: hsl(283, 100%, 73%);
+            --sunpillar-clr-1: var(--sunpillar-1);
+            --sunpillar-clr-2: var(--sunpillar-2);
+            --sunpillar-clr-3: var(--sunpillar-3);
+            --sunpillar-clr-4: var(--sunpillar-4);
+            --sunpillar-clr-5: var(--sunpillar-5);
+            --sunpillar-clr-6: var(--sunpillar-6);
+
+            --seedx: 0.023049157831819156;
+            --seedy: 0.05699415673751562;
+            --cosmosbg: 16px 72px;
+            --grain: url("https://poke-holo.simey.me/img/grain.webp");
+            --glitter: url("https://poke-holo.simey.me/img/glitter.png");
+            --space: 5%;
+            --angle: 133deg;
+            --imgsize: 500px;
+
+            .card-shine {
+              /*opacity: var(--glare-opacity);*/
+              mix-blend-mode: color-dodge;
+              background-image: var(--grain),
+              repeating-linear-gradient(0deg, var(--sunpillar-clr-1) calc(var(--space) * 1),
+                  var(--sunpillar-clr-2) calc(var(--space) * 2),
+                  var(--sunpillar-clr-3) calc(var(--space) * 3),
+                  var(--sunpillar-clr-4) calc(var(--space) * 4),
+                  var(--sunpillar-clr-5) calc(var(--space) * 5),
+                  var(--sunpillar-clr-6) calc(var(--space) * 6),
+                  var(--sunpillar-clr-1) calc(var(--space) * 7)),
+              repeating-linear-gradient(
+                  var(--angle),
+                  #0e152e 0%,
+                  hsl(180, 10%, 60%) 3.8%,
+                  hsl(180, 29%, 66%) 4.5%,
+                  hsl(180, 10%, 60%) 5.2%,
+                  #0e152e 10%,
+                  #0e152e 12%
+              ),
+              radial-gradient(
+                  farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                  hsla(0, 0%, 0%, 0.1) 12%,
+                  hsla(0, 0%, 0%, 0.15) 20%,
+                  hsla(0, 0%, 0%, 0.25) 120%
+              );
+              background-blend-mode: screen, hue, hard-light;
+              background-size: var(--imgsize) 100%,
+              200% 700%,
+              300% 100%,
+              200% 100%;
+              background-position: center,
+              0% var(--background-y),
+              var(--background-x) var(--background-y),
+              var(--background-x) var(--background-y);
+              filter: brightness(.8) contrast(2.95) saturate(.65);
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: 0; bottom: 0; left: 0; right: 0;
+                background-image: var(--grain),
+                repeating-linear-gradient(
+                    0deg,
+                    var(--sunpillar-clr-1) calc(var(--space) * 1),
+                    var(--sunpillar-clr-2) calc(var(--space) * 2),
+                    var(--sunpillar-clr-3) calc(var(--space) * 3),
+                    var(--sunpillar-clr-4) calc(var(--space) * 4),
+                    var(--sunpillar-clr-5) calc(var(--space) * 5),
+                    var(--sunpillar-clr-6) calc(var(--space) * 6),
+                    var(--sunpillar-clr-1) calc(var(--space) * 7)
+                ),
+                repeating-linear-gradient(
+                    var(--angle),
+                    #0e152e 0%,
+                    hsl(180, 10%, 60%) 3.8%,
+                    hsl(180, 29%, 66%) 4.5%,
+                    hsl(180, 10%, 60%) 5.2%,
+                    #0e152e 10%,
+                    #0e152e 12%
+                ),
+                radial-gradient(
+                    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                    hsla(0, 0%, 0%, 0.1) 12%,
+                    hsla(0, 0%, 0%, 0.15) 20%,
+                    hsla(0, 0%, 0%, 0.25) 120%
+                );
+                background-blend-mode: screen, hue, hard-light;
+                background-position: center,
+                0% var(--background-y),
+                calc(var(--background-x) * -1) calc(var(--background-y) * -1),
+                var(--background-x) var(--background-y);
+                background-size: var(--imgsize) 100%, 200% 400%, 195% 100%, 200% 100%;
+                filter: brightness(1) contrast(2.5) saturate(1.75);
+                mix-blend-mode: soft-light;
+                --sunpillar-clr-1: var(--sunpillar-6);
+                --sunpillar-clr-2: var(--sunpillar-1);
+                --sunpillar-clr-3: var(--sunpillar-2);
+                --sunpillar-clr-4: var(--sunpillar-3);
+                --sunpillar-clr-5: var(--sunpillar-4);
+                --sunpillar-clr-6: var(--sunpillar-5);
+                transform: translateZ(1.2px);
+              }
+            }
+
+            .card-glare {
+              background-image: radial-gradient(
+                  farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                  hsl(0, 0%, 100%) 0%,
+                  hsla(210, 3%, 54%, 0.33) 45%,
+                  hsla(0, 0%, 20%, 0.9) 130%
+              );
+              mix-blend-mode: hard-light;
+              opacity: calc(var(--glare-opacity) * 0.5);
+              filter: brightness(.9) contrast(1.75);
+              transform: translateZ(1.41px);
+            }
+            .card-glare-alt {
+              background: radial-gradient(
+                  farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                  hsla(0, 0%, 100%, 0.8) 10%,
+                  hsla(0, 0%, 100%, 0.65) 20%,
+                  hsla(0, 0%, 0%, 0.5) 90%
+              );
+              mix-blend-mode: soft-light;
+              opacity: var(--glare-opacity);
+            }
+          }
+        </style>
       </div>
       <div class="cardcase">
         <h2>Matrix</h2>
@@ -58,6 +282,86 @@
             <div class="card-runes" js-runes></div>
           </div>
         </div>
+        <style>
+          .card-matrix {
+            .card-runes {
+              font-family: monospace;
+              font-weight: bold;
+              font-size: 20px;
+              display: flex;
+              justify-content: space-between;
+              mix-blend-mode: color-dodge;
+              opacity: var(--glare-opacity);
+
+              mask-image: radial-gradient(
+                  farthest-corner circle at var(--pointer-x) var(--pointer-y),
+                  hsla(0, 0%, 100%, 1) 10%,
+                  hsla(0, 0%, 100%, 0.8) 40%,
+                  hsla(0, 0%, 0%, 0) 90%
+              );
+
+              .rune-col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              }
+
+              .rune {
+                color: transparent;
+                text-shadow: rgba(0, 0, 0, 0.1) 0 0 3px;
+                transition: all 1s ease-in-out;
+                flex-grow: 1;
+                flex-basis: 0;
+              }
+
+              .rune.fresh {
+                text-shadow: green 0 0 5px, lightgreen 0 0 10px, lightgreen 0 0 10px, lightgreen 0 0 10px;
+                color: white;
+              }
+            }
+          }
+        </style>
+        <script>
+          document.querySelectorAll('[js-runes]').forEach(setupRunes);
+
+          /** @param {HTMLElement} container */
+          function setupRunes(container) {
+            const numCols = 10;
+            const numRows = 12;
+            const alphabet = false
+              ? ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛜ', 'ᛞ', 'ᛟ']
+              : ['0', '1'];
+            const randomRune = () => alphabet[Math.floor(Math.random() * alphabet.length)];
+
+            for (let x = 0; x < numCols; x++) {
+              const column = document.createElement('span');
+              column.classList.add('rune-col');
+              for (let y = 0; y < numRows; y++) {
+                const cell = document.createElement('span');
+                cell.innerText = randomRune();
+                cell.classList.add('rune');
+                if (Math.random() > 0.5) {
+                  cell.classList.add('fresh');
+                }
+                column.appendChild(cell);
+              }
+              container.appendChild(column);
+            }
+
+            setInterval(function changeRunes() {
+              container.querySelectorAll('.rune.fresh').forEach(element => element.classList.remove('fresh'));
+              const total = numCols * numRows;
+              for (let i = 0; i < total / 3; i++) {
+                const randomIndex = Math.floor(Math.random() * total);
+                const row = Math.floor(randomIndex / numCols);
+                const col = randomIndex % numCols;
+                const cell = container.children.item(col).children.item(row);
+                cell.innerText = randomRune();
+                cell.classList.add('fresh');
+              }
+            }, 1_000);
+          }
+        </script>
       </div>
     </div>
   </main>
@@ -92,318 +396,3 @@
     }
   }
 </style>
-<style>
-  .card-base {
-    /* Start 3D rendering stack */
-    perspective: 600px;
-    /* Defaults for animated / interactive display */
-    --pointer-x: 50%;
-    --pointer-y: 50%;
-    --rotate-x: 0deg;
-    --rotate-y: 0deg;
-    --glare-opacity: 0;
-    --background-x: 50%;
-    --background-y: 50%;
-
-    .card-content {
-      transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
-      transform-style: preserve-3d;
-      transform-origin: center;
-
-      /* Clip the corners, otherwise the glare extends over the rounded corners. */
-      border-radius: 4.55% / 3.5%;
-      overflow: hidden;
-
-      /* Size the backing image to the card container */
-
-      & > img {
-        width: 100%;
-      }
-
-      /* Treat immediate children of card-content as layers */
-      display: grid;
-
-      & > * {
-        grid-area: 1/1;
-      }
-    }
-  }
-
-  .card-v2 {
-    .card-glare {
-      background: radial-gradient(
-          farthest-corner circle at var(--pointer-x) var(--pointer-y),
-          hsla(0, 0%, 100%, 0.8) 10%,
-          hsla(0, 0%, 100%, 0.65) 20%,
-          hsla(0, 0%, 0%, 0.5) 90%
-      );
-      mix-blend-mode: overlay;
-      opacity: var(--glare-opacity);
-    }
-  }
-
-  .card-v1 {
-    .card-glare {
-      --color1: #00ffff;
-      --color2: #ff00ff;
-      background-image: linear-gradient(
-          120deg,
-          transparent 25%,
-          #00ffff 48%,
-          #ff00ff 52%,
-          transparent 75%
-      );
-      /*background-image: linear-gradient(115deg, transparent 0%, var(--color1) 25%, transparent 47%, transparent 53%, var(--color2) 75%, transparent 100%);*/
-      background-position-x: calc(100% - var(--pointer-x));
-      background-position-y: calc(100% - var(--pointer-y));
-      background-size: 250% 250%;
-      mix-blend-mode: color-dodge;
-      opacity: calc(0.8 * var(--glare-opacity));
-      filter: brightness(0.5) contrast(1);
-    }
-
-    .card-sparkle {
-      background-image: url("https://assets.codepen.io/13471/sparkles.gif"),
-      url(https://assets.codepen.io/13471/holo.png),
-      linear-gradient(125deg,
-          #ff008450 15%,
-          #fca40040 30%,
-          #ffff0030 40%,
-          #00ff8a20 60%,
-          #00cfff40 70%,
-          #cc4cfa50 85%
-      );
-      background-position: 50% 50%;
-      background-size: 160%;
-      background-blend-mode: overlay;
-      z-index: 2;
-      filter: brightness(1) contrast(1);
-      /*transition: all 0.33s ease;*/
-      mix-blend-mode: color-dodge;
-      opacity: calc(0.3 + 0.25 * var(--glare-opacity));
-      /*background-position-x: calc(100% - var(--pointer-x));
-      background-position-y: calc(100% - var(--pointer-y));*/
-    }
-  }
-
-  .card-matrix {
-    .card-runes {
-      font-family: monospace;
-      font-weight: bold;
-      font-size: 20px;
-      display: flex;
-      justify-content: space-between;
-      mix-blend-mode: color-dodge;
-      opacity: var(--glare-opacity);
-
-      mask-image: radial-gradient(
-          farthest-corner circle at var(--pointer-x) var(--pointer-y),
-          hsla(0, 0%, 100%, 1) 10%,
-          hsla(0, 0%, 100%, 0.8) 40%,
-          hsla(0, 0%, 0%, 0) 90%
-      );
-
-      .rune-col {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-
-      .rune {
-        color: transparent;
-        text-shadow: rgba(0, 0, 0, 0.1) 0 0 3px;
-        transition: all 1s ease-in-out;
-        flex-grow: 1;
-        flex-basis: 0;
-      }
-
-      .rune.fresh {
-        text-shadow: green 0 0 5px, lightgreen 0 0 10px, lightgreen 0 0 10px, lightgreen 0 0 10px;
-        color: white;
-      }
-    }
-  }
-
-  .card-v3 {
-    --sunpillar-1: hsl(2, 100%, 73%);
-    --sunpillar-2: hsl(53, 100%, 69%);
-    --sunpillar-3: hsl(93, 100%, 69%);
-    --sunpillar-4: hsl(176, 100%, 76%);
-    --sunpillar-5: hsl(228, 100%, 74%);
-    --sunpillar-6: hsl(283, 100%, 73%);
-    --sunpillar-clr-1: var(--sunpillar-1);
-    --sunpillar-clr-2: var(--sunpillar-2);
-    --sunpillar-clr-3: var(--sunpillar-3);
-    --sunpillar-clr-4: var(--sunpillar-4);
-    --sunpillar-clr-5: var(--sunpillar-5);
-    --sunpillar-clr-6: var(--sunpillar-6);
-
-    --seedx: 0.023049157831819156;
-    --seedy: 0.05699415673751562;
-    --cosmosbg: 16px 72px;
-    --grain: url("https://poke-holo.simey.me/img/grain.webp");
-    --glitter: url("https://poke-holo.simey.me/img/glitter.png");
-    --space: 5%;
-    --angle: 133deg;
-    --imgsize: 500px;
-
-    .card-shine {
-      /*opacity: var(--glare-opacity);*/
-      mix-blend-mode: color-dodge;
-      background-image:
-          var(--grain),
-          repeating-linear-gradient(0deg, var(--sunpillar-clr-1) calc(var(--space) * 1),
-          var(--sunpillar-clr-2) calc(var(--space) * 2),
-          var(--sunpillar-clr-3) calc(var(--space) * 3),
-          var(--sunpillar-clr-4) calc(var(--space) * 4),
-          var(--sunpillar-clr-5) calc(var(--space) * 5),
-          var(--sunpillar-clr-6) calc(var(--space) * 6),
-          var(--sunpillar-clr-1) calc(var(--space) * 7)),
-          repeating-linear-gradient(
-              var(--angle),
-              #0e152e 0%,
-              hsl(180, 10%, 60%) 3.8%,
-              hsl(180, 29%, 66%) 4.5%,
-              hsl(180, 10%, 60%) 5.2%,
-              #0e152e 10%,
-              #0e152e 12%
-          ),
-          radial-gradient(
-              farthest-corner circle at var(--pointer-x) var(--pointer-y),
-              hsla(0, 0%, 0%, 0.1) 12%,
-              hsla(0, 0%, 0%, 0.15) 20%,
-              hsla(0, 0%, 0%, 0.25) 120%
-          );
-      background-blend-mode: screen, hue, hard-light;
-      background-size:
-          var(--imgsize) 100%,
-          200% 700%,
-          300% 100%,
-          200% 100%;
-      background-position:
-          center,
-          0% var(--background-y),
-          var(--background-x) var(--background-y),
-          var(--background-x) var(--background-y);
-      filter: brightness(.8) contrast(2.95) saturate(.65);
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        background-image:
-            var(--grain),
-            repeating-linear-gradient(
-                0deg,
-                var(--sunpillar-clr-1) calc(var(--space)*1),
-                var(--sunpillar-clr-2) calc(var(--space)*2),
-                var(--sunpillar-clr-3) calc(var(--space)*3),
-                var(--sunpillar-clr-4) calc(var(--space)*4),
-                var(--sunpillar-clr-5) calc(var(--space)*5),
-                var(--sunpillar-clr-6) calc(var(--space)*6),
-                var(--sunpillar-clr-1) calc(var(--space)*7)
-            ),
-            repeating-linear-gradient(
-                var(--angle),
-                #0e152e 0%,
-                hsl(180, 10%, 60%) 3.8%,
-                hsl(180, 29%, 66%) 4.5%,
-                hsl(180, 10%, 60%) 5.2%,
-                #0e152e 10%,
-                #0e152e 12%
-            ),
-            radial-gradient(
-                farthest-corner circle at var(--pointer-x) var(--pointer-y),
-                hsla(0, 0%, 0%, 0.1) 12%,
-                hsla(0, 0%, 0%, 0.15) 20%,
-                hsla(0, 0%, 0%, 0.25) 120%
-            );
-        background-blend-mode: screen, hue, hard-light;
-        background-position:
-            center,
-            0% var(--background-y),
-            calc(var(--background-x) * -1) calc(var(--background-y) * -1),
-            var(--background-x) var(--background-y);
-        background-size: var(--imgsize) 100%, 200% 400%, 195% 100%, 200% 100%;
-        filter: brightness(1) contrast(2.5) saturate(1.75);
-        mix-blend-mode: soft-light;
-        --sunpillar-clr-1: var(--sunpillar-6);
-        --sunpillar-clr-2: var(--sunpillar-1);
-        --sunpillar-clr-3: var(--sunpillar-2);
-        --sunpillar-clr-4: var(--sunpillar-3);
-        --sunpillar-clr-5: var(--sunpillar-4);
-        --sunpillar-clr-6: var(--sunpillar-5);
-        transform: translateZ(1.2px);
-      }
-    }
-    .card-glare-1 {
-      background-image:
-          radial-gradient(
-              farthest-corner circle at var(--pointer-x) var(--pointer-y),
-              hsl(0, 0%, 100%) 0%,
-              hsla(210, 3%, 54%, 0.33) 45%,
-              hsla(0, 0%, 20%, 0.9) 130%
-          );
-      mix-blend-mode: hard-light;
-      opacity: calc(var(--glare-opacity) * 0.5);
-      filter: brightness(.9) contrast(1.75);
-      transform: translateZ(1.41px);
-    }
-    .card-glare {
-      background: radial-gradient(
-          farthest-corner circle at var(--pointer-x) var(--pointer-y),
-          hsla(0, 0%, 100%, 0.8) 10%,
-          hsla(0, 0%, 100%, 0.65) 20%,
-          hsla(0, 0%, 0%, 0.5) 90%
-      );
-      mix-blend-mode: soft-light;
-      opacity: var(--glare-opacity);
-    }
-  }
-</style>
-<script>
-  document.querySelectorAll('[js-runes]').forEach(setupRunes);
-
-  /** @param {HTMLElement} container */
-  function setupRunes(container) {
-    const numCols = 10;
-    const numRows = 12;
-    const useRunes = false;
-    const alphabet = useRunes
-      ? ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛜ', 'ᛞ', 'ᛟ']
-      : ['0', '1'];
-
-    const randomRune = () => alphabet[Math.floor(Math.random() * alphabet.length)];
-
-    for (let x = 0; x < numCols; x++) {
-      const column = document.createElement('span');
-      column.classList.add('rune-col');
-      for (let y = 0; y < numRows; y++) {
-        const cell = document.createElement('span');
-        cell.innerText = randomRune();
-        cell.classList.add('rune');
-        if (Math.random() > 0.5) {
-          cell.classList.add('fresh');
-        }
-        column.appendChild(cell);
-      }
-      container.appendChild(column);
-    }
-
-    function changeRunes() {
-      container.querySelectorAll('.rune.fresh').forEach(element => element.classList.remove('fresh'));
-      const total = numCols * numRows;
-      for (let i = 0; i < total / 3; i++) {
-        const randomIndex = Math.floor(Math.random() * total);
-        const row = Math.floor(randomIndex / numCols);
-        const col = randomIndex % numCols;
-        const cell = container.children.item(col).children.item(row);
-        cell.innerText = randomRune();
-        cell.classList.add('fresh');
-      }
-    }
-
-    setInterval(changeRunes, 1_000);
-
-  }
-</script>
