@@ -35,6 +35,15 @@ watchEffect(() => {
   }
 });
 
+const faces = [
+  {label: 'Squirtle', url: 'https://images.pokemontcg.io/sm10/33_hires.png'},
+  {label: 'Charmander', url: 'https://images.pokemontcg.io/sm115/7_hires.png'},
+  {label: 'Bulbasaur', url: 'https://images.pokemontcg.io/sm35/1_hires.png'},
+];
+
+const selectedFace = useLocalStorage('cards.face', faces[0].url);
+provide('cards.face', selectedFace);
+
 </script>
 
 <template>
@@ -56,18 +65,26 @@ watchEffect(() => {
           Tilt with circle pattern
         </label>
       </fieldset>
+      <fieldset>
+        <legend>Card face</legend>
+        <select v-model="selectedFace">
+          <option v-for="face in faces" :value="face.url">
+            {{face.label}}
+          </option>
+        </select>
+      </fieldset>
     </form>
     <div class="cardlist" ref="$list">
       <div class="cardcase">
         <h2>Base card</h2>
         <CardBase>
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <img :src="selectedFace">
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V1: Cyan+Magenta</h2>
         <CardBase>
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <img :src="selectedFace">
           <V1Shine />
           <V1Sparkle />
         </CardBase>
@@ -75,14 +92,14 @@ watchEffect(() => {
       <div class="cardcase">
         <h2>V2: Basic glare</h2>
         <CardBase>
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <img :src="selectedFace">
           <GlareV2 />
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V3: Rainbow Shine</h2>
         <CardBase>
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <img :src="selectedFace">
           <ShineRainbow />
           <GlareV3 />
         </CardBase>
@@ -90,7 +107,7 @@ watchEffect(() => {
       <div class="cardcase">
         <h2>Matrix</h2>
         <CardBase>
-          <img src="https://images.pokemontcg.io/sm10/33_hires.png">
+          <img :src="selectedFace">
           <MatrixLayer />
           <GlareV2 />
         </CardBase>
