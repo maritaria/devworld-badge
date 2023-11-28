@@ -1,11 +1,19 @@
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {computed, inject, onMounted, ref, watch} from "vue";
 
 const $el = ref(null);
 
 onMounted(() => {
   setupTiltByMouse($el.value);
+});
+
+const autoPointer = inject('autoPointer');
+
+watch(() => {
+  if (autoPointer && $el.value) {
+    applyTilt($el.value, autoPointer.value ? {x: 70, y: 30} : null);
+  }
 });
 
 </script>

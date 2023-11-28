@@ -4,8 +4,13 @@ import CardV1 from "./components/CardV1.vue";
 import CardV2 from "./components/CardV2.vue";
 import CardV3RainbowShine from "./components/CardV3RainbowShine.vue";
 import MatrixCard from "./components/MatrixCard.vue";
+import {provide, ref} from "vue";
+import {useLocalStorage} from "@vueuse/core";
 
-const autoPointer = ref(true);
+const autoPointer = useLocalStorage('cards.autoPointer', false);
+
+provide('autoPointer', autoPointer);
+
 
 </script>
 
@@ -13,7 +18,7 @@ const autoPointer = ref(true);
   <main id="app">
     <h1>Cards</h1>
     <form>
-      <label><input type="checkbox" v-model="autoPointer">Auto pointer</label>
+      <label><input type="checkbox" v-model="autoPointer">Auto pointer {{autoPointer}}</label>
     </form>
     <div class="cardlist">
       <div class="cardcase">

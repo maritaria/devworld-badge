@@ -16,11 +16,20 @@ function setupTiltByMouse(element) {
       x: Math.clamp((100 / rect.width) * absolute.x, 0, 100),
       y: Math.clamp((100 / rect.height) * absolute.y, 0, 100),
     };
+    applyTilt(element, percent);
+  }
+
+  function onMouseLeave() {
+    applyTilt(element, null);
+  }
+}
+
+function applyTilt(element, percent) {
+  if (percent) {
     const center = {
       x: percent.x - 50,
       y: percent.y - 50,
     };
-
     element.style.setProperty('--pointer-x', `${percent.x.toFixed(1)}%`);
     element.style.setProperty('--pointer-y', `${percent.y.toFixed(1)}%`);
     element.style.setProperty('--rotate-x', `${(-center.x / 1.5).toFixed(1)}deg`);
@@ -28,9 +37,7 @@ function setupTiltByMouse(element) {
     element.style.setProperty('--glare-opacity', '1');
     element.style.setProperty('--background-x', `${Math.remap(percent.x, 0, 100, 37, 63).toFixed(1)}%`);
     element.style.setProperty('--background-y', `${Math.remap(percent.y, 0, 100, 33, 67).toFixed(1)}%`);
-  }
-
-  function onMouseLeave() {
+  } else {
     element.style.removeProperty('--pointer-x');
     element.style.removeProperty('--pointer-y');
     element.style.removeProperty('--rotate-x');
