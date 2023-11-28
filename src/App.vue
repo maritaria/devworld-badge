@@ -1,14 +1,20 @@
 <script setup>
-import CardBase from "./cards/CardBase.vue";
-import CardV1 from "./cards/CardV1.vue";
-import CardV2 from "./cards/CardV2.vue";
-import CardV3RainbowShine from "./cards/CardV3RainbowShine.vue";
-import MatrixCard from "./cards/MatrixCard.vue";
+import CardBase from "./components/CardBase.vue";
+import CardV1 from "./components/CardV1.vue";
+import CardV2 from "./components/CardV2.vue";
+import CardV3RainbowShine from "./components/CardV3RainbowShine.vue";
+import MatrixCard from "./components/MatrixCard.vue";
+
+const autoPointer = ref(true);
+
 </script>
 
 <template>
   <main id="app">
     <h1>Cards</h1>
+    <form>
+      <label><input type="checkbox" v-model="autoPointer">Auto pointer</label>
+    </form>
     <div class="cardlist">
       <div class="cardcase">
         <h2>Base card</h2>
@@ -30,6 +36,7 @@ import MatrixCard from "./cards/MatrixCard.vue";
         <h2>Matrix</h2>
         <MatrixCard />
       </div>
+      <!-- Horizontal stripe holo -->
     </div>
   </main>
 </template>
