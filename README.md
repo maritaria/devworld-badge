@@ -5,6 +5,7 @@
 - [DeviantArt/aschefield101 (Pokemon Cards)](https://www.deviantart.com/aschefield101/)
 - [React summit 2023 - Green lined Card](https://portal.gitnation.org/badges/react-summit-2023/anuradha_kumari)
 - [ViteConf 2023 Tickets](https://viteconf.org/23/tickets/JSworld-Conferences?p=herodevs)
+- [Youtube: All Holo Pokemon Cards and how they are different](https://www.youtube.com/watch?v=3xg3wYpChBs)
 
 # Ideas
 
