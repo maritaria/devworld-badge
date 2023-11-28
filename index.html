@@ -13,20 +13,20 @@
   <main>
     <h1>Cards</h1>
     <div class="cardlist">
-      <div class="card-v1" js-tilt>
+      <div class="card-base card-v1" js-tilt>
         <div class="card-content">
           <img src="https://images.pokemontcg.io/sm10/33_hires.png">
           <div class="card-glare"></div>
           <div class="card-sparkle"></div>
         </div>
       </div>
-      <div class="card-v2" js-tilt>
+      <div class="card-base card-v2" js-tilt>
         <div class="card-content">
           <img src="https://images.pokemontcg.io/sm10/33_hires.png">
           <div class="card-glare"></div>
         </div>
       </div>
-      <div class="card-matrix" js-tilt>
+      <div class="card-base card-matrix" js-tilt>
         <div class="card-content">
           <img src="https://images.pokemontcg.io/sm10/33_hires.png">
           <div class="card-runes" js-runes></div>
@@ -49,7 +49,7 @@
   }
 </style>
 <style>
-  .card-v2 {
+  .card-base {
     /* Start 3D rendering stack */
     perspective: 600px;
     /* Defaults for animated / interactive display */
@@ -81,53 +81,22 @@
         grid-area: 1/1;
       }
     }
-
   }
 
-  .card-glare {
-    background: radial-gradient(
-        farthest-corner circle at var(--pointer-x) var(--pointer-y),
-        hsla(0, 0%, 100%, 0.8) 10%,
-        hsla(0, 0%, 100%, 0.65) 20%,
-        hsla(0, 0%, 0%, 0.5) 90%
-    );
-    mix-blend-mode: overlay;
-    opacity: var(--glare-opacity);
+  .card-v2 {
+    .card-glare {
+      background: radial-gradient(
+          farthest-corner circle at var(--pointer-x) var(--pointer-y),
+          hsla(0, 0%, 100%, 0.8) 10%,
+          hsla(0, 0%, 100%, 0.65) 20%,
+          hsla(0, 0%, 0%, 0.5) 90%
+      );
+      mix-blend-mode: overlay;
+      opacity: var(--glare-opacity);
+    }
   }
 
   .card-v1 {
-    /* Start 3D rendering stack */
-    perspective: 600px;
-    /* Defaults for animated / interactive display */
-    --pointer-x: 50%;
-    --pointer-y: 50%;
-    --rotate-x: 0deg;
-    --rotate-y: 0deg;
-    --glare-opacity: 0;
-
-    .card-content {
-      transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
-      transform-style: preserve-3d;
-      transform-origin: center;
-
-      /* Clip the corners, otherwise the glare extends over the rounded corners. */
-      border-radius: 4.55% / 3.5%;
-      overflow: hidden;
-
-      /* Size the backing image to the card container */
-
-      & > img {
-        width: 100%;
-      }
-
-      /* Treat immediate children of card-content as layers */
-      display: grid;
-
-      & > * {
-        grid-area: 1/1;
-      }
-    }
-
     .card-glare {
       --color1: #00ffff;
       --color2: #ff00ff;
@@ -172,38 +141,6 @@
   }
 
   .card-matrix {
-    /* Start 3D rendering stack */
-    perspective: 600px;
-    /* Defaults for animated / interactive display */
-    --pointer-x: 50%;
-    --pointer-y: 50%;
-    --rotate-x: 0deg;
-    --rotate-y: 0deg;
-    --glare-opacity: 0;
-
-    .card-content {
-      transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
-      transform-style: preserve-3d;
-      transform-origin: center;
-
-      /* Clip the corners, otherwise the glare extends over the rounded corners. */
-      border-radius: 4.55% / 3.5%;
-      overflow: hidden;
-
-      /* Size the backing image to the card container */
-
-      & > img {
-        width: 100%;
-      }
-
-      /* Treat immediate children of card-content as layers */
-      display: grid;
-
-      & > * {
-        grid-area: 1/1;
-      }
-    }
-
     .card-runes {
       font-family: monospace;
       font-weight: bold;
