@@ -154,6 +154,11 @@ provide('cards.face', selectedFace);
   }
 }
 
+h1 {
+  text-align: center;
+  border-top: 2px dotted currentColor;
+}
+
 img {
   width: 100%;
 }
