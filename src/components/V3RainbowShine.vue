@@ -101,6 +101,7 @@
     0% var(--background-y),
     calc(var(--background-x) * -1) calc(var(--background-y) * -1),
     var(--background-x) var(--background-y);
+    /* TODO: something here prevents it from working on non-portrait sized content. unset mix-blend-mode for easier debugging. */
     background-size: var(--imgsize) 100%, 200% 400%, 195% 100%, 200% 100%;
     filter: brightness(1) contrast(2.5) saturate(1.75);
     mix-blend-mode: soft-light;
