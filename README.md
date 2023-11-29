@@ -46,4 +46,25 @@ Search: ...
 - Lanyards
 - Swinging
 - Use Fluid simulation to simulate dry-ice fog effect
-- 
+
+# Social Media Image Sizes
+
+<figure style="overflow-x:scroll;margin:0">
+<table style="min-width:max-content">
+<thead>
+<tr>
+<th>Brand</th>
+<th>Profile Photo</th>
+<th>Cover Photo</th>
+<th>Image Post</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Twitter</td><td>400 x 400</td><td>1500 x 500</td><td>1024 x 512</td></tr>
+<tr><td>Facebook</td><td>180 x 180</td><td>820 x 312, 1920 x 1080 (event)</td><td>1200 x 630</td></tr>
+<tr><td>Instagram</td><td>110 x 110</td><td>N/A</td><td>320 x 1080 (portrait)<br>1080 x 1080 (landscape)</td></tr>
+<tr><td>Linkedin</td><td>400 x 400</td><td>1584 x 396 (personal), 1536 x 768 (company)</td><td>1200 x 4620</td></tr>
+<tr><td>Pinterest</td><td>165 x 165</td><td>600 x 900</td><td>600 x 900</td></tr>
+</tbody>
+</table>
+</figure>
