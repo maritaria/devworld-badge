@@ -9,7 +9,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card-base" js-tilt ref="$el">
+  <div class="card-base" ref="$el">
     <div class="card-content">
       <slot></slot>
     </div>
