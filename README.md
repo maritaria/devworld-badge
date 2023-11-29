@@ -1,7 +1,7 @@
 # Inspirations
 
 - [Pokemon Cards V1](https://codepen.io/simeydotme/pen/PrQKgo)
-- [Pokemon Cards V2](https://poke-holo.simey.me/)
+- [Pokemon Cards V2](https://poke-holo.simey.me/) - [Card.svelte](https://github.com/simeydotme/pokemon-cards-css/blob/main/src/lib/components/Card.svelte#L248)
 - [DeviantArt/aschefield101 (Pokemon Cards)](https://www.deviantart.com/aschefield101/)
 - [React summit 2023 - Green lined Card](https://portal.gitnation.org/badges/react-summit-2023/anuradha_kumari)
 - [ViteConf 2023 Tickets](https://viteconf.org/23/tickets/JSworld-Conferences?p=herodevs)
