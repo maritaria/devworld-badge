@@ -71,7 +71,7 @@ provide('cards.face', selectedFace);
         <legend>Card face</legend>
         <select v-model="selectedFace">
           <option v-for="face in faces" :value="face.url">
-            {{face.label}}
+            {{ face.label }}
           </option>
         </select>
       </fieldset>
