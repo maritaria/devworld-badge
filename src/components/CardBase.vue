@@ -35,8 +35,6 @@ onMounted(() => {
 .card-base {
   /* Start 3D rendering stack */
   perspective: 600px;
-  /* Defaults for animated / interactive display */
-
 
   .card-content {
     transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
