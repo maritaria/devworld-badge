@@ -80,13 +80,13 @@ provide('cards.face', selectedFace);
     <div class="cardlist">
       <div class="cardcase">
         <h2>Base card</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V1: Cyan+Magenta</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
           <V1Shine />
           <V1Sparkle />
@@ -94,14 +94,14 @@ provide('cards.face', selectedFace);
       </div>
       <div class="cardcase">
         <h2>V2: Basic glare</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
           <GlareV2 />
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V3: Rainbow Shine</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
           <ShineRainbow />
           <GlareV3 />
@@ -109,7 +109,7 @@ provide('cards.face', selectedFace);
       </div>
       <div class="cardcase">
         <h2>Matrix</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
           <MatrixLayer />
           <GlareV2 />
@@ -117,7 +117,7 @@ provide('cards.face', selectedFace);
       </div>
       <div class="cardcase">
         <h2>Foil</h2>
-        <CardBase>
+        <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace">
           <Foil />
           <GlareReverseHolo />
@@ -152,5 +152,15 @@ provide('cards.face', selectedFace);
     margin: 0;
     order: 1; /* Place after the card */
   }
+}
+
+img {
+  width: 100%;
+}
+
+.pokemon-card {
+  /* Clip the corners, otherwise the glare extends over the rounded corners. */
+  border-radius: 4.55% / 3.5%;
+  overflow: hidden;
 }
 </style>

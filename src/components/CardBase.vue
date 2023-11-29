@@ -1,6 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
 
+defineProps(['wrap-class']);
+
+
 const $el = ref(null);
 
 onMounted(() => {
@@ -10,7 +13,7 @@ onMounted(() => {
 
 <template>
   <div class="card-base" ref="$el">
-    <div class="card-content">
+    <div class="card-content" :class="wrapClass">
       <slot></slot>
     </div>
   </div>
@@ -40,13 +43,6 @@ onMounted(() => {
     transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
     transform-style: preserve-3d;
     transform-origin: center;
-
-    /* Clip the corners, otherwise the glare extends over the rounded corners. */
-    border-radius: 4.55% / 3.5%;
-    overflow: hidden;
-
-    /* Size the backing image to the card container */
-    & >>> > img { width: 100%; }
 
     /* Treat immediate children of card-content as layers */
     display: grid;
