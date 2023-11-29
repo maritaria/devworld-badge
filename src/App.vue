@@ -30,10 +30,10 @@ const tilt = computed(() => {
   return null;
 });
 
-const $list = ref(null);
+const $app = ref(null);
 watchEffect(() => {
-  if ($list.value) {
-    applyTilt($list.value, tilt.value);
+  if ($app.value) {
+    applyTilt($app.value, tilt.value);
   }
 });
 
@@ -49,8 +49,8 @@ provide('cards.face', selectedFace);
 </script>
 
 <template>
-  <main id="app">
-    <h1>Cards</h1>
+  <main id="app" ref="$app">
+    <h1>Settings</h1>
     <form style="margin-bottom:30px" id="settings">
       <fieldset name="pointerLogicGroup">
         <legend>Tilt all cards</legend>
@@ -76,7 +76,8 @@ provide('cards.face', selectedFace);
         </select>
       </fieldset>
     </form>
-    <div class="cardlist" ref="$list">
+    <h1>Samples</h1>
+    <div class="cardlist">
       <div class="cardcase">
         <h2>Base card</h2>
         <CardBase>
