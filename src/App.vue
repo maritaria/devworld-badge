@@ -127,7 +127,7 @@ provide('cards.face', selectedFace);
   </main>
 </template>
 
-<style>
+<style scoped>
 .cardlist {
   display: flex;
   flex-wrap: wrap;
