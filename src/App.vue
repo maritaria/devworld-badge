@@ -81,13 +81,13 @@ provide('cards.face', selectedFace);
       <div class="cardcase">
         <h2>Base card</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V1: Cyan+Magenta</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
           <V1Shine />
           <V1Sparkle />
         </CardBase>
@@ -95,14 +95,14 @@ provide('cards.face', selectedFace);
       <div class="cardcase">
         <h2>V2: Basic glare</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
           <GlareV2 />
         </CardBase>
       </div>
       <div class="cardcase">
         <h2>V3: Rainbow Shine</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
           <ShineRainbow />
           <GlareV3 />
         </CardBase>
@@ -110,7 +110,7 @@ provide('cards.face', selectedFace);
       <div class="cardcase">
         <h2>Matrix</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
           <MatrixLayer />
           <GlareV2 />
         </CardBase>
@@ -118,7 +118,7 @@ provide('cards.face', selectedFace);
       <div class="cardcase">
         <h2>Foil</h2>
         <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace">
+          <img :src="selectedFace" width="734" height="1024">
           <Foil />
           <GlareReverseHolo />
         </CardBase>
@@ -166,6 +166,7 @@ h1 {
 
 img {
   width: 100%;
+  height: auto;
 }
 
 .pokemon-card {
