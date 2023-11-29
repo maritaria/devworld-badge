@@ -50,7 +50,7 @@ provide('cards.face', selectedFace);
 
 <template>
   <main id="app" ref="$app">
-    <h1>Settings</h1>
+    <h1 id="settings"><a href="#settings">Settings</a></h1>
     <form style="margin-bottom:30px" id="settings">
       <fieldset name="pointerLogicGroup">
         <legend>Tilt all cards</legend>
@@ -76,7 +76,7 @@ provide('cards.face', selectedFace);
         </select>
       </fieldset>
     </form>
-    <h1>Samples</h1>
+    <h1 id="samples"><a href="#samples">Samples</a></h1>
     <div class="cardlist">
       <div class="cardcase">
         <h2>Base card</h2>
@@ -157,6 +157,11 @@ provide('cards.face', selectedFace);
 h1 {
   text-align: center;
   border-top: 2px dotted currentColor;
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 img {
