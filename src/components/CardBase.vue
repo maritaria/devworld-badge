@@ -20,6 +20,9 @@ onMounted(() => {
 :root {
   --pointer-x: 50%;
   --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --pointer-from-left: .5;
+  --pointer-from-top: .5;
   --rotate-x: 0deg;
   --rotate-y: 0deg;
   --glare-opacity: 0;

@@ -8,6 +8,8 @@ import GlareV2 from "./components/V2Glare.vue";
 import GlareV3 from "./components/V3Glare.vue";
 import ShineRainbow from "./components/V3RainbowShine.vue";
 import MatrixLayer from "./components/MatrixRunes.vue";
+import Foil from "./components/Foil.vue";
+import GlareReverseHolo from "./components/GlareReverseHolo.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -112,7 +114,14 @@ provide('cards.face', selectedFace);
           <GlareV2 />
         </CardBase>
       </div>
-      <!-- Horizontal stripe holo -->
+      <div class="cardcase">
+        <h2>Foil</h2>
+        <CardBase>
+          <img :src="selectedFace">
+          <Foil />
+          <GlareReverseHolo />
+        </CardBase>
+      </div>
     </div>
   </main>
 </template>

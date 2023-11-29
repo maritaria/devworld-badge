@@ -30,8 +30,12 @@ function applyTilt(element, percent) {
       x: percent.x - 50,
       y: percent.y - 50,
     };
+    const centerDistance = Math.sqrt((center.x ** 2) + center.y ** 2);
     element.style.setProperty('--pointer-x', `${percent.x.toFixed(1)}%`);
     element.style.setProperty('--pointer-y', `${percent.y.toFixed(1)}%`);
+    element.style.setProperty('--pointer-from-center', `${Math.clamp(centerDistance/50, 0, 1).toFixed(2)}`)
+    element.style.setProperty('--pointer-from-top', `${Math.clamp(percent.y / 100, 0, 1).toFixed(2)}`);
+    element.style.setProperty('--pointer-from-left', `${Math.clamp(percent.x / 100, 0, 1).toFixed(2)}`);
     element.style.setProperty('--rotate-x', `${(-center.x / 1.5).toFixed(1)}deg`);
     element.style.setProperty('--rotate-y', `${(center.y / 2).toFixed(1)}deg`);
     element.style.setProperty('--glare-opacity', '1');
@@ -40,6 +44,9 @@ function applyTilt(element, percent) {
   } else {
     element.style.removeProperty('--pointer-x');
     element.style.removeProperty('--pointer-y');
+    element.style.removeProperty('--pointer-from-center');
+    element.style.removeProperty('--pointer-from-top');
+    element.style.removeProperty('--pointer-from-left');
     element.style.removeProperty('--rotate-x');
     element.style.removeProperty('--rotate-y');
     element.style.removeProperty('--glare-opacity');
