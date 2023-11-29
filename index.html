@@ -14,32 +14,3 @@
   <main id="app"></main>
 </body>
 </html>
-<style>
-  .cardlist {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .cardlist > * {
-    flex: 0 0 300px;
-  }
-
-  .cardcase {
-    /* Border and spacing */
-    border: 3px solid dimgray;
-    border-radius: 30px;
-    padding: 10px;
-    /* Vertical stack the children */
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    & h2 {
-      text-align: center;
-      margin: 0;
-      order: 1; /* Place after the card */
-    }
-  }
-</style>
