@@ -2,8 +2,12 @@
 import {computed, onMounted, reactive, ref} from "vue";
 import {useIntervalFn} from "@vueuse/core";
 
-const numCols = 10;
-const numRows = 12;
+const props = defineProps({
+  cols: {default: 10},
+  rows: {default: 10},
+});
+const numCols = props.cols;
+const numRows = props.rows;
 const alphabet = false
     ? ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛜ', 'ᛞ', 'ᛟ']
     : ['0', '1'];

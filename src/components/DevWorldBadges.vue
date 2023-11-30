@@ -2,12 +2,13 @@
 import CardBase from "./CardBase.vue";
 import Foil from "./Foil.vue";
 import MatrixRunes from "./MatrixRunes.vue";
+import MatrixShine from "./MatrixShine.vue";
 </script>
 
 <template>
   <div class="cardlist">
     <div class="cardcase">
-      <h2>Badge - Default</h2>
+      <h2>Default</h2>
       <CardBase>
         <div class="dev-world">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -17,7 +18,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Lightgreen</h2>
+      <h2>Lightgreen</h2>
       <CardBase>
         <div class="dev-world lightgreen">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -27,7 +28,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Lawngreen</h2>
+      <h2>Lawngreen</h2>
       <CardBase>
         <div class="dev-world lawngreen">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -37,7 +38,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Red</h2>
+      <h2>Red</h2>
       <CardBase>
         <div class="dev-world red">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -47,7 +48,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Blue</h2>
+      <h2>Blue</h2>
       <CardBase>
         <div class="dev-world blue">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -57,7 +58,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Yellow</h2>
+      <h2>Yellow</h2>
       <CardBase>
         <div class="dev-world yellow">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -67,7 +68,7 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Purple</h2>
+      <h2>Purple</h2>
       <CardBase>
         <div class="dev-world purple">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
@@ -77,13 +78,24 @@ import MatrixRunes from "./MatrixRunes.vue";
       </CardBase>
     </div>
     <div class="cardcase">
-      <h2>Badge - Matrix</h2>
+      <h2>MatrixRunes</h2>
       <CardBase>
         <div class="dev-world blue">
           <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
           <div class="inset"></div>
           <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
           <MatrixRunes />
+        </div>
+      </CardBase>
+    </div>
+    <div class="cardcase">
+      <h2>MatrixShine</h2>
+      <CardBase>
+        <div class="dev-world blue">
+          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <div class="inset extra" ref="$inset"></div>
+          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <MatrixShine />
         </div>
       </CardBase>
     </div>
