@@ -132,7 +132,6 @@ provide('cards.face', selectedFace);
     </div>
     <h1 id="devworld"><a href="#devworld">DevWorld</a></h1>
     <div class="cardlist">
-
       <div class="cardcase">
         <h2>Badge Sample</h2>
         <CardBase>
