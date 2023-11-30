@@ -37,9 +37,12 @@ function letter() {
 
 useRafFn(({timestamp}) => {
   if (!$ctx.value) return;
-  const ctx = $ctx.value;
-  const canvas = ctx.canvas;
-  const letters = alphabet;
+  render($ctx.value, timestamp);
+});
+
+/** @param {CanvasRenderingContext2D} ctx */
+function render(ctx, timestamp) {
+  const {canvas} = ctx;
   const {fontSize} = props;
   // Darken the already drawn letters
   ctx.fillStyle = 'rgba(0, 0, 0, .02)';
@@ -59,7 +62,7 @@ useRafFn(({timestamp}) => {
       }
     }
   }
-});
+}
 
 /** @param {HTMLCanvasElement} canvas */
 function autosizeCanvas(canvas) {
