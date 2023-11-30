@@ -7,7 +7,7 @@ import V1Sparkle from "./components/V1Sparkle.vue";
 import GlareV2 from "./components/V2Glare.vue";
 import GlareV3 from "./components/V3Glare.vue";
 import ShineRainbow from "./components/V3RainbowShine.vue";
-import MatrixLayer from "./components/MatrixRunes.vue";
+import MatrixRunes from "./components/MatrixRunes.vue";
 import Foil from "./components/Foil.vue";
 import GlareReverseHolo from "./components/GlareReverseHolo.vue";
 import DevWorldTicket from "./components/DevWorldTicket.vue";
@@ -114,7 +114,7 @@ provide('cards.face', selectedFace);
         <h2>Matrix</h2>
         <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace" width="734" height="1024">
-          <MatrixLayer />
+          <MatrixRunes />
           <GlareV2 />
         </CardBase>
       </div>
