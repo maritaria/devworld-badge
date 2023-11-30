@@ -49,6 +49,13 @@ Search: ...
 - Swinging
 - Use Fluid simulation to simulate dry-ice fog effect
 
+# Fonts
+
+- [1001Fonts.com - Techno](https://www.1001fonts.com/techno-fonts.html)
+- [Library 3AM](https://www.1001fonts.com/library-3-am-font.html) - [license](https://www.1001fonts.com/licenses/ffc.html)
+- [Rational Integer](https://www.1001fonts.com/rational-integer-font.html) - license: free for commercial use
+- [Scriptina](https://www.1001fonts.com/scriptina-font.html)
+
 # Social Media Image Sizes
 
 <figure style="overflow-x:scroll;margin:0">

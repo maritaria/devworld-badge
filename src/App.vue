@@ -10,6 +10,9 @@ import ShineRainbow from "./components/V3RainbowShine.vue";
 import MatrixLayer from "./components/MatrixRunes.vue";
 import Foil from "./components/Foil.vue";
 import GlareReverseHolo from "./components/GlareReverseHolo.vue";
+import DevWorldTicket from "./components/DevWorldTicket.vue";
+import DevWorldNeon from "./components/DevWorldNeon.vue";
+import DevWorldBadge from "./components/DevWorldBadge.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -127,6 +130,39 @@ provide('cards.face', selectedFace);
         </CardBase>
       </div>
     </div>
+    <h1 id="devworld"><a href="#devworld">DevWorld</a></h1>
+    <div class="cardlist">
+
+      <div class="cardcase">
+        <h2>Badge Sample</h2>
+        <CardBase>
+          <DevWorldBadge />
+        </CardBase>
+      </div>
+    </div>
+      <div class="cardlist">
+        <div class="cardcase">
+          <h2>DevWorld</h2>
+          <CardBase>
+            <DevWorldTicket style="width:800px" />
+          </CardBase>
+        </div>
+        <div class="cardcase">
+          <h2>Black friday</h2>
+          <CardBase>
+            <img src="./assets/doc/twitter-black-friday-sale.jpg">
+            <GlareReverseHolo/>
+          </CardBase>
+        </div>
+        <div class="cardcase">
+          <h2>Neon Ticket</h2>
+          <CardBase wrap-class="devworld-ticket">
+            <DevWorldNeon />
+            <GlareReverseHolo />
+          </CardBase>
+        </div>
+      </div>
+    <div style="min-height:100vh"></div>
   </main>
 </template>
 
@@ -175,6 +211,11 @@ img {
 .pokemon-card {
   /* Clip the corners, otherwise the glare extends over the rounded corners. */
   border-radius: 4.55% / 3.5%;
+  overflow: hidden;
+}
+
+>>> .devworld-ticket {
+  border-radius: 50px;
   overflow: hidden;
 }
 </style>

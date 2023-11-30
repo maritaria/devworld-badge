@@ -48,7 +48,6 @@ const maskUrl = computed(() => props.mask ? `url(${props.mask})` : undefined);
 
   /* .card__shine */
   transform: translateZ(1px);
-  z-index: 3;
 
   /* .card__rotator * */
   image-rendering: optimizeQuality;
