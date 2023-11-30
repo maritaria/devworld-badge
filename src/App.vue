@@ -12,7 +12,7 @@ import Foil from "./components/Foil.vue";
 import GlareReverseHolo from "./components/GlareReverseHolo.vue";
 import DevWorldTicket from "./components/DevWorldTicket.vue";
 import DevWorldNeon from "./components/DevWorldNeon.vue";
-import DevWorldBadge from "./components/DevWorldBadge.vue";
+import DevWorldBadges from "./components/DevWorldBadges.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -114,7 +114,7 @@ provide('cards.face', selectedFace);
         <h2>Matrix</h2>
         <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace" width="734" height="1024">
-          <MatrixRunes />
+          <MatrixRunes cols="10" rows="12" />
           <GlareV2 />
         </CardBase>
       </div>
@@ -130,42 +130,36 @@ provide('cards.face', selectedFace);
         </CardBase>
       </div>
     </div>
+    <h1 id="devworld-badges"><a href="#devworld-badges">DevWorld (Badges)</a></h1>
+    <DevWorldBadges />
     <h1 id="devworld"><a href="#devworld">DevWorld</a></h1>
     <div class="cardlist">
       <div class="cardcase">
-        <h2>Badge Sample</h2>
+        <h2>DevWorld</h2>
         <CardBase>
-          <DevWorldBadge />
+          <DevWorldTicket style="width:800px" />
+        </CardBase>
+      </div>
+      <div class="cardcase">
+        <h2>Black friday</h2>
+        <CardBase>
+          <img src="./assets/doc/twitter-black-friday-sale.jpg">
+          <GlareReverseHolo />
+        </CardBase>
+      </div>
+      <div class="cardcase">
+        <h2>Neon Ticket</h2>
+        <CardBase wrap-class="devworld-ticket">
+          <DevWorldNeon />
+          <GlareReverseHolo />
         </CardBase>
       </div>
     </div>
-      <div class="cardlist">
-        <div class="cardcase">
-          <h2>DevWorld</h2>
-          <CardBase>
-            <DevWorldTicket style="width:800px" />
-          </CardBase>
-        </div>
-        <div class="cardcase">
-          <h2>Black friday</h2>
-          <CardBase>
-            <img src="./assets/doc/twitter-black-friday-sale.jpg">
-            <GlareReverseHolo/>
-          </CardBase>
-        </div>
-        <div class="cardcase">
-          <h2>Neon Ticket</h2>
-          <CardBase wrap-class="devworld-ticket">
-            <DevWorldNeon />
-            <GlareReverseHolo />
-          </CardBase>
-        </div>
-      </div>
     <div style="min-height:100vh"></div>
   </main>
 </template>
 
-<style scoped>
+<style>
 .cardlist {
   display: flex;
   flex-wrap: wrap;
@@ -185,12 +179,16 @@ provide('cards.face', selectedFace);
   flex-direction: column;
   gap: 10px;
 
-  & h2 {
+  & > h2 {
     text-align: center;
     margin: 0;
     order: 1; /* Place after the card */
   }
 }
+</style>
+
+<style scoped>
+
 
 h1 {
   text-align: center;
