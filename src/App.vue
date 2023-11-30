@@ -119,7 +119,10 @@ provide('cards.face', selectedFace);
         <h2>Foil</h2>
         <CardBase wrap-class="pokemon-card">
           <img :src="selectedFace" width="734" height="1024">
-          <Foil />
+          <Foil
+              foil="https://poke-holo.b-cdn.net/foils/swsh12/foils/upscaled/127_foil_holo_reverse_2x.webp"
+              mask="https://poke-holo.b-cdn.net/foils/swsh12/masks/upscaled/127_foil_holo_reverse_2x.webp"
+          />
           <GlareReverseHolo />
         </CardBase>
       </div>
