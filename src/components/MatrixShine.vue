@@ -8,23 +8,9 @@ const props = defineProps({
   fontSize: {default: 10},
 });
 
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
 /** @type {{value: HTMLCanvasElement | null}} */
 const $canvas = ref(null);
 const $ctx = ref(null);
-
-function rand(min, max) {
-  return min + Math.random() * (max - min);
-}
-
-function letter() {
-  return alphabet[Math.floor(rand(0, alphabet.length))];
-}
-
-function arr(length, fn) {
-  return Array.from({length}, (_, i) => fn(i));
-}
 
 /** @type {{x: number,y:number,chars:string[],next:number,step:number, maxLength:number,}[]} */
 const columns = [];
@@ -33,14 +19,6 @@ watchEffect(() => {
   if (!$canvas.value) return;
   $ctx.value = $canvas.value.getContext('2d');
 });
-
-function initRay(obj) {
-  obj.y = 0;
-  obj.chars = [];
-  obj.maxLength = ~~rand(15, 40);
-  obj.next = 0;
-  obj.step = ~~(1000 / obj.maxLength);
-}
 
 useRafFn(({timestamp}) => {
   if (!$ctx.value) return;
@@ -81,28 +59,32 @@ function render(ctx, timestamp) {
     const x = col.x * fontSize;
     for (const [dy, char] of col.chars.entries()) {
       const y = (col.y - dy) * fontSize;
-      const color = colorDroplet(dy, col);
-      ctx.fillStyle = fmtColor(color);
+      const [r, g, b] = colorDroplet(dy, col);
+      ctx.fillStyle = `rgb(${r},${g},${b}`;
       ctx.fillText(char, x, y);
     }
   }
 }
 
-function lerp(factor, start, end) {
-  const range = end - start;
-  return start + (range * factor);
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+function letter() {
+  return alphabet[Math.floor(rand(0, alphabet.length))];
 }
 
-function lerpColor(factor, start, end) {
-  return [
-    lerp(factor, start[0], end[0]),
-    lerp(factor, start[1], end[1]),
-    lerp(factor, start[2], end[2]),
-  ];
+function rand(min, max) {
+  return min + Math.random() * (max - min);
 }
 
-function fmtColor([r, g, b]) {
-  return `rgb(${r},${g},${b}`;
+function arr(length, fn) {
+  return Array.from({length}, (_, i) => fn(i));
+}
+
+function initRay(obj) {
+  obj.y = 0;
+  obj.chars = [];
+  obj.maxLength = ~~rand(15, 40);
+  obj.next = 0;
+  obj.step = ~~(1000 / obj.maxLength);
 }
 
 function colorDroplet(y, col) {
@@ -123,27 +105,29 @@ function colorDroplet(y, col) {
   return body;
 }
 
-const $container = ref(null);
+function lerpColor(factor, start, end) {
+  return [
+    lerp(factor, start[0], end[0]),
+    lerp(factor, start[1], end[1]),
+    lerp(factor, start[2], end[2]),
+  ];
+}
 
-watchEffect((cleanup) => {
-  const observer = new ResizeObserver(() => {
-  });
-
-});
+function lerp(factor, start, end) {
+  const range = end - start;
+  return start + (range * factor);
+}
 
 useResizeObserver($canvas, (entries) => {
-  if (!$canvas.value || !$container.value) return;
+  if (!$canvas.value) return;
   $canvas.value.width = $canvas.value.clientWidth;
   $canvas.value.height = $canvas.value.clientHeight;
-  console.log('onResize', $canvas.value.width, $canvas.value.height);
   const columnCount = $canvas.value.width / props.fontSize;
   if (columns.length > columnCount) {
     const tooMany = columns.length - columnCount;
-    console.log('Fixing column count', '-', tooMany);
     columns.splice(columns.length - tooMany, tooMany);
   } else if (columns.length < columnCount) {
     const tooFew = columnCount - columns.length;
-    console.log('Fixing column count', '+', tooFew);
     columns.push(...arr(tooFew, x => {
       return {
         x: columns.length + x, y: 0,
@@ -159,7 +143,7 @@ useResizeObserver($canvas, (entries) => {
 </script>
 
 <template>
-  <div class="matrix-shine" ref="$container">
+  <div class="matrix-shine">
     <canvas ref="$canvas" />
   </div>
 </template>
