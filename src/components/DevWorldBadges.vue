@@ -116,13 +116,13 @@ import MatrixShine from "./MatrixShine.vue";
     grid-area: 1/1;
   }
 
-  .inset {
+  & .inset {
     box-shadow: var(--border-glow-inside) 0 0 20px 10px inset;
     border-radius: inherit;
   }
 
-  img {
-    max-width: 100%;
+  & img {
+    width: 100%;
   }
 }
 
