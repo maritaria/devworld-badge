@@ -19,9 +19,8 @@ const state = reactive({
   text: [],
   settled: [],
   settleChance: 0.6,
-  scrambleChance: 0.05,
-  isShrinking: false,
-  isGrowing: false,
+  scrambleChance: 0.04,
+  isScrambling: false,
 });
 
 // 1. Growing / Shrinking
@@ -32,6 +31,7 @@ function init() {
   state.text = ['a'];
   state.settled = [];
   console.log('init', state);
+  state.isScrambling = false;
 }
 
 watch(() => props.text, init, {immediate: true});
@@ -72,12 +72,22 @@ function needsResize(state) {
 
 useIntervalFn(function interval() {
   scramble(state);
-  if (needsResize(state)) {
+  if (state.isScrambling) {
+    if (Math.random() < state.settleChance) {
+      if (state.text.length <= 1) {
+        state.isScrambling = false;
+      } else if (state.settled.length) {
+        state.settled.splice(Math.floor(Math.random() * state.settled.length), 1);
+      } else {
+        state.text.splice(0, 1);
+      }
+    }
+  } else if (needsResize(state)) {
     resize(state);
   } else if (isSettled(state)) {
     console.log('scramble');
     if (Math.random() < state.scrambleChance) {
-      init();
+      state.isScrambling = true;
     }
   } else if (Math.random() < state.settleChance) {
     console.log('settle');
