@@ -1,0 +1,108 @@
+<script setup>
+import {reactive, ref, watch} from "vue";
+import {useIntervalFn} from "@vueuse/core";
+
+const props = defineProps({
+  text: {default: ''},
+  settle: {default: 1000},
+});
+
+const alphabets = [
+  'abcdefghijklmnopqrstuvwxyz',
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  '0123456789',
+  '!@#$%^&*_+-=;:|<>,.?§~',
+];
+
+const state = reactive({
+  target: '',
+  text: [],
+  settled: [],
+  settleChance: 0.6,
+  scrambleChance: 0.05,
+  isShrinking: false,
+  isGrowing: false,
+});
+
+// 1. Growing / Shrinking
+// 2. Settling
+
+function init() {
+  state.target = props.text;
+  state.text = ['a'];
+  state.settled = [];
+  console.log('init', state);
+}
+
+watch(() => props.text, init, {immediate: true});
+
+function isSettled(state) {
+  return state.settled.length >= state.target.length;
+}
+
+function settle(state) {
+  const remaining = state.target.length - state.settled.length;
+  let index = Math.floor(Math.random() * remaining);
+  while (state.settled.includes(index)) {
+    index++;
+  }
+  state.settled.push(index);
+  state.settled.sort((a, b) => a - b);
+}
+
+function scramble(state) {
+  for (let index = 0; index < state.text.length; index++) {
+    const isSettled = state.settled.includes(index);
+    state.text[index] = isSettled ? state.target[index] : (letter() + '​');
+  }
+}
+
+function letter() {
+  const alphabet = pick(alphabets);
+  return pick(alphabet);
+
+  function pick(set) {
+    return set[Math.floor(Math.random() * set.length)];
+  }
+}
+
+function needsResize(state) {
+  return state.text.length !== state.target.length;
+}
+
+useIntervalFn(function interval() {
+  scramble(state);
+  if (needsResize(state)) {
+    resize(state);
+  } else if (isSettled(state)) {
+    console.log('scramble');
+    if (Math.random() < state.scrambleChance) {
+      init();
+    }
+  } else if (Math.random() < state.settleChance) {
+    console.log('settle');
+    settle(state);
+  }
+}, 50);
+
+function resize(state) {
+  if (Math.random() < state.settleChance) {
+    if (state.text.length < state.target.length) {
+      console.log('size+');
+      state.text.push('');
+    } else {
+      console.log('size-');
+      state.text.splice(0, 1);
+    }
+  }
+}
+
+</script>
+
+<template>
+  <span>{{ state.text.join('') }}</span>
+</template>
+
+<style scoped>
+
+</style>

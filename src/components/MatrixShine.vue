@@ -31,11 +31,6 @@ function render(ctx, timestamp) {
   const {fontSize} = props;
   const maxY = Math.floor(canvas.height / fontSize);
 
-  // Clear the canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'currentColor';
-  ctx.font = `bold ${fontSize * 1.2}px monospace`;
-
   // Update columns
   for (const col of columns) {
     if (col.next < timestamp) {
@@ -53,6 +48,10 @@ function render(ctx, timestamp) {
       }
     }
   }
+
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = `bold ${fontSize * 1.2}px monospace`;
 
   // Render
   for (const col of columns) {
@@ -152,7 +151,6 @@ useResizeObserver($canvas, (entries) => {
 .matrix-shine {
   mix-blend-mode: overlay;
   mix-blend-mode: plus-lighter;
-  color: skyblue;
   position: relative;
 }
 

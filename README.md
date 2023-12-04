@@ -1,3 +1,15 @@
+# Card flow
+
+1. Sign up with email address, with terms and conditions.
+2. Fill in name and profile picture
+3. Generate badge
+4. Export to GIF
+5. Share on social media
+
+Important details:
+- Social media video dimensions
+- Social media video share restrictions
+
 # Inspirations
 
 - [Pokemon Cards V1](https://codepen.io/simeydotme/pen/PrQKgo)

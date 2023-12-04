@@ -13,6 +13,7 @@ import GlareReverseHolo from "./components/GlareReverseHolo.vue";
 import DevWorldTicket from "./components/DevWorldTicket.vue";
 import DevWorldNeon from "./components/DevWorldNeon.vue";
 import DevWorldBadges from "./components/DevWorldBadges.vue";
+import DevWorldStandaloneBadge from "./components/DevWorldStandaloneBadge.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -82,77 +83,7 @@ provide('cards.face', selectedFace);
     <h1 id="samples"><a href="#samples">Samples</a></h1>
     <div class="cardlist">
       <div class="cardcase">
-        <h2>Base card</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>V1: Cyan+Magenta</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-          <V1Shine />
-          <V1Sparkle />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>V2: Basic glare</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-          <GlareV2 />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>V3: Rainbow Shine</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-          <ShineRainbow />
-          <GlareV3 />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>Matrix</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-          <MatrixRunes cols="10" rows="12" />
-          <GlareV2 />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>Foil</h2>
-        <CardBase wrap-class="pokemon-card">
-          <img :src="selectedFace" width="734" height="1024">
-          <Foil
-              foil="https://poke-holo.b-cdn.net/foils/swsh12/foils/upscaled/127_foil_holo_reverse_2x.webp"
-              mask="https://poke-holo.b-cdn.net/foils/swsh12/masks/upscaled/127_foil_holo_reverse_2x.webp"
-          />
-          <GlareReverseHolo />
-        </CardBase>
-      </div>
-    </div>
-    <h1 id="devworld-badges"><a href="#devworld-badges">DevWorld (Badges)</a></h1>
-    <DevWorldBadges />
-    <h1 id="devworld"><a href="#devworld">DevWorld</a></h1>
-    <div class="cardlist">
-      <div class="cardcase">
-        <h2>DevWorld</h2>
-        <CardBase>
-          <DevWorldTicket style="width:800px" />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>Black friday</h2>
-        <CardBase>
-          <img src="./assets/doc/twitter-black-friday-sale.jpg">
-          <GlareReverseHolo />
-        </CardBase>
-      </div>
-      <div class="cardcase">
-        <h2>Neon Ticket</h2>
-        <CardBase wrap-class="devworld-ticket">
-          <DevWorldNeon />
-          <GlareReverseHolo />
-        </CardBase>
+        <DevWorldStandaloneBadge />
       </div>
     </div>
     <div style="min-height:100vh"></div>
@@ -186,10 +117,7 @@ provide('cards.face', selectedFace);
   }
 }
 </style>
-
 <style scoped>
-
-
 h1 {
   text-align: center;
   border-top: 2px dotted currentColor;
