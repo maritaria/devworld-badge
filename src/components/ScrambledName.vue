@@ -7,13 +7,6 @@ const props = defineProps({
   settle: {default: 1000},
 });
 
-const alphabets = [
-  'abcdefghijklmnopqrstuvwxyz',
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  '0123456789',
-  '!@#$%^&*_+-=;:|<>,.?§~',
-];
-
 const state = reactive({
   target: '',
   text: [],
@@ -56,6 +49,13 @@ function scramble(state) {
     state.text[index] = isSettled ? state.target[index] : (letter() + '​');
   }
 }
+
+const alphabets = [
+  'abcdefghijklmnopqrstuvwxyz',
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  '0123456789',
+  '!@#$%^&*_+-=;:|<>,.?§~',
+];
 
 function letter() {
   const alphabet = pick(alphabets);
