@@ -4,7 +4,6 @@ import {useIntervalFn} from "@vueuse/core";
 
 const props = defineProps({
   text: {default: ''},
-  settle: {default: 1000},
 });
 
 const state = reactive({
