@@ -22,7 +22,6 @@ function init() {
   state.target = props.text;
   state.text = ['a'];
   state.settled = [];
-  console.log('init', state);
   state.isScrambling = false;
 }
 
@@ -84,12 +83,10 @@ useIntervalFn(function interval() {
   } else if (needsResize(state)) {
     resize(state);
   } else if (isSettled(state)) {
-    console.log('scramble');
     if (Math.random() < state.scrambleChance) {
       state.isScrambling = true;
     }
   } else if (Math.random() < state.settleChance) {
-    console.log('settle');
     settle(state);
   }
 }, 50);
@@ -97,10 +94,8 @@ useIntervalFn(function interval() {
 function resize(state) {
   if (Math.random() < state.settleChance) {
     if (state.text.length < state.target.length) {
-      console.log('size+');
       state.text.push('');
     } else {
-      console.log('size-');
       state.text.splice(0, 1);
     }
   }
