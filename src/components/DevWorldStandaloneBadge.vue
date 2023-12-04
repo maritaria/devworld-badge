@@ -33,7 +33,7 @@ function onPicture(event) {
   <CardBase>
     <div class="dev-world" :class="color">
       <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
-      <div class="inset extra" ref="$inset"></div>
+      <div class="inset extra"></div>
       <Foil :foil="foilUrl" />
       <MatrixShine />
     </div>
@@ -53,7 +53,6 @@ function onPicture(event) {
       Picture:
       <input type="file" accept="image/*" name="picture" @change="onPicture">
     </label>
-
   </form>
 </template>
 
