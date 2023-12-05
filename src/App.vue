@@ -14,6 +14,7 @@ import DevWorldTicket from "./components/DevWorldTicket.vue";
 import DevWorldNeon from "./components/DevWorldNeon.vue";
 import DevWorldBadges from "./components/DevWorldBadges.vue";
 import DevWorldStandaloneBadge from "./components/DevWorldStandaloneBadge.vue";
+import DevWorldReglBadge from "./components/DevWorldReglBadge.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -84,6 +85,9 @@ provide('cards.face', selectedFace);
     <div class="cardlist">
       <div class="cardcase">
         <DevWorldStandaloneBadge />
+      </div>
+      <div class="cardcase">
+        <DevWorldReglBadge />
       </div>
     </div>
     <div style="min-height:100vh"></div>
