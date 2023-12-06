@@ -89,6 +89,9 @@ provide('cards.face', selectedFace);
       <div class="cardcase">
         <DevWorldReglBadge />
       </div>
+      <div class="cardcase">
+        <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">
+      </div>
     </div>
     <div style="min-height:100vh"></div>
   </main>
