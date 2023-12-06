@@ -91,28 +91,27 @@ function makeDrawImage(regl) {
       }
     }
 
-    void main() {
-      gl_FragColor = texture2D(texture, uv);
-
-
-      // Clip rounded rectangle
-      gl_FragColor.a = 1.0;
-
+    float cornerAlpha(vec2 uv, vec2 size) {
+      vec2 localPos = uv * size;
       // uv:
       // [0,0] = top-left
       // [1,1] = bottom-right
-
-      vec2 localPos = uv * size;
-
       vec2 topLeft = localPos;
       vec2 bottomRight = size - localPos;
       vec2 topRight = vec2(bottomRight.x, topLeft.y);
       vec2 bottomLeft = vec2(topLeft.x, bottomRight.y);
+      return (
+        cornerDistance(topLeft, corner)
+        * cornerDistance(bottomRight, corner)
+        * cornerDistance(topRight, corner)
+        * cornerDistance(bottomLeft, corner)
+      );
+    }
 
-      gl_FragColor.a *= cornerDistance(topLeft, corner);
-      gl_FragColor.a *= cornerDistance(bottomRight, corner);
-      gl_FragColor.a *= cornerDistance(topRight, corner);
-      gl_FragColor.a *= cornerDistance(bottomLeft, corner);
+    void main() {
+      gl_FragColor = texture2D(texture, uv);
+      // Create rounded corners using alpha channel
+      gl_FragColor.a *= cornerAlpha(uv, size);
     }`,
     attributes: {
       point: regl.buffer([
