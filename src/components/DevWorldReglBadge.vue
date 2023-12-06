@@ -51,6 +51,10 @@ function loadTexture(regl, src) {
   });
 }
 
+/**
+ * @param {REGL.Regl} regl
+ * @return {REGL.DrawCommand}
+ */
 function makeDrawImage(regl) {
   return regl({
     vert: `
