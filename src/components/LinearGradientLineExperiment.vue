@@ -1,5 +1,8 @@
 <script setup>
 import {reactive, ref, computed, unref} from "vue";
+import {Vec2} from "../Vec2.js";
+import {round, toDegrees, toRadians, wrap} from "../math.js";
+import {linearGradientLength} from "../linear-gradient.js";
 
 /**
  * to bottom = 180deg = (top 0%, bottom 100%) -- default
@@ -8,7 +11,7 @@ import {reactive, ref, computed, unref} from "vue";
  * to right  = 90deg  = (left 0%, right 100%)
  * @type {Ref<UnwrapRef<number>>}
  */
-const angle = ref(-45);
+const angle = ref(-15);
 
 const clearance = ref(100);
 
@@ -17,38 +20,41 @@ const box = reactive({
   height: 200,
 });
 
-const angleDelta = computed(() => fromAngle(angle.value));
-const angleArrow = computed(() => multiply(angleDelta.value, 1000));
+const angleDelta = computed(() => Vec2.fromAngle(angle.value));
+const angleArrow = computed(() => angleDelta.value.multiply(1000));
 const diagonal = computed(() => Math.sqrt(box.width ** 2 + box.height ** 2));
 
 const beta = computed(() => toDegrees(Math.atan2(box.height, box.width)));
-const betaArrow = computed(() => fromAngle(beta.value, 100));
-const theta = computed(() => angle.value - beta.value);
-const thetaArrow = computed(() => fromAngle(beta.value + theta.value, 40));
+const betaArrow = computed(() => Vec2.fromAngle(beta.value, 100));
+const theta = computed(() => wrap(angle.value - beta.value, -180, 180));
+const thetaArrow = computed(() => Vec2.fromAngle(beta.value + theta.value, 40));
 const slope = computed(() => Math.sin(toRadians(theta.value)));
-const length = computed(() => slope.value * diagonal.value);
+const length = computed(() => linearGradientLength(box.width, box.height, angle.value));
 
 function drawArrow(vector, origin, props) {
   vector = unref(vector);
+  origin = Vec2.coerceArgs(unref(origin) ?? 0);
+  const end = origin.add(vector);
   return {
     ...props,
-    x1: origin[0],
-    y1: origin[1],
-    x2: origin[0] + vector[0],
-    y2: origin[1] + vector[1],
+    x1: origin.x,
+    y1: origin.y,
+    x2: end.x,
+    y2: end.y,
   };
 }
 
 const lines = computed(() => [
   drawArrow(angleArrow, [0, 0], {stroke: 'aqua'}),
+  drawArrow(angleArrow.value.multiply(-1), [0, 0], {stroke: 'aqua'}),
   drawArrow(betaArrow, [0, 0], {stroke: 'red'}),
   drawArrow(thetaArrow, [0, 0], {stroke: 'yellow'}),
 
   (() => {
-    const [x1, y1] = [box.width, box.height];
-    const [dx, dy] = fromAngle(angle.value - 90, -length.value);
-    const [x2, y2] = [x1 + dx, y1 + dy];
-    return {x1, y1, x2, y2, stroke: 'lightgreen'};
+    const start = new Vec2(box.width, box.height);
+    const delta = Vec2.fromAngle(angle.value - 90, theta.value > 0 ? -length.value : length.value);
+    const end = start.add(delta);
+    return {x1: start.x, y1: start.y, x2: end.x, y2: end.y, stroke: 'lightgreen'};
   })(),
 ].filter(Boolean));
 
@@ -61,91 +67,14 @@ const debug = computed(() => {
   return {
     width: box.width,
     height: box.height,
-    diagonal: rounded(diagonal.value),
-    angle: rounded(angle.value),
-    beta: rounded(beta.value),
-    theta: rounded(theta.value),
-    slope: rounded(slope.value),
-    length: rounded(length.value),
+    diagonal: round(diagonal.value),
+    angle: round(angle.value),
+    beta: round(beta.value),
+    theta: round(theta.value),
+    slope: round(slope.value),
+    length: round(length.value),
   };
 });
-
-//region Utilities
-
-function toDegrees(radians) {
-  return wrap(radians * 180 / Math.PI, 360);
-}
-
-function toRadians(degrees) {
-  return degrees * Math.PI / 180;
-}
-
-function toAngle([x, y]) {
-  return toDegrees(Math.atan2(y, x));
-}
-
-function rounded(number, decimals = 5) {
-  return parseFloat(number.toFixed(decimals));
-}
-
-function fromAngle(degrees, length = 1) {
-  const radians = toRadians(degrees);
-  return [
-    rounded(Math.cos(radians) * length),
-    rounded(Math.sin(radians) * length),
-  ];
-}
-
-function wrap(value, min, max) {
-  if (max === undefined) {
-    max = min;
-    min = 0;
-  }
-  const range = max - min;
-  const offset = value - min;
-  const wrapped = ((offset % range) + range) % range;
-  return min + wrapped;
-}
-
-function normalize(v) {
-  const [x, y] = (typeof v === 'number') ? [v, v] : v;
-  const length = Math.sqrt(x ** 2 + y ** 2);
-  if (length == 0) return [0, 0];
-  return [
-    x / length,
-    y / length,
-  ];
-}
-
-function multiply(v1, v2) {
-  const [x1, y1] = (typeof v1 === 'number') ? [v1, v1] : v1;
-  const [x2, y2] = (typeof v2 === 'number') ? [v2, v2] : v2;
-  return [
-    x1 * x2,
-    y1 * y2,
-  ];
-}
-
-function add(v1, v2) {
-  const [x1, y1] = (typeof v1 === 'number') ? [v1, v1] : v1;
-  const [x2, y2] = (typeof v2 === 'number') ? [v2, v2] : v2;
-  return [
-    x1 + x2,
-    y1 + y2,
-  ];
-}
-
-function divide(v1, v2) {
-  const [x1, y1] = (typeof v1 === 'number') ? [v1, v1] : v1;
-  const [x2, y2] = (typeof v2 === 'number') ? [v2, v2] : v2;
-  if (x2 == 0 || y2 == 0) throw new TypeError("Divide by zero");
-  return [
-    x1 / x2,
-    y1 / y2,
-  ];
-}
-
-//endregion
 
 const $div = ref(null);
 
@@ -159,23 +88,19 @@ function onMouseMove(event) {
   };
 
   const mouseAngle = Math.atan2(absolute.y, absolute.x);
-  console.log('mouse', ...[absolute.x, absolute.y, toDegrees(mouseAngle)].map(i=>rounded(i, 1)));
   angle.value = toDegrees(mouseAngle);
 }
 
 /** @param {MouseEvent} event */
 function onMouseOut(event) {
-  if (event.target === $div.value)
+  if (event.target !== $div.value) return;
   angle.value = -45;
 }
 
 </script>
 
 <template>
-  <div ref="$div"
-      @mousemove="onMouseMove"
-      @mouseout="onMouseOut"
-  >
+  <div ref="$div" @mousemove="onMouseMove" @mouseout="onMouseOut">
     <svg
         :viewBox="`-${clearance} -${clearance} ${box.width + clearance*2} ${box.height + clearance*2}`"
         :width="`${box.width + clearance * 2}px`"
