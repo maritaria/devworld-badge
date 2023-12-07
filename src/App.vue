@@ -15,6 +15,7 @@ import DevWorldNeon from "./components/DevWorldNeon.vue";
 import DevWorldBadges from "./components/DevWorldBadges.vue";
 import DevWorldStandaloneBadge from "./components/DevWorldStandaloneBadge.vue";
 import ReglBadge from "./components/ReglBadge.vue";
+import LinearGradientLineExperiment from "./components/LinearGradientLineExperiment.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -94,6 +95,8 @@ provide('cards.face', selectedFace);
         <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">
       </div>
     </div>
+    <h2>LinearGradientLineExperiment</h2>
+    <LinearGradientLineExperiment/>
     <div style="min-height:100vh"></div>
   </main>
 </template>
