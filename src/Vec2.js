@@ -30,12 +30,12 @@ Vec2.fromAngle = function fromAngle(degrees, length = 1) {
   );
 }
 
-Vec2.coerceArgs = function (...args) {
-  if (args.length === 0) throw new TypeError('Cannot produce Vec2 from 0 arguments');
-  if (args.length >= 3) throw new TypeError('Cannot produce Vec2 from more than 2 arguments');
-  if (args.length === 2) return new Vec2(...args);
+Vec2.coerceArgs = function (...vector) {
+  if (vector.length === 0) throw new TypeError('Cannot produce Vec2 from 0 arguments');
+  if (vector.length >= 3) throw new TypeError('Cannot produce Vec2 from more than 2 arguments');
+  if (vector.length === 2) return new Vec2(...vector);
 
-  const arg = args[0];
+  const arg = vector[0];
   const type = typeof arg;
   if (type === 'number') {
     return new Vec2(arg);
@@ -71,20 +71,20 @@ Vec2.prototype = {
     return toDegrees(Math.atan2(this.y, this.x));
   },
   // Arithmetic
-  add(...args) {
-    const other = Vec2.coerceArgs(...args);
+  add(...vector) {
+    const other = Vec2.coerceArgs(...vector);
     return new this.constructor(this.x + other.x, this.y + other.y);
   },
-  subtract(...args) {
-    const other = Vec2.coerceArgs(...args);
+  subtract(...vector) {
+    const other = Vec2.coerceArgs(...vector);
     return new this.constructor(this.x - other.x, this.y - other.y);
   },
-  multiply(...args) {
-    const other = Vec2.coerceArgs(...args);
+  multiply(...vector) {
+    const other = Vec2.coerceArgs(...vector);
     return new this.constructor(this.x * other.x, this.y * other.y);
   },
-  divide(...args) {
-    const other = Vec2.coerceArgs(...args);
+  divide(...vector) {
+    const other = Vec2.coerceArgs(...vector);
     return new this.constructor(this.x / other.x, this.y / other.y);
   },
   // Modify
