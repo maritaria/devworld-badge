@@ -1,5 +1,10 @@
 import {round, toDegrees, toRadians} from "./math.js";
 
+/**
+ * @class
+ * @property {number} x
+ * @property {number} y
+ */
 function Vec2(x, y = x) {
   if (typeof x !== 'number') throw new TypeError("Parameter 'x' must be a number");
   if (typeof y !== 'number') throw new TypeError("Parameter 'y' must be a number");
