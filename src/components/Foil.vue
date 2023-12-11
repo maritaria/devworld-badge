@@ -14,24 +14,28 @@ const maskUrl = computed(() => props.mask ? `url(${props.mask})` : undefined);
 
 <style scoped>
 .foil {
+  --layer-1: var(--foil);
+  --layer-2: linear-gradient(
+      -45deg,
+      #000 15%,
+      #fff 50%,
+      #000 85%
+  );
+  --layer-3: radial-gradient(
+      circle at var(--pointer-x) var(--pointer-y),
+      #fff 5%,
+      #000 50%,
+      #fff 80%
+  );
+}
+.foil {
   --mask: v-bind(maskUrl);
   --foil: v-bind(foilUrl);
 
   --foil-brightness: 0.6; /* .card.metal */
   --card-opacity: var(--glare-opacity);
 
-  background-image: radial-gradient(
-      circle at var(--pointer-x) var(--pointer-y),
-      #fff 5%,
-      #000 50%,
-      #fff 80%
-  ),
-  linear-gradient(
-      -45deg,
-      #000 15%,
-      #fff,
-      #000 85%
-  ), var(--foil);
+  background-image: var(--layer-3), var(--layer-2), var(--layer-1);
   background-blend-mode: soft-light, difference;
   background-size: 120% 120%, 200% 200%, cover;
   background-position: center center,
