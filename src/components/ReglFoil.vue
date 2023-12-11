@@ -2,6 +2,7 @@
 import {computed, onMounted, reactive, ref, watch, watchEffect} from "vue";
 import createREGL from 'regl';
 import badgeImg from '../assets/doc/niki-devworld-badge-sample-3.jpg';
+import foilUrl from '../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg';
 import {useRafFn} from "@vueuse/core";
 import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
@@ -14,12 +15,15 @@ onMounted(async () => {
   if (!$canvas.value) throw Error("Missing ref($canvas)");
   const regl = createREGL($canvas.value);
   const badge = await loadTexture(regl, badgeImg);
+  const foil = await loadTexture(regl, foilUrl);
   const drawImage = makeMaskRender(regl);
-  const [width, height] =  remapByWidth([badge.width, badge.height], 400)
-  drawImage({
-    mouse: [0, 0],
-  });
-  render.value = drawImage;
+  const defaultProps = {
+    mouse: [0,0],
+    foil,
+    card: badge,
+  };
+  render.value = (props) => drawImage({...defaultProps, ...props});
+  render.value();
 });
 
 function remapByWidth([width, height], newWidth) {
@@ -78,6 +82,8 @@ function makeMaskRender(regl) {
       uniform vec2 mouse;
       uniform vec2 screen;
       uniform float linearGradientLength;
+      uniform sampler2D foil;
+      uniform sampler2D card;
 
       vec2 findFarthestCorner(vec2 mouse, vec2 ratio) {
         return vec2(
@@ -179,6 +185,56 @@ function makeMaskRender(regl) {
         );
       }
 
+      vec3 difference(vec3 backdrop, vec3 source) {
+        return abs(backdrop - source);
+      }
+
+      vec3 sampleTexture(sampler2D source, vec2 uv, vec2 ratio) {
+        // TODO: pre-scale the foil so it is not as pixelated
+        vec2 foilUV = ((uv * vec2(1.0, -1.0) / ratio) + vec2(1.0)) / 2.0;
+        return texture2D(source, foilUV).rgb;
+      }
+
+      vec3 adjustBrightness(float brightness, vec3 image) {
+        return image * brightness;
+      }
+
+      vec3 adjustContrast(float contrast, vec3 image) {
+        // <feFunc{R,G,B} type="linear" slope="[amount]" intercept="-(0.5 * [amount]) + 0.5"/>
+        // linear -> C' = slope * C + intercept
+        float slope = contrast;
+        float intercept = -(0.5 * contrast) + 0.5;
+        return slope * image + intercept;
+      }
+
+      vec3 adjustSaturation(float s, vec3 image) {
+        // <feColorMatrix type="saturate" values="[amount]"/>
+        mat3 matrix = mat3(
+        0.213 + 0.787*s, 0.715 - 0.715*s, 0.072 - 0.072*s,
+        0.213 - 0.213*s, 0.715 + 0.285*s, 0.072 - 0.072*s,
+        0.213 - 0.213*s, 0.715 - 0.715*s, 0.072 + 0.928*s
+        );
+        return image * matrix;
+      }
+
+      float colorDodge(float backdrop, float source) {
+        // https://drafts.fxtf.org/compositing/#valdef-blend-mode-color-dodge
+        if (backdrop == 0.0)
+        return 0.0;
+        else if (source >= 1.0)
+        return 1.0;
+        else
+        return min(1.0, backdrop / (1.0 - source));
+      }
+
+      vec3 colorDodge(vec3 backdrop, vec3 source) {
+        return vec3(
+        colorDodge(backdrop.r, source.r),
+        colorDodge(backdrop.g, source.g),
+        colorDodge(backdrop.b, source.b)
+        );
+      }
+
       void main() {
         // Shadow variables to make them mutable
         vec2 uv = uv;
@@ -186,19 +242,31 @@ function makeMaskRender(regl) {
 
         // Adjust uv and mouse so the [-1, 1] ranges are now ratio aware and [-1, 1] matches the longest side
         vec2 ratio = vec2(
-          min(1.0, screen.x / screen.y),
-          min(1.0, screen.y / screen.x)
+        min(1.0, screen.x / screen.y),
+        min(1.0, screen.y / screen.x)
         );
         uv *= ratio;
         mouse *= ratio;
 
-        vec3 gradient = radialGradient(uv, mouse, ratio);
+        // background-*:
 
-        vec3 linear = linearGradient(uv, mouse, ratio, linearGradientLength);
+        vec3 layer3 = radialGradient(uv, mouse, ratio);
+        vec3 layer2 = linearGradient(uv, mouse, ratio, linearGradientLength);
+        vec3 layer1 = sampleTexture(foil, uv, ratio);
 
-        vec3 combined = softLight(linear, gradient);
+        vec3 combine23 = softLight(layer2, layer3);
+        vec3 combine12 = difference(layer1, layer2);
 
-        gl_FragColor = vec4(combined, 1);
+        vec3 background = softLight(difference(layer1, layer2), layer3);
+
+        // filter: brightness(0.6) contrast(1.5) saturate(1);
+        vec3 filtered = adjustSaturation(1.0, adjustContrast(1.5, adjustBrightness(0.6, background)));
+
+        // mix-blend-mode: dodge
+        vec3 base = sampleTexture(card, uv, ratio);
+        vec3 dodged = colorDodge(base, filtered);
+
+        gl_FragColor = vec4(dodged, 1);
       }
     `,
     attributes: {
@@ -223,6 +291,8 @@ function makeMaskRender(regl) {
         return relativeLength;
       },
       mouse: regl.prop('mouse'), // Position of mouse as [-1, 1] for x and y.
+      foil: regl.prop('foil'),
+      card: regl.prop('card'),
     },
     count: 3,
   });
