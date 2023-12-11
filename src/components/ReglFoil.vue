@@ -1,9 +1,8 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch, watchEffect} from "vue";
+import {onMounted, reactive, ref, watchEffect} from "vue";
 import createREGL from 'regl';
 import badgeImg from '../assets/doc/niki-devworld-badge-sample-3.jpg';
 import foilUrl from '../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg';
-import {useRafFn} from "@vueuse/core";
 import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
 
@@ -282,13 +281,8 @@ function makeMaskRender(regl) {
       linearGradientLength: function (context, props) {
         const angle = -45;
         const length = linearGradientLength(context.viewportWidth, context.viewportHeight, angle);
-        const diagonal = new Vec2(context.viewportWidth, context.viewportHeight).length;
-        const ratio = length / diagonal;
-        console.log('linearGradientLength', context.viewportWidth, context.viewportHeight, angle, '->', length);
-        console.log('ratio', length, diagonal, ratio, 1/ratio);
-        const relativeLength = length / Math.max(context.viewportWidth, context.viewportHeight);
-        console.log('relativeLength', relativeLength);
-        return relativeLength;
+        // Define the gradient length as [0,1] relative to the longest side.
+        return length / Math.max(context.viewportWidth, context.viewportHeight);
       },
       mouse: regl.prop('mouse'), // Position of mouse as [-1, 1] for x and y.
       foil: regl.prop('foil'),
