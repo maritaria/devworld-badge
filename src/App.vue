@@ -101,7 +101,7 @@ provide('cards.face', selectedFace);
       </div>
     </div>
     <h2>LinearGradientLineExperiment</h2>
-    <LinearGradientLineExperiment/>
+    <LinearGradientLineExperiment />
     <div style="min-height:100vh"></div>
   </main>
 </template>
