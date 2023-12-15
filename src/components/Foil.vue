@@ -28,6 +28,14 @@ const maskUrl = computed(() => props.mask ? `url(${props.mask})` : undefined);
       #fff 80%
   );
 }
+
+.foil.debug:not(.layer-1) {--layer-1: none;}
+.foil.debug:not(.layer-2) {--layer-2: none;}
+.foil.debug:not(.layer-3) {--layer-3: none;}
+.foil.debug:not(.filter) { filter: unset; }
+.foil.debug:not(.blend) {mix-blend-mode: unset;}
+.foil.debug:not(.opacity) {opacity: unset;}
+
 .foil {
   --mask: v-bind(maskUrl);
   --foil: v-bind(foilUrl);
