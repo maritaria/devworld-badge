@@ -57,32 +57,36 @@ provide('cards.face', selectedFace);
 
 <template>
   <main id="app" ref="$app">
-    <h1 id="settings"><a href="#settings">Settings</a></h1>
-    <form style="margin-bottom:30px" id="settings">
-      <fieldset name="pointerLogicGroup">
-        <legend>Tilt all cards</legend>
-        <label>
-          <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
-          Tilt on hover
-        </label>
-        <label>
-          <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
-          Tilt with fixed position
-        </label>
-        <label>
-          <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
-          Tilt with circle pattern
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Card face</legend>
-        <select v-model="selectedFace">
-          <option v-for="face in faces" :value="face.url">
-            {{ face.label }}
-          </option>
-        </select>
-      </fieldset>
-    </form>
+    <details>
+      <summary>
+        <h1 id="settings">Settings</h1>
+      </summary>
+      <form style="margin-bottom:30px" id="settings">
+        <fieldset name="pointerLogicGroup">
+          <legend>Tilt all cards</legend>
+          <label>
+            <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
+            Tilt on hover
+          </label>
+          <label>
+            <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
+            Tilt with fixed position
+          </label>
+          <label>
+            <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
+            Tilt with circle pattern
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Card face</legend>
+          <select v-model="selectedFace">
+            <option v-for="face in faces" :value="face.url">
+              {{ face.label }}
+            </option>
+          </select>
+        </fieldset>
+      </form>
+    </details>
     <h1 id="samples"><a href="#samples">Samples</a></h1>
     <div class="cardlist">
       <div class="cardcase">
@@ -159,4 +163,9 @@ img {
   border-radius: 50px;
   overflow: hidden;
 }
+
+summary {
+  display: block;
+}
+
 </style>
