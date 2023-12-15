@@ -17,6 +17,7 @@ import DevWorldStandaloneBadge from "./components/DevWorldStandaloneBadge.vue";
 import ReglBadge from "./components/ReglBadge.vue";
 import ReglFoil from "./components/ReglFoil.vue";
 import LinearGradientLineExperiment from "./components/LinearGradientLineExperiment.vue";
+import ReglBoxShadow from "./components/ReglBoxShadow.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -91,6 +92,10 @@ provide('cards.face', selectedFace);
     <div class="cardlist">
       <div class="cardcase">
         <DevWorldStandaloneBadge />
+      </div>
+      <div class="cardcase">
+        <h2>ReglBoxShadow</h2>
+        <ReglBoxShadow />
       </div>
       <div class="cardcase">
         <h2>ReglFoil</h2>
