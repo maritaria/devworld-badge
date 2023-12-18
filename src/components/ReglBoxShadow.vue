@@ -7,6 +7,7 @@ import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
 
 const $canvas = ref(null);
+const size = reactive({ width: 400 * 2, height: 564 * 2 });
 
 const render = ref(null);
 
@@ -115,30 +116,26 @@ function makeShadowRender(regl) {
       }
 
       vec3 insetBoxShadow(vec2 pos, vec2 topleft, vec2 bottomright, float cornerRadius, vec3 shadow_color) {
-        const float blurRadius = 20.0;
-        const float blurSpread = 10.0;
+        const float factor = 2.0;
+        const float blurRadius = 20.0 * factor;
+        const float blurSpread = 10.0 * factor;
         vec3 color_inside = BLACK;
         vec3 color_outside = shadow_color;
 
         // Gaussian blur - https://www.shadertoy.com/view/XdfGDH
         float sigma = blurRadius / 2.0;
         const int mSize = int(blurRadius);
-        const int kSize = (mSize-1)/2;
+        const int kSize = mSize / 2;
 
         // 1. Create the 1D kernel
-        float kernel[mSize];
+        float kernel[mSize+1];
         for (int x = 0; x <= kSize; ++x) {
           kernel[kSize+x] = kernel[kSize-x] = normpdf(float(x), sigma);
         }
 
-        // Get the normalization factor (as the gaussian has been clamped)
-        float Z = 0.0;
-        for (int j = 0; j < mSize; ++j) {
-          Z += kernel[j];
-        }
-
         // Run the kernel
         vec3 result = vec3(0.0);
+        float Z = 0.0;
         for (int x = -kSize; x <= kSize; ++x) {
           for (int y = -kSize; y <= kSize; ++y) {
             // Use the distance function to determine the colors being mixed.
@@ -150,10 +147,12 @@ function makeShadowRender(regl) {
             vec3 cell_color = mix(color_inside, color_outside, cell_mix);
             // Sum using kernel factors
             result += kernel[kSize+y] * kernel[kSize+x] * cell_color;
+            // Track the normalization factor
+            Z += kernel[kSize+y] * kernel[kSize+x];
           }
         }
         // Normalize the value range
-        result /= Z * Z;
+        result /= Z;
         return result;
       }
 
@@ -167,9 +166,7 @@ function makeShadowRender(regl) {
 
         // Get the starting color
         vec3 background = texture2D(base, uvNorm).rgb;
-        // Compute distance to shape edge, negative is inside
-        float distance = shape(pixel, ZERO, screen, cornerRadius);
-        gl_FragColor = vec4(background, clamp(-distance, 0.0, 1.0));
+        gl_FragColor.rgb = background;
 
         // --border-glow-inside: deepskyblue; // .dev-world.blue
         // box-shadow: var(--border-glow-inside) 0 0 20px 10px inset;
@@ -177,7 +174,10 @@ function makeShadowRender(regl) {
         vec3 boxShadow = insetBoxShadow(pixel, ZERO, screen, cornerRadius, deepskyblue);
 
         // Additive blend over the base
-        gl_FragColor += vec4(boxShadow, 0.0);
+        gl_FragColor.rgb += boxShadow;
+
+        // Force alpha channel
+        gl_FragColor.a = 1.0;
       }
     `,
     attributes: {
@@ -196,11 +196,10 @@ function makeShadowRender(regl) {
     count: 3,
   });
 }
-
 </script>
 
 <template>
-  <canvas ref="$canvas" width="400" height="564" />
+  <canvas ref="$canvas" :width="size.width" :height="size.height" />
 </template>
 
 <style scoped>
