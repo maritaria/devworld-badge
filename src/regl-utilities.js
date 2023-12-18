@@ -2,9 +2,10 @@
 /**
  * @param {REGL.Regl} regl
  * @param {string} src
+ * @param {REGL.Texture2DOptions} extra
  * @return {Promise<REGL.Texture2D>}
  */
-export function loadTexture(regl, src) {
+export function loadTexture(regl, src, extra = {}) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = src;
@@ -13,6 +14,7 @@ export function loadTexture(regl, src) {
         data: img,
         min: 'linear',
         mag: 'linear',
+        ...extra,
       }));
     };
     img.onerror = (event, source, lineno, colno, cause) => {
