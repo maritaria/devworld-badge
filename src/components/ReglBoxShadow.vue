@@ -9,8 +9,6 @@ import {Vec2} from "../Vec2.js";
 const $canvas = ref(null);
 const size = reactive({ width: 400 * 2, height: 564 * 2 });
 
-const render = ref(null);
-
 onMounted(async () => {
   if (!$canvas.value) throw Error("Missing ref($canvas)");
   const regl = createREGL($canvas.value);
