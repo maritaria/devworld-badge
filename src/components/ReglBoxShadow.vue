@@ -5,6 +5,7 @@ import badgeImg from '../assets/doc/niki-devworld-badge-sample-3.jpg';
 import foilUrl from '../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg';
 import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
+import {loadTexture} from "../regl-utilities.js";
 
 const $canvas = ref(null);
 const size = reactive({ width: 400 * 2, height: 564 * 2 });
@@ -16,30 +17,6 @@ onMounted(async () => {
   const drawImage = makeShadowRender(regl);
   drawImage({base, cornerRadius: 30});
 });
-
-/**
- * @param {REGL.Regl} regl
- * @param src
- * @return {Promise<REGL.Texture2D>}
- */
-function loadTexture(regl, src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      resolve(regl.texture({
-        data: img,
-        min: 'linear',
-        mag: 'linear',
-      }));
-    };
-    img.onerror = (event, source, lineno, colno, cause) => {
-      const error = new Error("Image failed to load");
-      error.cause = cause;
-      reject(error);
-    };
-  });
-}
 
 /**
  * @param {REGL.Regl} regl
