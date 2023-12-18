@@ -17,14 +17,6 @@ onMounted(async () => {
   drawImage({base, cornerRadius: 30});
 });
 
-function remapByWidth([width, height], newWidth) {
-  const multiplier = newWidth / width;
-  return [
-    newWidth,
-    height * multiplier,
-  ];
-}
-
 /**
  * @param {REGL.Regl} regl
  * @param src
