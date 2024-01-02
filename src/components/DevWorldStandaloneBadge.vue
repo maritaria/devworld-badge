@@ -97,7 +97,7 @@ img {
 
   display: grid;
 
-  box-shadow: var(--border-glow-outside) 0 0 20px 3px, var(--border-glow-outside-extra) 0 0 2px 3px;
+  //box-shadow: var(--border-glow-outside) 0 0 20px 3px, var(--border-glow-outside-extra) 0 0 2px 3px;
   overflow: hidden;
   border-radius: 7.5% / 5.32%;
 

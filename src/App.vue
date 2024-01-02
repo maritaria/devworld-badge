@@ -19,6 +19,8 @@ import ReglFoil from "./components/ReglFoil.vue";
 import LinearGradientLineExperiment from "./components/LinearGradientLineExperiment.vue";
 import ReglBoxShadow from "./components/ReglBoxShadow.vue";
 import ReglLayeringTest from "./components/ReglLayeringTest.vue";
+import ReglTiltedCard from "./components/ReglTiltedCard.vue";
+import ReglCube from "./components/ReglCube.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -39,11 +41,8 @@ const tilt = computed(() => {
   return null;
 });
 
-const $app = ref(null);
 watchEffect(() => {
-  if ($app.value) {
-    applyTilt($app.value, tilt.value);
-  }
+  applyTilt(window.app, tilt.value);
 });
 
 const faces = [
@@ -58,66 +57,72 @@ provide('cards.face', selectedFace);
 </script>
 
 <template>
-  <main id="app" ref="$app">
-    <details>
-      <summary>
-        <h1 id="settings">Settings</h1>
-      </summary>
-      <form style="margin-bottom:30px" id="settings">
-        <fieldset name="pointerLogicGroup">
-          <legend>Tilt all cards</legend>
-          <label>
-            <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
-            Tilt on hover
-          </label>
-          <label>
-            <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
-            Tilt with fixed position
-          </label>
-          <label>
-            <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
-            Tilt with circle pattern
-          </label>
-        </fieldset>
-        <fieldset>
-          <legend>Card face</legend>
-          <select v-model="selectedFace">
-            <option v-for="face in faces" :value="face.url">
-              {{ face.label }}
-            </option>
-          </select>
-        </fieldset>
-      </form>
-    </details>
-    <h1 id="samples"><a href="#samples">Samples</a></h1>
-    <div class="cardlist">
-      <div class="cardcase">
-        <DevWorldStandaloneBadge />
-      </div>
-      <div class="cardcase">
-        <h2>ReglLayeringTest</h2>
-        <ReglLayeringTest />
-      </div>
-      <div class="cardcase">
-        <h2>ReglBoxShadow</h2>
-        <ReglBoxShadow />
-      </div>
-      <div class="cardcase">
-        <h2>ReglFoil</h2>
-        <ReglFoil />
-      </div>
-      <div class="cardcase">
-        <h2>ReglBadge</h2>
-        <ReglBadge />
-      </div>
-      <div class="cardcase">
-        <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">
-      </div>
-    </div>
-    <h2>LinearGradientLineExperiment</h2>
-    <LinearGradientLineExperiment />
-    <div style="min-height:100vh"></div>
-  </main>
+  <details>
+    <summary>
+      <h1 id="settings">Settings</h1>
+    </summary>
+    <form style="margin-bottom:30px" id="settings">
+      <fieldset name="pointerLogicGroup">
+        <legend>Tilt all cards</legend>
+        <label>
+          <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
+          Tilt on hover
+        </label>
+        <label>
+          <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
+          Tilt with fixed position
+        </label>
+        <label>
+          <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
+          Tilt with circle pattern
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Card face</legend>
+        <select v-model="selectedFace">
+          <option v-for="face in faces" :value="face.url">
+            {{ face.label }}
+          </option>
+        </select>
+      </fieldset>
+    </form>
+  </details>
+  <h1 id="samples"><a href="#samples">Samples</a></h1>
+  <div class="cardlist">
+    <!--      <div class="cardcase">-->
+    <!--        <DevWorldStandaloneBadge />-->
+    <!--      </div>-->
+          <div class="cardcase">
+            <h2>ReglCube</h2>
+            <ReglCube />
+          </div>
+          <div class="cardcase">
+            <h2>ReglTiltedCard</h2>
+            <ReglTiltedCard />
+          </div>
+<!--          <div class="cardcase">-->
+<!--            <h2>ReglLayeringTest</h2>-->
+<!--            <ReglLayeringTest />-->
+<!--          </div>-->
+<!--          <div class="cardcase">-->
+<!--            <h2>ReglBoxShadow</h2>-->
+<!--            <ReglBoxShadow />-->
+<!--          </div>-->
+<!--    <div class="cardcase">-->
+<!--      <h2>ReglFoil</h2>-->
+<!--      <ReglFoil />-->
+<!--    </div>-->
+    <!--      <div class="cardcase">-->
+    <!--        <h2>ReglBadge</h2>-->
+    <!--        <ReglBadge />-->
+    <!--      </div>-->
+<!--    <div class="cardcase">-->
+<!--      <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">-->
+<!--    </div>-->
+  </div>
+  <!--    <h2>LinearGradientLineExperiment</h2>-->
+  <!--    <LinearGradientLineExperiment />-->
+  <div style="min-height:100vh"></div>
 </template>
 
 <style>
