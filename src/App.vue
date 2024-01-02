@@ -21,6 +21,7 @@ import ReglBoxShadow from "./components/ReglBoxShadow.vue";
 import ReglLayeringTest from "./components/ReglLayeringTest.vue";
 import ReglTiltedCard from "./components/ReglTiltedCard.vue";
 import ReglCube from "./components/ReglCube.vue";
+import ReglRecorder from "./components/ReglRecorder.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -99,6 +100,10 @@ provide('cards.face', selectedFace);
           <div class="cardcase">
             <h2>ReglTiltedCard</h2>
             <ReglTiltedCard />
+          </div>
+          <div class="cardcase">
+            <h2>Recorder</h2>
+            <ReglRecorder />
           </div>
 <!--          <div class="cardcase">-->
 <!--            <h2>ReglLayeringTest</h2>-->
