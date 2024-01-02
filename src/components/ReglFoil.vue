@@ -17,7 +17,7 @@ onMounted(async () => {
   const foil = await loadTexture(regl, foilUrl);
   const drawImage = makeMaskRender(regl);
   const defaultProps = {
-    mouse: [0,0],
+    mouse: [0, 0],
     foil,
     card: badge,
   };
@@ -28,8 +28,8 @@ onMounted(async () => {
 function remapByWidth([width, height], newWidth) {
   const multiplier = newWidth / width;
   return [
-      newWidth,
-      height * multiplier,
+    newWidth,
+    height * multiplier,
   ];
 }
 
@@ -66,13 +66,13 @@ function makeMaskRender(regl) {
   return regl({
     // language=GLSL
     vert: `
-    precision highp float;
-    attribute vec2 position;
-    varying vec2 uv;
-    void main() {
-      gl_Position = vec4(position, 0, 1);
-      uv = position;
-    }
+      precision highp float;
+      attribute vec2 position;
+      varying vec2 uv;
+      void main() {
+        gl_Position = vec4(position, 0, 1);
+        uv = position;
+      }
     `,
     // language=GLSL
     frag: `
@@ -324,7 +324,12 @@ watchEffect(() => {
 </script>
 
 <template>
-  <canvas ref="$canvas" width="400" height="564" @mousemove="onMouseMove" @mouseleave="onMouseLeave" />
+  <canvas
+      ref="$canvas"
+      width="400" height="564"
+      @mousemove="onMouseMove"
+      @pointermove.capture="onMouseMove"
+  />
 </template>
 
 <style scoped>
