@@ -6,15 +6,18 @@ import {linearGradientLength} from "../linear-gradient.js";
 import badgeImg from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import maskUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 import {Vec2} from "../Vec2.js";
+import {clamp} from "@vueuse/core";
+
+const pxRatio = window.devicePixelRatio;
 
 const $canvas = ref(null);
 const size = reactive({width: 400 * 1, height: 564 * 1});
 const rsize = computed(() => ({
-  width: size.width * window.devicePixelRatio,
-  height: size.height * window.devicePixelRatio,
+  width: size.width * pxRatio,
+  height: size.height * pxRatio,
 }));
 
-const mouse = reactive({x: 0, y: 0});
+const mouse = reactive({x: 0.5, y: 0.5});
 const render = ref(() => {});
 
 // language=GLSL
@@ -35,8 +38,8 @@ const VERTEX_SHADER_POSITION_WITH_UV = `
 function adjustCanvasSize(canvas, width, height) {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
-  canvas.width = width * window.devicePixelRatio;
-  canvas.height = height * window.devicePixelRatio;
+  canvas.width = width * pxRatio;
+  canvas.height = height * pxRatio;
 }
 
 onMounted(async () => {
@@ -44,7 +47,14 @@ onMounted(async () => {
 
   adjustCanvasSize($canvas.value, size.width, size.height);
 
-  const regl = createREGL($canvas.value);
+  const regl = createREGL({
+    canvas: $canvas.value,
+    attributes: {
+      alpha: true,
+      premultiplyAlpha: false,
+      powerPreference: 'high-performance',
+    },
+  });
   const badge = await loadTexture(regl, badgeImg);
   const mask = await loadTexture(regl, maskUrl, {flipY: true});
   const layers = [];
@@ -58,23 +68,21 @@ onMounted(async () => {
   const stage2 = regl.framebuffer(rsize.value.width, rsize.value.height);
   const withTarget = regl({framebuffer: regl.prop('target')});
 
-  const attachMouse = regl({
-    context: {
-      mouse: (_, props) => props?.mouse ?? [0, 0],
-    },
+  // TODO: Make this faster, precompute the blur mask outside of GPU.
+  // TODO: Handle context loss (for mobile)
+  // TODO: Pre-bake the neon fade, to skip rendering it on the GPU at all.
+  // TODO: Render blur using svg inlining trick
+  // TODO: Offset mouse point using device sensors
+  withTarget({target: stage1}, () => {
+    regl.clear({depth: 1});
+    drawImage({image: badge});
+    drawShadow({cornerRadius: 30 * pxRatio});
   });
 
   render.value = (props) => {
-    attachMouse(props, () => {
-      regl.clear({depth: 1});
-      withTarget({target:stage1}, () => {
-        regl.clear({depth: 1});
-        drawImage({image: badge});
-        drawShadow({cornerRadius: 30 * window.devicePixelRatio});
-      });
-      drawFoil({card: stage1, mask});
-      drawCorners({cornerRadius: 30 * window.devicePixelRatio});
-    });
+    regl.clear({depth: 1});
+    drawFoil({card: stage1, mask, mouse: props?.mouse ?? [1, 1]});
+    drawCorners({cornerRadius: 30 * pxRatio});
   };
   render.value();
 });
@@ -195,7 +203,7 @@ function makeShadowRenderer(regl) {
       }
 
       vec3 insetBoxShadow(vec2 pos, vec2 topleft, vec2 bottomright, float cornerRadius, vec3 shadow_color) {
-        const float factor = ${window.devicePixelRatio.toFixed(1)};
+        const float factor = ${pxRatio.toFixed(1)};
         const float blurRadius = 20.0 * factor;
         const float blurSpread = 10.0 * factor;
 
@@ -276,7 +284,7 @@ function makeFoilRenderer(regl) {
       screen: (context, props) => [context.viewportWidth, context.viewportHeight],
       card: regl.prop('card'),
       foil: regl.prop('mask'),
-      mouse: regl.context('mouse'),
+      mouse: regl.prop('mouse'),
       linearGradientLength: function (context) {
         const angle = -45;
         const length = linearGradientLength(context.viewportWidth, context.viewportHeight, angle);
@@ -563,7 +571,7 @@ function makeCornerRenderer(regl) {
 
       void main() {
         // uv: [0..1] in viewport space
-        vec2 uv = uv * vec2(1,-1) / 2.0 + 0.5;
+        vec2 uv = uv * vec2(1, -1) / 2.0 + 0.5;
         vec2 pixel = uv * screen;
         float distance = shape(pixel, vec2(0), screen, cornerRadius);
         gl_FragColor = vec4(1);
@@ -576,31 +584,31 @@ function makeCornerRenderer(regl) {
 
 function onMouseMove(event) {
   const rect = event.target.getBoundingClientRect();
-  mouse.x = event.clientX - rect.left;
-  mouse.y = event.clientY - rect.top;
+  mouse.x = clamp((event.clientX - rect.left) / size.width, 0, 1);
+  mouse.y = clamp((event.clientY - rect.top) / size.height, 0, 1);
 }
 
 function onMouseLeave(event) {
-  mouse.x = size.width / 2;
-  mouse.y = size.height / 2;
+  mouse.x = 0.5;
+  mouse.y = 0.5;
 }
 
 watchEffect(() => {
   if (!render.value) return;
-
-  const m = new Vec2(mouse.x, mouse.y);
-  const m2 = m.divide(size.width, size.height);
-  const m3 = m2.multiply(2).subtract(1);
-  render.value({mouse: [m3.x, -m3.y]});
-  applyTilt(window.app, m2.multiply(100).round(1));
+  const pos = new Vec2(mouse.x, mouse.y);
+  const posViewSpace = pos.multiply(2).subtract(1);
+  render.value({mouse: [posViewSpace.x, -posViewSpace.y]});
+  applyTilt(window.app, pos.multiply(100).round(1));
 });
 
 </script>
 
 <template>
-  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" />
+  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" @pointermove.capture="onMouseMove" />
 </template>
 
 <style scoped>
-
+canvas {
+  touch-action: none;
+}
 </style>
