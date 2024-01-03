@@ -117,5 +117,4 @@ function makePanelRenderer(regl) {
 canvas {
   touch-action: none;
 }
-
 </style>
