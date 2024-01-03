@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
 import {mat4, quat, vec3} from "gl-matrix";
-import {initCanvas, loadTexture} from "../regl-utilities.js";
+import {initCanvas, loadTexture} from "../regl/utilities.js";
 import {elements, position, uv} from "../card.data.js";
 import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
 import Slider from "./Slider.vue";

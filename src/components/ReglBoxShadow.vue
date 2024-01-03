@@ -5,7 +5,7 @@ import badgeImg from '../assets/doc/niki-devworld-badge-sample-3.jpg';
 import foilUrl from '../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg';
 import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
-import {loadTexture} from "../regl-utilities.js";
+import {loadTexture} from "../regl/utilities.js";
 
 const $canvas = ref(null);
 const size = reactive({ width: 400 * 2, height: 564 * 2 });

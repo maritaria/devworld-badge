@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, reactive, ref, watchEffect} from "vue";
 import createREGL from "regl";
-import {loadTexture} from "../regl-utilities.js";
+import {loadTexture} from "../regl/utilities.js";
 import {linearGradientLength} from "../linear-gradient.js";
 import badgeImg from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import maskUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";

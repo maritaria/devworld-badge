@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted, watchEffect, reactive} from "vue";
 import createREGL from "regl";
-import {loadTexture} from "../regl-utilities.js";
+import {loadTexture} from "../regl/utilities.js";
 import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
 
 const $canvas = ref(null);
