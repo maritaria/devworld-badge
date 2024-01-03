@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "cp src/gl-matrix.d.ts node_modules/gl-matrix/index.d.ts"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
@@ -16,6 +17,6 @@
     "@vueuse/core": "^10.6.1",
     "gl-matrix": "^3.4.3",
     "regl": "^2.1.0",
-    "vue": "^3.3.9"
+    "vue": "^3.4.0"
   }
 }

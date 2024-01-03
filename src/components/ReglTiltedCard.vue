@@ -4,9 +4,8 @@ import createREGL from "regl";
 import {loadTexture} from "../regl-utilities.js";
 import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import {chunk} from "../array.chunk.js";
-import * as mat4 from "../mat4.js";
 import {toRadians} from "../math.js";
-import {vec4} from "gl-matrix";
+import {vec4, mat4} from "gl-matrix";
 
 const $canvas = ref(null);
 const render = ref(() => {
