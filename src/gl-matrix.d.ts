@@ -1206,11 +1206,11 @@ declare module "gl-matrix" {
      *
      * @param {Mat4} out mat4 receiving operation result
      * @param {Quat4} q Rotation quaternion
-     * @param {ReadonlyVec3} v Translation vector
+     * @param {ReadonlyVec3} t Translation vector
      * @param {ReadonlyVec3} s Scaling vector
      * @returns {Mat4} out
      */
-    export function fromRotationTranslationScale(out: Mat4, q: any, v: ReadonlyVec3, s: ReadonlyVec3): Mat4;
+    export function fromRotationTranslationScale(out: Mat4, q: Quat, t: ReadonlyVec3, s: ReadonlyVec3): Mat4;
     /**
      * Creates a matrix from a quaternion rotation, vector translation and vector scale, rotating and scaling around the given origin
      * This is equivalent to (but much faster than):
@@ -1226,12 +1226,12 @@ declare module "gl-matrix" {
      *
      * @param {Mat4} out mat4 receiving operation result
      * @param {Quat4} q Rotation quaternion
-     * @param {ReadonlyVec3} v Translation vector
+     * @param {ReadonlyVec3} t Translation vector
      * @param {ReadonlyVec3} s Scaling vector
      * @param {ReadonlyVec3} o The origin vector around which to scale and rotate
      * @returns {Mat4} out
      */
-    export function fromRotationTranslationScaleOrigin(out: Mat4, q: Quat, v: ReadonlyVec3, s: ReadonlyVec3, o: ReadonlyVec3): Mat4;
+    export function fromRotationTranslationScaleOrigin(out: Mat4, q: Quat, t: ReadonlyVec3, s: ReadonlyVec3, o: ReadonlyVec3): Mat4;
     /**
      * Calculates a 4x4 matrix from the given quaternion
      *
@@ -2379,13 +2379,13 @@ declare module "gl-matrix" {
      * Creates a quaternion from the given euler angle x, y, z.
      *
      * @param {Quat} out the receiving quaternion
-     * @param {x} Angle to rotate around X axis in degrees.
-     * @param {y} Angle to rotate around Y axis in degrees.
-     * @param {z} Angle to rotate around Z axis in degrees.
+     * @param {number} x Angle to rotate around X axis in degrees.
+     * @param {number} y Angle to rotate around Y axis in degrees.
+     * @param {number} z Angle to rotate around Z axis in degrees.
      * @returns {Quat} out
      * @function
      */
-    export function fromEuler(out: Quat, x: any, y: any, z: any): Quat;
+    export function fromEuler(out: Quat, x: number, y: number, z: number): Quat;
     /**
      * Returns a string representation of a quatenion
      *
