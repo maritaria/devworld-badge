@@ -19,7 +19,7 @@ import ReglFoil from "./components/ReglFoil.vue";
 import LinearGradientLineExperiment from "./components/LinearGradientLineExperiment.vue";
 import ReglBoxShadow from "./components/ReglBoxShadow.vue";
 import ReglLayeringTest from "./components/ReglLayeringTest.vue";
-import ReglTiltedCard from "./components/ReglTiltedCard.vue";
+import ReglTiltedPanel from "./components/ReglTiltedPanel.vue";
 import ReglCube from "./components/ReglCube.vue";
 import ReglRecorder from "./components/ReglRecorder.vue";
 
@@ -98,8 +98,8 @@ provide('cards.face', selectedFace);
             <ReglCube />
           </div>
           <div class="cardcase">
-            <h2>ReglTiltedCard</h2>
-            <ReglTiltedCard />
+            <h2>ReglTiltedPanel</h2>
+            <ReglTiltedPanel />
           </div>
           <div class="cardcase">
             <h2>Recorder</h2>
