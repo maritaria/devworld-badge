@@ -7,6 +7,7 @@ import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
 import Slider from "./Slider.vue";
 import {Vec2} from "../Vec2.js";
 import {useMousePosition} from "../vue-utilities.js";
+import {makeTiltedPanelRenderer} from "../regl/tilted-panel-renderer.js";
 
 const $settings = reactive({
   canvas: {width: 400, height: 500},
@@ -23,7 +24,7 @@ onMounted(async () => {
   if (!$canvas.value) throw new Error('Missing $canvas');
   const regl = initCanvas($canvas.value, $settings.canvas);
   const texture = await loadTexture(regl, textureUrl);
-  const drawPanel = makePanelRenderer(regl);
+  const drawPanel = makeTiltedPanelRenderer(regl);
 
   regl.frame(function renderFrame() {
     regl.clear({color: [0, 0, 0, 255], depth: 1});
@@ -45,64 +46,6 @@ function useCardTilt(mouse) {
       x: tilt.y / 2,
       y: tilt.x / 1.5,
     };
-  });
-}
-
-/**
- * @param {REGL.Regl} regl
- * @return {REGL.DrawCommand}
- */
-function makePanelRenderer(regl) {
-  return regl({
-    elements,
-    attributes: {
-      position,
-      uv,
-    },
-    uniforms: {
-      view: ({tick}, props) => {
-        const t = 0.01 * tick;
-        return mat4.lookAt([],
-            [0, 0, props.distance ?? 1],
-            [0, 0, 0],
-            [0, 1, 0]
-        );
-      },
-      projection: ({viewportWidth, viewportHeight}) =>
-          mat4.perspective([],
-              Math.PI / 4,
-              viewportWidth / viewportHeight,
-              0.01,
-              10),
-      model: (context, props) => props.model ?? mat4.fromRotationTranslationScale(
-          [],
-          quat.fromEuler([], props.tilt?.x ?? 0, props.tilt?.y ?? 0, 0),
-          [0, 0, 0],
-          [props.scale?.x ?? 1, props.scale?.y ?? 1, 1],
-      ),
-      texture: regl.prop('texture'),
-    },
-    // language=GLSL
-    vert: `
-      precision mediump float;
-      attribute vec3 position;
-      attribute vec2 uv;
-      varying vec2 vUv;
-      uniform mat4 projection, view, model;
-      void main() {
-        vUv = uv;
-        gl_Position = projection * view * model * vec4(position, 1);
-      }
-    `,
-    // language=GLSL
-    frag: `
-      precision mediump float;
-      varying vec2 vUv;
-      uniform sampler2D texture;
-      void main () {
-        gl_FragColor = texture2D(texture, vUv);
-      }
-    `,
   });
 }
 
