@@ -21,7 +21,10 @@ export function useRegl(
   } = {}
 ) {
   const $regl = ref(null);
-  watch($canvas, (canvas) => {
+  watch($canvas, onCanvasSet);
+  return $regl;
+  /** @param {HTMLCanvasElement} canvas */
+  function onCanvasSet(canvas) {
     if (!canvas) return;
     console.log('useRegl', 'watch($canvas)', canvas);
     // Init canvas
@@ -41,6 +44,5 @@ export function useRegl(
       extensions,
     });
     $regl.value = regl;
-  });
-  return $regl;
+  }
 }
