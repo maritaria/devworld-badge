@@ -8,17 +8,19 @@ import Slider from "./Slider.vue";
 import {Vec2} from "../Vec2.js";
 import {useMousePosition} from "../vue-utilities.js";
 import {makeTiltedPanelRenderer} from "../regl/tilted-panel-renderer.js";
+import {useSpring} from "../use-spring.js";
 
 const $settings = reactive({
   canvas: {width: 400, height: 500},
   panel: new Vec2(400, 500).normalized(),
-  distance: 2,
+  distance: 1.3,
 });
 
 const $canvas = ref(null);
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
 const $tilt = useCardTilt(mouse);
+const $distance = useSpring(() => $settings.distance * (mouse.hover ? 0.9 : 1));
 
 onMounted(async () => {
   if (!$canvas.value) throw new Error('Missing $canvas');
@@ -27,9 +29,9 @@ onMounted(async () => {
   const drawPanel = makeTiltedPanelRenderer(regl);
 
   regl.frame(function renderFrame() {
-    regl.clear({color: [0, 0, 0, 255], depth: 1});
+    regl.clear({color: [0, 0, 0, 1], depth: 1});
     drawPanel({
-      distance: $settings.distance,
+      distance: $distance.value,
       tilt: $tilt.value,
       texture,
       scale: $settings.panel,
@@ -38,13 +40,21 @@ onMounted(async () => {
 });
 
 function useCardTilt(mouse) {
-  return computed(() => {
+  const tilt = computed(() => {
     // Tilt is expressed in degrees
     const m = Vec2.fromObject(mouse);
     const tilt = m.multiply(100).subtract(50);
     return {
       x: tilt.y / 2,
       y: tilt.x / 1.5,
+    };
+  });
+  const springX = useSpring(() => tilt.value.x);
+  const springY = useSpring(() => tilt.value.y);
+  return computed(() => {
+    return {
+      x: springX.value,
+      y: springY.value,
     };
   });
 }
