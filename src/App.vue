@@ -22,6 +22,7 @@ import ReglLayeringTest from "./components/ReglLayeringTest.vue";
 import ReglTiltedPanel from "./components/ReglTiltedPanel.vue";
 import ReglCube from "./components/ReglCube.vue";
 import ReglRecorder from "./components/ReglRecorder.vue";
+import SpringGraph from "./components/SpringGraph.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -104,6 +105,10 @@ provide('cards.face', selectedFace);
     <div class="cardcase">
       <h2>Recorder</h2>
       <ReglRecorder />
+    </div>
+    <div class="cardcase">
+      <h2>SpringGraph</h2>
+      <SpringGraph />
     </div>
 <!--          <div class="cardcase">-->
 <!--            <h2>ReglLayeringTest</h2>-->
