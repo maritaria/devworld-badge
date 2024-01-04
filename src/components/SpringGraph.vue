@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, reactive, ref, unref, watch} from "vue";
 import {useRafFn} from "@vueuse/core";
-import {useSpring} from "../use-spring.js";
+import {useSpring} from "../vue/use-spring.js";
 
 const $canvas = ref(null);
 const $value = ref(20);

@@ -6,9 +6,9 @@ import {elements, position, uv} from "../card.data.js";
 import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
 import Slider from "./Slider.vue";
 import {Vec2} from "../Vec2.js";
-import {useMousePosition} from "../vue-utilities.js";
 import {makeTiltedPanelRenderer} from "../regl/tilted-panel-renderer.js";
-import {useSpring} from "../use-spring.js";
+import {useMousePosition} from "../vue/use-mouse-position.js";
+import {useSpring} from "../vue/use-spring.js";
 
 const $settings = reactive({
   canvas: {width: 400, height: 500},
