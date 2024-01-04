@@ -1,6 +1,15 @@
 import {computed, ref, toValue, unref, watch} from "vue";
 import createREGL from "regl";
 
+/**
+ * @param {import('vue').WatchSource<HTMLCanvasElement>} $canvas
+ * @param {number} width
+ * @param {number} height
+ * @param {number} pixelRatio
+ * @param {string[]} extensions
+ * @param {WebGLContextAttributes} attributes
+ * @return {Ref<REGL.Regl>}
+ */
 export function useRegl(
   $canvas,
   {
