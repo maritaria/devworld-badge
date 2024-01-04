@@ -93,18 +93,18 @@ provide('cards.face', selectedFace);
     <!--      <div class="cardcase">-->
     <!--        <DevWorldStandaloneBadge />-->
     <!--      </div>-->
-          <div class="cardcase">
-            <h2>ReglCube</h2>
-            <ReglCube />
-          </div>
-          <div class="cardcase">
-            <h2>ReglTiltedPanel</h2>
-            <ReglTiltedPanel />
-          </div>
-          <div class="cardcase">
-            <h2>Recorder</h2>
-            <ReglRecorder />
-          </div>
+    <div class="cardcase">
+      <h2>ReglCube</h2>
+      <ReglCube />
+    </div>
+    <div class="cardcase">
+      <h2>ReglTiltedPanel</h2>
+      <ReglTiltedPanel />
+    </div>
+    <div class="cardcase">
+      <h2>Recorder</h2>
+      <ReglRecorder />
+    </div>
 <!--          <div class="cardcase">-->
 <!--            <h2>ReglLayeringTest</h2>-->
 <!--            <ReglLayeringTest />-->
