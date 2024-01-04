@@ -1,76 +1,47 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watchEffect} from "vue";
+import {computed, onMounted, reactive, ref, unref, watch, watchEffect} from "vue";
 import createREGL from "regl";
 import {loadTexture} from "../regl/utilities.js";
 import {linearGradientLength} from "../linear-gradient.js";
 import badgeImg from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import maskUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 import {Vec2} from "../Vec2.js";
-import {clamp} from "@vueuse/core";
+import {clamp, computedAsync, noop} from "@vueuse/core";
 import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
+import {useRegl} from "../vue/use-regl.js";
 
 const pxRatio = window.devicePixelRatio;
 
 const $canvas = ref(null);
-const size = reactive({width: 400 * 1, height: 564 * 1});
-const rsize = computed(() => ({
-  width: size.width * pxRatio,
-  height: size.height * pxRatio,
-}));
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
-const render = ref(null);
 
-/**
- * @param {HTMLCanvasElement} canvas
- * @param {number} width
- * @param {number} height
- */
-function adjustCanvasSize(canvas, width, height) {
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  canvas.width = width * pxRatio;
-  canvas.height = height * pxRatio;
-}
+const $regl = useRegl($canvas, {
+  width: 400,
+  height: 564,
+  pixelRatio: window.devicePixelRatio,
+});
 
-onMounted(async () => {
-  if (!$canvas.value) throw Error("Missing ref($canvas)");
-
-  adjustCanvasSize($canvas.value, size.width, size.height);
-
-  const regl = createREGL({
-    canvas: $canvas.value,
-    attributes: {
-      alpha: true,
-      premultiplyAlpha: false,
-      powerPreference: 'high-performance',
-    },
-  });
-  // TODO: Make this faster, precompute the blur mask outside of GPU.
-  // TODO: Handle context loss (for mobile)
-  // TODO: Pre-bake the neon fade, to skip rendering it on the GPU at all.
-  // TODO: Render blur using svg inlining trick
-  // TODO: Offset mouse point using device sensors
-
+const $render = computedAsync(async () => {
+  const regl = unref($regl);
+  if (!regl) return;
   const res = await loadCardResources(regl);
   const drawCard = makeCardRenderer(regl);
-
-  render.value = (props = {}) => {
+  return function Render(props = {}) {
     regl.clear({depth: 1});
     drawCard({
       ...res,
       mouse: props.mouse ?? [1, 1],
     });
   };
-  render.value();
-});
+}, noop);
 
 watchEffect(() => {
-  if (!render.value) return;
+  const render = unref($render);
   const pos = new Vec2(mouse.x, mouse.y);
   const posViewSpace = pos.multiply(2).subtract(1);
-  render.value({mouse: [posViewSpace.x, -posViewSpace.y]});
+  render({mouse: [posViewSpace.x, -posViewSpace.y]});
   applyTilt(window.app, pos.multiply(100).round(1));
 });
 
