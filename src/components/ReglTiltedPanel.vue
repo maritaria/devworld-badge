@@ -25,7 +25,7 @@ const $distance = useSpring(() => $settings.distance * (mouse.hover ? 0.9 : 1));
 onMounted(async () => {
   if (!$canvas.value) throw new Error('Missing $canvas');
   const regl = initCanvas($canvas.value, $settings.canvas);
-  const texture = await loadTexture(regl, textureUrl);
+  const texture = await loadTexture(regl, textureUrl, {flipY: true});
   const drawPanel = makeTiltedPanelRenderer(regl);
 
   regl.frame(function renderFrame() {
