@@ -23,6 +23,7 @@ import ReglTiltedPanel from "./components/ReglTiltedPanel.vue";
 import ReglCube from "./components/ReglCube.vue";
 import ReglRecorder from "./components/ReglRecorder.vue";
 import SpringGraph from "./components/SpringGraph.vue";
+import ReglTiltedCard from "./components/ReglTiltedCard.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -101,6 +102,10 @@ provide('cards.face', selectedFace);
     <div class="cardcase">
       <h2>ReglTiltedPanel</h2>
       <ReglTiltedPanel />
+    </div>
+    <div class="cardcase">
+      <h2>ReglTiltedCard</h2>
+      <ReglTiltedCard />
     </div>
     <div class="cardcase">
       <h2>Recorder</h2>
