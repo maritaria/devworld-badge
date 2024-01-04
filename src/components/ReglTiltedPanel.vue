@@ -6,7 +6,7 @@ import {elements, position, uv} from "../card.data.js";
 import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
 import Slider from "./Slider.vue";
 import {Vec2} from "../Vec2.js";
-import {makeTiltedPanelRenderer} from "../regl/tilted-panel-renderer.js";
+import {makeTiltedPanelRenderer} from "../regl/panel-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {useSpring} from "../vue/use-spring.js";
 
