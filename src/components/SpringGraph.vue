@@ -1,12 +1,11 @@
 <script setup>
 import {computed, onMounted, reactive, ref, unref, watch} from "vue";
 import {useRafFn} from "@vueuse/core";
-
 import {useSpring} from "../use-spring.js";
 
 const $canvas = ref(null);
 const $value = ref(20);
-const $spring = useSpring($value);
+const $spring = useSpring(() => $value.value);
 
 onMounted(() => {
   if (!$canvas.value) throw new Error('Missing $canvas');

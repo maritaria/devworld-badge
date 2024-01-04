@@ -1,4 +1,4 @@
-import {computed, reactive, unref, watch} from "vue";
+import {computed, reactive, toValue, watch} from "vue";
 import {useRafFn} from "@vueuse/core";
 
 /**
@@ -12,7 +12,7 @@ import {useRafFn} from "@vueuse/core";
  * @see https://github.com/sveltejs/svelte/blob/570884eabda10a28e640ae3fdeae64c2f1a587b8/packages/svelte/src/motion/spring.js
  */
 export function useSpring($target, opts = {}) {
-  const initial = +(unref($target));
+  const initial = +(toValue($target));
   assertNumber(initial, 'initial');
 
   const state = reactive({
