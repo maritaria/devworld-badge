@@ -91,9 +91,9 @@ provide('cards.face', selectedFace);
   </details>
   <h1 id="samples"><a href="#samples">Samples</a></h1>
   <div class="cardlist">
-    <!--      <div class="cardcase">-->
-    <!--        <DevWorldStandaloneBadge />-->
-    <!--      </div>-->
+    <div class="cardcase">
+      <DevWorldStandaloneBadge />
+    </div>
     <div class="cardcase">
       <h2>ReglCube</h2>
       <ReglCube />
@@ -110,25 +110,25 @@ provide('cards.face', selectedFace);
       <h2>SpringGraph</h2>
       <SpringGraph />
     </div>
-<!--          <div class="cardcase">-->
-<!--            <h2>ReglLayeringTest</h2>-->
-<!--            <ReglLayeringTest />-->
-<!--          </div>-->
-<!--          <div class="cardcase">-->
-<!--            <h2>ReglBoxShadow</h2>-->
-<!--            <ReglBoxShadow />-->
-<!--          </div>-->
-<!--    <div class="cardcase">-->
-<!--      <h2>ReglFoil</h2>-->
-<!--      <ReglFoil />-->
-<!--    </div>-->
-    <!--      <div class="cardcase">-->
-    <!--        <h2>ReglBadge</h2>-->
-    <!--        <ReglBadge />-->
-    <!--      </div>-->
-<!--    <div class="cardcase">-->
-<!--      <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">-->
-<!--    </div>-->
+    <div class="cardcase">
+      <h2>ReglLayeringTest</h2>
+      <ReglLayeringTest />
+    </div>
+    <div class="cardcase">
+      <h2>ReglBoxShadow</h2>
+      <ReglBoxShadow />
+    </div>
+    <div class="cardcase">
+      <h2>ReglFoil</h2>
+      <ReglFoil />
+    </div>
+    <div class="cardcase">
+      <h2>ReglBadge</h2>
+      <ReglBadge />
+    </div>
+    <!--    <div class="cardcase">-->
+    <!--      <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">-->
+    <!--    </div>-->
   </div>
   <!--    <h2>LinearGradientLineExperiment</h2>-->
   <!--    <LinearGradientLineExperiment />-->
