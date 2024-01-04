@@ -37,8 +37,6 @@ export function makeCardRenderer(regl) {
   const drawFoil = makeFoilRenderer(regl);
   const drawCorners = makeCornerRenderer(regl);
 
-  const withTarget = regl({framebuffer: regl.prop('target')});
-
   let stage1 = null;
   return function RenderCard(props) {
     initStage1(props.image);
@@ -53,7 +51,7 @@ export function makeCardRenderer(regl) {
   function initStage1(image) {
     if (stage1) return;
     stage1 = regl.framebuffer(width, height);
-    withTarget({target: stage1}, () => {
+    stage1.use(() => {
       regl.clear({depth: 1});
       drawImage({image});
       drawShadow({cornerRadius});
