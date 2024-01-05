@@ -60,7 +60,6 @@ const $render = computedAsync(async () => {
       regl.clear({depth: 1});
       drawCard({...resources, mouse});
     });
-    // return;
     // 2. Render the panel with the card on it.
     regl.clear({depth: 1});
     drawPanel({
