@@ -10,6 +10,8 @@ import {useSpring} from "../vue/use-spring.js";
 
 const $canvas = ref(null);
 const cardSize = new Vec2(400, 564).multiply(2);
+const distancePassive = 1.5;
+const distanceHover = 1.2;
 const $regl = useRegl($canvas, {
   ...cardSize.toSize(),
   attributes: {
@@ -20,7 +22,6 @@ const $regl = useRegl($canvas, {
 });
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
-
 const props = useMouseTilt(mouse);
 
 function useMouseTilt(mouse) {
@@ -35,7 +36,10 @@ function useMouseTilt(mouse) {
   });
   const springX = useSpring(() => tilt.value.x);
   const springY = useSpring(() => tilt.value.y);
-  const distance = useSpring(() => mouse.hover ? 1.15 : 1.3);
+  const distance = useSpring(() => mouse.hover ? distanceHover : distancePassive, {
+    stiffness: 1 / 20,
+    damping: 1 / 8,
+  });
   return computed(() => {
     return {
       tilt: {
