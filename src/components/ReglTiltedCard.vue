@@ -9,12 +9,13 @@ import {Vec2} from "../Vec2.js";
 import {useSpring} from "../vue/use-spring.js";
 
 const $canvas = ref(null);
-const cardSize = new Vec2(400, 564);
+const cardSize = new Vec2(400, 564).multiply(2);
 const $regl = useRegl($canvas, {
   ...cardSize.toSize(),
   attributes: {
     // Needed for the corner renderer, as it only affects the alpha channel.
     premultipliedAlpha: false,
+    antialias: true,
   },
 });
 
@@ -52,6 +53,9 @@ const $render = computedAsync(async () => {
   const resources = await loadCardResources(regl);
   const drawCard = makeCardRenderer(regl, {
     ...cardSize.toSize(),
+    cornerRadius: 60,
+    blurRadius: 40,
+    blurSpread: 20,
   });
   const drawPanel = makeTiltedPanelRenderer(regl);
 

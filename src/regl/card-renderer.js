@@ -26,15 +26,18 @@ export async function loadCardResources(regl) {
  * @param {REGL.Regl} regl
  * @return {RenderCardFn}
  */
-export function makeCardRenderer(regl, {width, height, cornerRadius = 30, pixelRatio = window.devicePixelRatio} = {}) {
-  width *= pixelRatio;
-  height *= pixelRatio;
-  cornerRadius *= pixelRatio;
+export function makeCardRenderer(regl, {
+  width,
+  height,
+  cornerRadius = 30,
+  blurRadius = 20,
+  blurSpread = 15,
+} = {}) {
 
   const drawImage = makeImageRenderer(regl);
-  const drawShadow = makeShadowRenderer(regl, pixelRatio);
+  const drawShadow = makeShadowRenderer(regl, blurRadius, blurSpread);
   const drawFoil = makeFoilRenderer(regl);
-  const drawCorners = makeCornerRenderer(regl, pixelRatio);
+  const drawCorners = makeCornerRenderer(regl);
 
   let stage1 = null;
   return function RenderCard(props) {
@@ -101,10 +104,11 @@ function makeImageRenderer(regl) {
 
 /**
  * @param {REGL.Regl} regl
- * @param {number} pxRatio
+ * @param {number} blurRadius
+ * @param {number} blurSpread
  * @return {REGL.DrawCommand}
  */
-function makeShadowRenderer(regl, pxRatio) {
+function makeShadowRenderer(regl, blurRadius = 20, blurSpread = 10) {
   return regl({
     count: 3,
     attributes: {
@@ -161,9 +165,8 @@ function makeShadowRenderer(regl, pxRatio) {
       }
 
       vec3 insetBoxShadow(vec2 pos, vec2 topleft, vec2 bottomright, float cornerRadius, vec3 shadow_color) {
-        const float factor = ${pxRatio.toFixed(1)};
-        const float blurRadius = 20.0 * factor;
-        const float blurSpread = 10.0 * factor;
+        const float blurRadius = ${blurRadius.toFixed(1)};
+        const float blurSpread = ${blurSpread.toFixed(1)};
 
         vec3 color_inside = vec3(0);
         vec3 color_outside = shadow_color;
@@ -203,7 +206,7 @@ function makeShadowRenderer(regl, pxRatio) {
 
         }
         // Normalize the value range
-        result /= Z;
+        result /= Z*Z;
         return result;
       }
 
@@ -440,15 +443,9 @@ function makeFoilRenderer(regl) {
         uv *= ratio;
         mouse *= ratio;
 
-        // background-*:
-
         vec3 layer3 = radialGradient(uv, mouse, ratio);
         vec3 layer2 = linearGradient(uv, mouse, ratio, linearGradientLength);
         vec3 layer1 = sampleTexture(foil, uv, ratio);
-
-        vec3 combine23 = softLight(layer2, layer3);
-        vec3 combine12 = difference(layer1, layer2);
-
         vec3 background = softLight(difference(layer1, layer2), layer3);
 
         // filter: brightness(0.6) contrast(1.5) saturate(1);
@@ -459,8 +456,6 @@ function makeFoilRenderer(regl) {
         vec3 dodged = colorDodge(base, filtered);
 
         gl_FragColor = vec4(dodged, 1);
-
-
       }
     `,
   });
