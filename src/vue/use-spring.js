@@ -11,7 +11,7 @@ import {useRafFn} from "@vueuse/core";
  *
  * @see https://github.com/sveltejs/svelte/blob/570884eabda10a28e640ae3fdeae64c2f1a587b8/packages/svelte/src/motion/spring.js
  */
-export function useSpring($target, opts = {}) {
+export function useSpring($target, {stiffness = 0.15, damping = 0.8, precision = 0.01} = {}) {
   const initial = +(toValue($target));
   assertNumber(initial, 'initial');
 
@@ -19,9 +19,9 @@ export function useSpring($target, opts = {}) {
     valuePrevious: initial,
     valueCurrent: initial,
     valueTarget: initial,
-    stiffness: opts.stiffness ?? 0.15,
-    damping: opts.damping ?? 0.8,
-    precision: opts.precision ?? 0.01,
+    stiffness,
+    damping,
+    precision,
     inv_mass: 1,
     dt: 1 / 60,
     lastTime: performance.now(),
