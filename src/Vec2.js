@@ -146,6 +146,10 @@ Vec2.prototype = {
   normalized() {
     return this.withLength(1);
   },
+  /** @return {Vec2} */
+  transposed() {
+    return new this.constructor(this.y, this.x);
+  },
   /**
    * @param {number} decimals
    * @return {Vec2}
