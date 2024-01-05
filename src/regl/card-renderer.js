@@ -34,7 +34,7 @@ export function makeCardRenderer(regl, {width, height, cornerRadius = 30, pixelR
   const drawImage = makeImageRenderer(regl);
   const drawShadow = makeShadowRenderer(regl, pixelRatio);
   const drawFoil = makeFoilRenderer(regl);
-  const drawCorners = makeCornerRenderer(regl);
+  const drawCorners = makeCornerRenderer(regl, pixelRatio);
 
   let stage1 = null;
   return function RenderCard(props) {
@@ -482,7 +482,7 @@ function makeFoilRenderer(regl) {
  * @param {REGL.Regl} regl
  * @return {REGL.DrawCommand}
  */
-function makeCornerRenderer(regl) {
+function makeCornerRenderer(regl, pixelRatio) {
   return regl({
     count: 3,
     attributes: {
@@ -490,7 +490,7 @@ function makeCornerRenderer(regl) {
     },
     uniforms: {
       screen: (context) => [context.viewportWidth, context.viewportHeight],
-      cornerRadius: regl.prop('cornerRadius'),
+      cornerRadius: (context, props) => props.cornerRadius * pixelRatio,
     },
     depth: {enable: false},
     // Blend-mode: multiply by alpha
