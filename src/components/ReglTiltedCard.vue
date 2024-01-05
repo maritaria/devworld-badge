@@ -27,11 +27,10 @@ const props = useMouseTilt(mouse);
 function useMouseTilt(mouse) {
   const tilt = computed(() => {
     // Tilt is expressed in degrees
-    const m = Vec2.fromObject(mouse);
-    const tilt = m.multiply(100).subtract(50);
+    const m = Vec2.fromObject(mouse).subtract(0.5).multiply(-100);
     return {
-      x: -tilt.y / 2,
-      y: -tilt.x / 1.5,
+      x: m.x / 1.5,
+      y: m.y / 2,
     };
   });
   const springX = useSpring(() => tilt.value.x);
@@ -43,8 +42,8 @@ function useMouseTilt(mouse) {
   return computed(() => {
     return {
       tilt: {
-        x: springX.value,
-        y: springY.value,
+        x: springY.value,
+        y: springX.value,
       },
       distance: distance.value,
     };
