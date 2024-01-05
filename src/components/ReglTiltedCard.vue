@@ -9,9 +9,9 @@ import {Vec2} from "../Vec2.js";
 import {useSpring} from "../vue/use-spring.js";
 
 const $canvas = ref(null);
+const cardSize = new Vec2(400, 564);
 const $regl = useRegl($canvas, {
-  width: 400,
-  height: 564,
+  ...cardSize.toSize(),
 });
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
@@ -50,8 +50,7 @@ const $render = computedAsync(async () => {
   const drawPanel = makeTiltedPanelRenderer(regl);
 
   const cardBuffer = regl.framebuffer({
-    width: 400 * 2,
-    height: 564 * 2,
+    ...cardSize.multiply(devicePixelRatio).toSize(),
   });
 
   return function Render({mouse} = {}) {
@@ -66,7 +65,7 @@ const $render = computedAsync(async () => {
       tilt: props.value.tilt,
       distance: props.value.distance,
       texture: cardBuffer,
-      scale: new Vec2(400, 500).normalized(),
+      scale: cardSize.normalized(),
     });
   }
 }, noop);
