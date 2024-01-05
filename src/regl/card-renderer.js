@@ -482,14 +482,14 @@ function makeFoilRenderer(regl) {
  * @param {REGL.Regl} regl
  * @return {REGL.DrawCommand}
  */
-function makeCornerRenderer(regl, pixelRatio) {
+function makeCornerRenderer(regl) {
   return regl({
     count: 3,
     attributes: {
       position: [[1, 1], [-3, 1], [1, -3]],
     },
     uniforms: {
-      cornerRadius: (context, props) => props.cornerRadius * pixelRatio,
+      cornerRadius: regl.prop('cornerRadius'),
       screen: (context) => [context.drawingBufferWidth, context.drawingBufferHeight],
     },
     depth: {enable: false},
