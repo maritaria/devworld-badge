@@ -12,6 +12,10 @@ const $canvas = ref(null);
 const cardSize = new Vec2(400, 564);
 const $regl = useRegl($canvas, {
   ...cardSize.toSize(),
+  attributes: {
+    // Needed for the corner renderer, as it only affects the alpha channel.
+    premultipliedAlpha: false,
+  },
 });
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();

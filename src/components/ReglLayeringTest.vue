@@ -20,6 +20,10 @@ const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
 const $regl = useRegl($canvas, {
   width: 400,
   height: 564,
+  attributes: {
+    // Needed for the corner renderer, as it only affects the alpha channel.
+    premultipliedAlpha: false,
+  },
 });
 
 const $render = computedAsync(async () => {
