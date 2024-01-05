@@ -70,12 +70,6 @@ function makeImageRenderer(regl) {
       position: [[1, 1], [-3, 1], [1, -3]],
     },
     uniforms: {
-      screen: function (context, props) {
-        return [
-          context.viewportWidth,
-          context.viewportHeight,
-        ];
-      },
       image: regl.prop('image'),
     },
     // language=GLSL
