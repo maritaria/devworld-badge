@@ -20,7 +20,6 @@ const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
 const $regl = useRegl($canvas, {
   width: 400,
   height: 564,
-  pixelRatio: window.devicePixelRatio,
 });
 
 const $render = computedAsync(async () => {
