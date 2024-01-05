@@ -50,7 +50,9 @@ const $render = computedAsync(async () => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
   if (!regl) return;
   const resources = await loadCardResources(regl);
-  const drawCard = makeCardRenderer(regl);
+  const drawCard = makeCardRenderer(regl, {
+    ...cardSize.toSize(),
+  });
   const drawPanel = makeTiltedPanelRenderer(regl);
 
   const cardBuffer = regl.framebuffer({

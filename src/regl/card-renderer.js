@@ -26,14 +26,13 @@ export async function loadCardResources(regl) {
  * @param {REGL.Regl} regl
  * @return {RenderCardFn}
  */
-export function makeCardRenderer(regl) {
-  const pxRatio = window.devicePixelRatio;
-  const width = 400 * pxRatio;
-  const height = 564 * pxRatio;
-  const cornerRadius = 30 * pxRatio;
+export function makeCardRenderer(regl, {width, height, cornerRadius = 30, pixelRatio = window.devicePixelRatio} = {}) {
+  width *= pixelRatio;
+  height *= pixelRatio;
+  cornerRadius *= pixelRatio;
 
   const drawImage = makeImageRenderer(regl);
-  const drawShadow = makeShadowRenderer(regl, pxRatio);
+  const drawShadow = makeShadowRenderer(regl, pixelRatio);
   const drawFoil = makeFoilRenderer(regl);
   const drawCorners = makeCornerRenderer(regl);
 

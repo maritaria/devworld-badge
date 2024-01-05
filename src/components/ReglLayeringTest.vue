@@ -30,7 +30,7 @@ const $render = computedAsync(async () => {
   const regl = unref($regl);
   if (!regl) return;
   const res = await loadCardResources(regl);
-  const drawCard = makeCardRenderer(regl);
+  const drawCard = makeCardRenderer(regl, {width: 400, height: 564});
   return function Render(props = {}) {
     regl.clear({depth: 1});
     drawCard({
