@@ -143,14 +143,6 @@ function makeShadowRenderer(regl, pxRatio) {
       uniform vec2 screen;
       uniform float cornerRadius;
 
-      #define ZERO vec2(0)
-      #define ONE vec2(1)
-      #define RED vec3(1, 0, 0)
-      #define GREEN vec3(0, 1, 0)
-      #define BLUE vec3(0, 0, 1)
-      #define BLACK vec3(0)
-      #define WHITE vec3(1)
-
       float sdRoundedBox(in vec2 centerDelta, in vec2 size, in float cornerRadius) {
         // Source: https://iquilezles.org/articles/distfunctions2d/
         vec2 q = abs(centerDelta) - (size / 2.0) + cornerRadius;
@@ -173,7 +165,7 @@ function makeShadowRenderer(regl, pxRatio) {
         const float blurRadius = 20.0 * factor;
         const float blurSpread = 10.0 * factor;
 
-        vec3 color_inside = BLACK;
+        vec3 color_inside = vec3(0);
         vec3 color_outside = shadow_color;
 
         // Gaussian blur - https://www.shadertoy.com/view/XdfGDH
@@ -183,7 +175,6 @@ function makeShadowRenderer(regl, pxRatio) {
 
         // 1. Create the 1D kernel
         float kernel[mSize+1];
-
 
         for (int x = 0; x <= kSize; ++x) {
           kernel[kSize+x] = kernel[kSize-x] = normpdf(float(x), sigma);
@@ -217,17 +208,14 @@ function makeShadowRenderer(regl, pxRatio) {
       }
 
       void main() {
-        // Flip Y, so it matches screen coodinate space
-        vec2 uv = vec2(uv.x, -uv.y);
-        // Remap uv from [-1..1] to [0..1]
-        vec2 uvNorm = (1.0 + uv) / 2.0;
-        // Express uv as pixel coordinate
-        vec2 pixel = uvNorm * screen;
+        // uv: [0..1] in viewport space
+        vec2 uv = uv * vec2(1, -1) / 2.0 + 0.5;
+        vec2 pixel = uv * screen;
 
         // --border-glow-inside: deepskyblue; // .dev-world.blue
         // box-shadow: var(--border-glow-inside) 0 0 20px 10px inset;
         vec3 deepskyblue = vec3(0.0, 191.0 / 255.0, 1.0);// #00BFFF
-        vec3 boxShadow = insetBoxShadow(pixel, ZERO, screen, cornerRadius, deepskyblue);
+        vec3 boxShadow = insetBoxShadow(pixel, vec2(0), screen, cornerRadius, deepskyblue);
 
         // Write out the color, should be additively blended
         gl_FragColor += vec4(boxShadow, 1.0);
