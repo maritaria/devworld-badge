@@ -113,8 +113,8 @@ function makeShadowRenderer(regl, pxRatio) {
     uniforms: {
       screen: function (context, props) {
         return [
-          context.viewportWidth,
-          context.viewportHeight,
+          context.drawingBufferWidth,
+          context.drawingBufferHeight,
         ];
       },
       cornerRadius: regl.prop('cornerRadius'),
@@ -489,8 +489,8 @@ function makeCornerRenderer(regl, pixelRatio) {
       position: [[1, 1], [-3, 1], [1, -3]],
     },
     uniforms: {
-      screen: (context) => [context.viewportWidth, context.viewportHeight],
       cornerRadius: (context, props) => props.cornerRadius * pixelRatio,
+      screen: (context) => [context.drawingBufferWidth, context.drawingBufferHeight],
     },
     depth: {enable: false},
     // Blend-mode: multiply by alpha
