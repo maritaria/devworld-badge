@@ -27,11 +27,12 @@ export function makeTiltedPanelRenderer(regl) {
           viewportWidth / viewportHeight,
           0.01,
           10),
-      model: (context, props) => props.model ?? mat4.fromRotationTranslationScale(
+      model: (context, props) => props.model ?? mat4.fromRotationTranslationScaleOrigin(
         [],
         quat.fromEuler([], props.tilt?.x ?? 0, props.tilt?.y ?? 0, 0),
         [0, 0, 0],
         [props.scale?.x ?? 1, props.scale?.y ?? 1, 1],
+        [0, 0, -0.05],
       ),
       texture: regl.prop('texture'),
     },
