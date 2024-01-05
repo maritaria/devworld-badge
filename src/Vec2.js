@@ -36,6 +36,15 @@ Vec2.fromAngle = function fromAngle(degrees, length = 1) {
 }
 
 /**
+ * @param {number} width - The X component of the vector
+ * @param {number} height - The Y component of the vector
+ * @return {Vec2}
+ */
+Vec2.fromSize = function ({width, height}) {
+  return new Vec2(width, height);
+};
+
+/**
  * @param vector
  * @return {Vec2}
  */
@@ -156,6 +165,10 @@ Vec2.prototype = {
   /** @return {number} */
   get [1]() {
     return this.y;
+  },
+  /** @return {{width:number,height:number}} */
+  toSize() {
+    return {width: this.x, height: this.y};
   },
   // ToString
   toStringPrecision: 3,
