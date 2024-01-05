@@ -67,7 +67,5 @@ function useCardTilt(mouse) {
 </template>
 
 <style scoped>
-canvas {
-  touch-action: none;
-}
+
 </style>

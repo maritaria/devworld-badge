@@ -148,7 +148,5 @@ function stopRecording() {
 </template>
 
 <style scoped>
-canvas {
-  touch-action: none;
-}
+
 </style>

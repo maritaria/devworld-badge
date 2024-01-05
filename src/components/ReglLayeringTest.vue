@@ -55,7 +55,5 @@ watchEffect(() => {
 </template>
 
 <style scoped>
-canvas {
-  touch-action: none;
-}
+
 </style>
