@@ -3,6 +3,7 @@ import {useRegl} from "../vue/use-regl.js";
 import {ref, unref} from "vue";
 import {computedAsync, useRafFn} from "@vueuse/core";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
+import {makeOffscreenCanvas} from "../canvas.js";
 
 const $canvas = ref(null);
 const $regl = useRegl($canvas, {
@@ -35,7 +36,7 @@ useRafFn(({delta}) => {
   $render.value?.(delta);
 });
 
-function makeMatrixRainRenderer({width, height, fontSize = 10, canvas = useOffscreenCanvas(width, height)}) {
+function makeMatrixRainRenderer({width, height, fontSize = 10, canvas = makeOffscreenCanvas(width, height)}) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
@@ -141,27 +142,6 @@ function makeMatrixRainRenderer({width, height, fontSize = 10, canvas = useOffsc
       next: 0,
       step: 30,
     }));
-  }
-}
-
-/**
- * @param {number} width
- * @param {number} height
- * @return {OffscreenCanvas | HTMLCanvasElement}
- */
-function useOffscreenCanvas(width, height) {
-  /** @type {OffscreenCanvas | HTMLCanvasElement} */
-  return ('OffscreenCanvas' in window)
-      ? new OffscreenCanvas(width, height)
-      : makeCanvas(width, height);
-
-  function makeCanvas(width, height) {
-    const canvas = document.createElement('canvas');
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
-    return canvas;
   }
 }
 
