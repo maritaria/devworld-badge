@@ -8,7 +8,7 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
   ctx.font = `bold ${fontSize * 1.2}px monospace`;
   // State
-  const columns = initColumns(width, fontSize);
+  const columns = initColumns(width, height, fontSize);
   let timestamp = 0;
   return function renderMatrixRain(delta = 1 / 60) {
     timestamp += delta;
@@ -99,9 +99,9 @@ function lerp(factor, start, end) {
  * @param {number} width
  * @return {{x: number,y:number,chars:string[],next:number,step:number, maxLength:number,}[]}}
  */
-function initColumns(width, fontSize) {
+function initColumns(width, height, fontSize) {
   return Array.from({length: width / fontSize}, (_, index) => ({
-    x: index, y: 0,
+    x: index, y: Math.floor(-rand(0, height / fontSize * 2)),
     chars: [],
     maxLength: 20,
     next: 0,
