@@ -35,9 +35,10 @@ useRafFn(({delta}) => {
   $render.value?.(delta);
 });
 
-function makeMatrixRainRenderer({width, height, fontSize = 10}) {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  const ctx = useOffscreenCanvas(width, height);
+function makeMatrixRainRenderer({width, height, fontSize = 10, canvas = useOffscreenCanvas(width, height)}) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
+  const ctx = canvas.getContext('2d');
+  if (ctx === null) throw new Error('Failed to obtain "2d" context');
   ctx.font = `bold ${fontSize * 1.2}px monospace`;
   // State
   const columns = initColumns(width);
@@ -143,15 +144,16 @@ function makeMatrixRainRenderer({width, height, fontSize = 10}) {
   }
 }
 
+/**
+ * @param {number} width
+ * @param {number} height
+ * @return {OffscreenCanvas | HTMLCanvasElement}
+ */
 function useOffscreenCanvas(width, height) {
   /** @type {OffscreenCanvas | HTMLCanvasElement} */
-  const canvas = ('OffscreenCanvas' in window)
+  return ('OffscreenCanvas' in window)
       ? new OffscreenCanvas(width, height)
       : makeCanvas(width, height);
-
-  const ctx = canvas.getContext('2d');
-  if (ctx == null) throw new Error('Failed to obtain "2d" context');
-  return ctx;
 
   function makeCanvas(width, height) {
     const canvas = document.createElement('canvas');
