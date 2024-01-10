@@ -8,7 +8,7 @@ import createREGL from "regl";
  * @param {number} pixelRatio
  * @param {string[]} extensions
  * @param {WebGLContextAttributes} attributes
- * @return {Ref<REGL.Regl>}
+ * @return {import('vue').Ref<REGL.Regl>}
  */
 export function useRegl(
   $canvas,
