@@ -22,9 +22,7 @@ export async function createImage(url) {
  * @param {string} html
  * @return {Promise<REGL.Texture2D>}
  */
-export async function createHtmlTexture(regl, html) {
-  const width = 300;
-  const height = 300;
+export async function createHtmlTexture(regl, width, height, html) {
   const dataUrl = htmlToDataUrl(html, width, height);
   const img = await createImage(dataUrl);
   return regl.texture(img);

@@ -43,7 +43,7 @@ async function loadMyTexture(regl) {
   `;
   // language=html
   const html = `<div class="name">Bram Kamies</div>`;
-  return await createHtmlTexture(regl, `${html}<style>${css}</style>`);
+  return await createHtmlTexture(regl, 300, 300,`${html}<style>${css}</style>`);
 }
 
 </script>
