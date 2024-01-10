@@ -99,6 +99,10 @@ provide('cards.face', selectedFace);
       <DevWorldStandaloneBadge />
     </div>
     <div class="cardcase">
+      <h2>ReglTiltedCard</h2>
+      <ReglTiltedCard />
+    </div>
+    <div class="cardcase">
       <h2>ReglMatrixRain</h2>
       <ReglMatrixRain />
     </div>
@@ -117,10 +121,6 @@ provide('cards.face', selectedFace);
     <div class="cardcase">
       <h2>ReglTiltedPanel</h2>
       <ReglTiltedPanel />
-    </div>
-    <div class="cardcase">
-      <h2>ReglTiltedCard</h2>
-      <ReglTiltedCard />
     </div>
     <div class="cardcase">
       <h2>Recorder</h2>
