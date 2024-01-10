@@ -4,6 +4,7 @@ const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 export function makeMatrixRainRenderer(canvas, fontSize = 10) {
   const {width, height} = canvas;
+  /** @type {CanvasRenderingContext2D|null} */
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
   ctx.font = `bold ${fontSize * 1.2}px monospace`;
