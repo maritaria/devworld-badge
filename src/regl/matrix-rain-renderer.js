@@ -7,6 +7,8 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
   /** @type {CanvasRenderingContext2D|null} */
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
+  ctx.shadowBlur = 5;
+  ctx.shadowColor = 'lightgreen';
   ctx.font = `bold ${fontSize * 1.2}px monospace`;
   // State
   const columns = initColumns(width, height, fontSize);

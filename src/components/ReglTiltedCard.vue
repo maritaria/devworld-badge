@@ -72,6 +72,7 @@ const $render = computedAsync(async () => {
 
   const rainCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
   const rainRender = makeMatrixRainRenderer(rainCanvas, 15 * pxRatio);
+  rainCanvas.getContext('2d').globalAlpha = 0.6;
   const rainBuffer = regl.texture(rainCanvas);
   let last = performance.now();
 
