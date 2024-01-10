@@ -43,8 +43,8 @@ export async function createHtmlTexture(regl, width, height, html) {
     const svg = document.createElementNS(xmlns, 'svg')
     const foreignObject = document.createElementNS(xmlns, 'foreignObject')
 
-    svg.setAttribute('width', `${width * devicePixelRatio}`)
-    svg.setAttribute('height', `${height * devicePixelRatio}`)
+    svg.setAttribute('width', `${width}`)
+    svg.setAttribute('height', `${height}`)
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
 
     foreignObject.setAttribute('width', '100%')
