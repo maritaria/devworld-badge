@@ -25,6 +25,7 @@ import ReglRecorder from "./components/ReglRecorder.vue";
 import SpringGraph from "./components/SpringGraph.vue";
 import ReglTiltedCard from "./components/ReglTiltedCard.vue";
 import ReglNeonText from "./components/ReglNeonText.vue";
+import ReglMatrixRain from "./components/ReglMatrixRain.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -95,6 +96,10 @@ provide('cards.face', selectedFace);
   <div class="cardlist">
     <div class="cardcase">
       <DevWorldStandaloneBadge />
+    </div>
+    <div class="cardcase">
+      <h2>ReglMatrixRain</h2>
+      <ReglMatrixRain />
     </div>
     <div class="cardcase">
       <h2>ReglNeonText</h2>
