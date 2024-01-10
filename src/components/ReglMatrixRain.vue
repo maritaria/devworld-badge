@@ -18,13 +18,10 @@ const $regl = useRegl($canvas, {
 const $render = computedAsync(async () => {
   const regl = unref($regl);
   if (!regl) return;
-
   const paint = makeTextureRenderer(regl);
   const canvas = makeOffscreenCanvas(400, 500);
   const render = makeMatrixRainRenderer(canvas);
-
   const texture = regl.texture(canvas);
-
   return (delta) => {
     render(delta);
     texture.subimage(canvas);
@@ -37,7 +34,6 @@ const $render = computedAsync(async () => {
 useRafFn(({delta}) => {
   $render.value?.(delta);
 });
-
 </script>
 
 <template>
