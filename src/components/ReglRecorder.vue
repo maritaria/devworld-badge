@@ -15,7 +15,7 @@ onMounted(async () => {
   if (!$canvas.value) throw Error("Missing ref($canvas)");
   /** @type HTMLCanvasElement */
   const canvas = $canvas.value;
-  const pxRatio = 1; window.devicePixelRatio;
+  const pxRatio = 1;
 
   canvas.style.width = `${size.width}px`;
   canvas.style.height = `${size.height}px`;

@@ -11,8 +11,6 @@ import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {useRegl} from "../vue/use-regl.js";
 
-const pxRatio = window.devicePixelRatio;
-
 const $canvas = ref(null);
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();

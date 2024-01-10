@@ -1,10 +1,11 @@
 /**
  * @param {REGL.Regl} regl
- * @return {(function(*, *): void)|*}
+ * @return {(function(foreground: REGL.Texture2D, background: REGL.Texture2D): void)}
  */
 export function makePlusLighterMixer(regl) {
   const compiled = regl({
     count: 3,
+    depth: {enable: false},
     attributes: {
       position: [[1, 1], [-3, 1], [1, -3]],
     },

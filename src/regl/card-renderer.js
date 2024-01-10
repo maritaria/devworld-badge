@@ -47,6 +47,7 @@ export function makeCardRenderer(regl, {
       foil: props.foil,
       mouse: props.mouse ?? [1, 1],
     });
+    props?.layers?.();
     drawCorners({cornerRadius});
   };
 

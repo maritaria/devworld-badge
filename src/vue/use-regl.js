@@ -1,5 +1,6 @@
 import {computed, ref, toValue, unref, watch} from "vue";
 import createREGL from "regl";
+import {pxRatio} from "../canvas.js";
 
 /**
  * @param {import('vue').WatchSource<HTMLCanvasElement>} $canvas
@@ -15,7 +16,7 @@ export function useRegl(
   {
     width,
     height,
-    pixelRatio = window.devicePixelRatio,
+    pixelRatio = pxRatio,
     extensions = [],
     attributes = {},
   } = {}

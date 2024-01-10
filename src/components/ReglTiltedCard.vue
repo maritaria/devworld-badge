@@ -7,9 +7,13 @@ import {useMousePosition} from "../vue/use-mouse-position.js";
 import {makeTiltedPanelRenderer} from "../regl/panel-renderer.js";
 import {Vec2} from "../Vec2.js";
 import {useSpring} from "../vue/use-spring.js";
+import {makeOffscreenCanvas, pxRatio} from "../canvas.js";
+import {makeMatrixRainRenderer} from "../regl/matrix-rain-renderer.js";
+import {makePlusLighterMixer} from "../regl/plus-lighter-mixer.js";
+import {makeTextureRenderer} from "../regl/texture-renderer.js";
 
 const $canvas = ref(null);
-const cardSize = new Vec2(400, 564).multiply(2);
+const cardSize = new Vec2(400, 564).multiply(1.5).round();
 const distancePassive = 1.5;
 const distanceHover = 1.2;
 const $regl = useRegl($canvas, {
@@ -63,16 +67,47 @@ const $render = computedAsync(async () => {
   const drawPanel = makeTiltedPanelRenderer(regl);
 
   const cardBuffer = regl.framebuffer({
-    ...cardSize.multiply(devicePixelRatio).toSize(),
+    ...cardSize.multiply(pxRatio).toSize(),
+  });
+
+  const rainCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
+  const rainRender = makeMatrixRainRenderer(rainCanvas, 40);
+  const rainBuffer = regl.texture(rainCanvas);
+  let last = performance.now();
+
+  function rainDraw() {
+    const now = performance.now();
+    rainRender(now - last);
+    rainBuffer.subimage(rainCanvas);
+    last = now;
+  }
+
+  const drawTexture = makeTextureRenderer(regl);
+  const mixPlusLighter = regl({
+    depth: {enable: false},
+    blend: {
+      enable: true,
+      func: {src: 'src alpha', dst: 'dst alpha'},
+    },
   });
 
   return function Render({mouse} = {}) {
-    // 1. Render the card to a framebuffer
+    // 1. Update and prepare the matrix rain layer
+    rainDraw();
+    // 2. Render the card to a framebuffer
     cardBuffer.use(() => {
       regl.clear({depth: 1});
-      drawCard({...resources, mouse});
+      drawCard({
+        ...resources,
+        mouse,
+        layers: () => {
+          mixPlusLighter(() => {
+            drawTexture({texture: rainBuffer});
+          });
+        },
+      });
     });
-    // 2. Render the panel with the card on it.
+    // 3. Render the panel with the card on it.
     regl.clear({depth: 1});
     drawPanel({
       tilt: props.value.tilt,

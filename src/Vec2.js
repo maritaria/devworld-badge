@@ -154,7 +154,7 @@ Vec2.prototype = {
    * @param {number} decimals
    * @return {Vec2}
    */
-  round(decimals) {
+  round(decimals = 0) {
     return this.map(n => round(n, decimals));
   },
   // Iterable / Array support

@@ -7,6 +7,7 @@ import {makePlusLighterMixer} from "../regl/plus-lighter-mixer.js";
 import {makeOffscreenCanvas} from "../canvas.js";
 import {makeMatrixRainRenderer} from "../regl/matrix-rain-renderer.js";
 import {useRafFn} from "@vueuse/core";
+import {makeTextureRenderer} from "../regl/texture-renderer.js";
 
 const $canvas = ref(null);
 const $regl = useRegl($canvas, {width: 300, height: 300});
@@ -28,11 +29,29 @@ watchEffect(async (onCleanup) => {
     last = now;
   };
 
+  const drawImage = makeTextureRenderer(regl);
+  const withBlending = regl({
+    depth: {enable: false},
+    blend: {
+      enable: true,
+      equation: 'add',
+      func: {
+        srcRGB: 'src alpha',
+        dstRGB: 'dst alpha',
+        srcAlpha: 'one',
+        dstAlpha: 'one',
+      },
+    },
+  });
+
   const handle = regl.frame(() => {
     updateRain();
     const mixer = makePlusLighterMixer(regl);
     mixer(foreground, background);
-
+    // drawImage({texture: background});
+    // withBlending(() => {
+    //   drawImage({texture: foreground});
+    // });
   });
   onCleanup(() => handle.cancel());
 });

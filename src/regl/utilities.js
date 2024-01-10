@@ -1,4 +1,5 @@
 import createREGL from "regl";
+import {pxRatio} from "../canvas.js";
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -7,7 +8,7 @@ import createREGL from "regl";
  * @param {number} pixelRatio
  * @return {REGL.Regl}
  */
-export function initCanvas(canvas, {width, height}, pixelRatio = window.devicePixelRatio) {
+export function initCanvas(canvas, {width, height}, pixelRatio = pxRatio) {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   canvas.width = width * pixelRatio;

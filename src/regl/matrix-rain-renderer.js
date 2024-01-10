@@ -2,9 +2,8 @@ import {makeOffscreenCanvas} from "../canvas.js";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
-export function makeMatrixRainRenderer(canvas) {
+export function makeMatrixRainRenderer(canvas, fontSize = 10) {
   const {width, height} = canvas;
-  const fontSize = 10;
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
   ctx.font = `bold ${fontSize * 1.2}px monospace`;
@@ -67,7 +66,7 @@ function initRay(obj) {
 
 function colorDroplet(y, col) {
   const head = [255, 255, 255];
-  const body = [0, 255, 0];
+  const body = [50, 255, 0];
   const tail = [0, 0, 0];
   const headLength = Math.clamp(col.maxLength / 3, 3, 10);
   if (y <= 0) return head;

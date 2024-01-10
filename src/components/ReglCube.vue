@@ -1,10 +1,9 @@
 <script setup>
-
-
 import {ref, onMounted, watchEffect, reactive} from "vue";
 import createREGL from "regl";
 import {loadTexture} from "../regl/utilities.js";
 import textureUrl from "../assets/doc/linkedin-black-friday-sale.png";
+import {pxRatio} from "../canvas.js";
 
 const $canvas = ref(null);
 const $render = ref(null);
@@ -15,7 +14,6 @@ onMounted(async () => {
   if (!$canvas.value) throw Error("Missing ref($canvas)");
   /** @type HTMLCanvasElement */
   const canvas = $canvas.value;
-  const pxRatio = window.devicePixelRatio;
 
   canvas.style.width = `${size.width}px`;
   canvas.style.height = `${size.height}px`;
