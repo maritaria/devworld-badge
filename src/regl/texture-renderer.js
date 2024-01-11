@@ -1,6 +1,6 @@
 /**
  * @param {REGL.Regl} regl
- * @returns {REGL.DrawCommand}
+ * @returns {REGL.DrawCommand<REGL.DefaultContext, {texture: REGL.Texture2D}>}
  */
 export function makeTextureRenderer(regl) {
   return regl({
