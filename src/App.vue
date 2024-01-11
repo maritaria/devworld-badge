@@ -27,6 +27,7 @@ import ReglTiltedCard from "./components/ReglTiltedCard.vue";
 import ReglNeonText from "./components/ReglNeonText.vue";
 import ReglMatrixRain from "./components/ReglMatrixRain.vue";
 import ReglPlusLighter from "./components/ReglPlusLighter.vue";
+import ReglAvatar from "./components/ReglAvatar.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -101,6 +102,10 @@ provide('cards.face', selectedFace);
     <div class="cardcase">
       <h2>ReglTiltedCard</h2>
       <ReglTiltedCard />
+    </div>
+    <div class="cardcase">
+      <h2>ReglAvatar</h2>
+      <ReglAvatar />
     </div>
     <div class="cardcase">
       <h2>ReglMatrixRain</h2>
