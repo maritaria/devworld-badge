@@ -27,7 +27,6 @@ export function useRegl(
   /** @param {HTMLCanvasElement} canvas */
   function onCanvasSet(canvas) {
     if (!canvas) return;
-    console.log('useRegl', 'watch($canvas)', canvas);
     // Init canvas
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
