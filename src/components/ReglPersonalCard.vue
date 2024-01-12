@@ -198,7 +198,7 @@ watchEffect(() => void console.log('$avatar', $avatar.value));
     <span>Picture:</span>
     <AvatarPicker v-model="$avatarSource" />
   </form>
-  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto;max-width:80vw"/>
+  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto;max-width:80vw" />
   <h1>To-do list</h1>
   <ol>
     <li><input type="checkbox" readonly>Display name</li>
