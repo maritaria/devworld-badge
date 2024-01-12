@@ -186,8 +186,6 @@ watchEffect(async () => {
 watchEffect(() => void console.log('$name', $name.value));
 watchEffect(() => void console.log('$avatar', $avatar.value));
 
-
-
 </script>
 <template>
   <form @submit.prevent>
