@@ -28,6 +28,9 @@ import ReglNeonText from "./components/ReglNeonText.vue";
 import ReglMatrixRain from "./components/ReglMatrixRain.vue";
 import ReglPlusLighter from "./components/ReglPlusLighter.vue";
 import ReglAvatar from "./components/ReglAvatar.vue";
+import SilhouettePicker from "./components/AvatarPicker.vue";
+import ReglPersonalCard from "./components/ReglPersonalCard.vue";
+import CanvasTextRenderer from "./components/CanvasTextRenderer.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -97,60 +100,69 @@ provide('cards.face', selectedFace);
   <h1 id="samples"><a href="#samples">Samples</a></h1>
   <div class="cardlist">
     <div class="cardcase">
-      <DevWorldStandaloneBadge />
+      <h2>ReglPersonalCard</h2>
+      <ReglPersonalCard />
     </div>
     <div class="cardcase">
-      <h2>ReglTiltedCard</h2>
-      <ReglTiltedCard />
+      <h2>CanvasTextRenderer</h2>
+      <CanvasTextRenderer />
     </div>
     <div class="cardcase">
-      <h2>ReglAvatar</h2>
-      <ReglAvatar />
-    </div>
-    <div class="cardcase">
-      <h2>ReglMatrixRain</h2>
-      <ReglMatrixRain />
-    </div>
-    <div class="cardcase">
-      <h2>ReglPlusLighter</h2>
-      <ReglPlusLighter />
-    </div>
-    <div class="cardcase">
-      <h2>ReglNeonText</h2>
-      <ReglNeonText />
-    </div>
-    <div class="cardcase">
-      <h2>ReglCube</h2>
-      <ReglCube />
-    </div>
-    <div class="cardcase">
-      <h2>ReglTiltedPanel</h2>
-      <ReglTiltedPanel />
-    </div>
-    <div class="cardcase">
-      <h2>Recorder</h2>
-      <ReglRecorder />
-    </div>
-    <div class="cardcase">
-      <h2>SpringGraph</h2>
-      <SpringGraph />
-    </div>
-    <div class="cardcase">
-      <h2>ReglLayeringTest</h2>
-      <ReglLayeringTest />
-    </div>
-    <div class="cardcase">
-      <h2>ReglBoxShadow</h2>
-      <ReglBoxShadow />
-    </div>
-    <div class="cardcase">
-      <h2>ReglFoil</h2>
-      <ReglFoil />
-    </div>
-    <div class="cardcase">
-      <h2>ReglBadge</h2>
-      <ReglBadge />
-    </div>
+       <h2>ReglTiltedCard</h2>
+       <ReglTiltedCard />
+     </div>
+     <div class="cardcase">
+       <h2>ReglAvatar</h2>
+       <ReglAvatar />
+     </div>
+     <div class="cardcase">
+       <h2>SilhouettePicker</h2>
+       <SilhouettePicker />
+     </div>
+     <div class="cardcase">
+       <h2>ReglMatrixRain</h2>
+       <ReglMatrixRain />
+     </div>
+     <div class="cardcase">
+       <h2>ReglPlusLighter</h2>
+       <ReglPlusLighter />
+     </div>
+     <div class="cardcase">
+       <h2>ReglNeonText</h2>
+       <ReglNeonText />
+     </div>
+     <div class="cardcase">
+       <h2>ReglCube</h2>
+       <ReglCube />
+     </div>
+     <div class="cardcase">
+       <h2>ReglTiltedPanel</h2>
+       <ReglTiltedPanel />
+     </div>
+     <div class="cardcase">
+       <h2>Recorder</h2>
+       <ReglRecorder />
+     </div>
+     <div class="cardcase">
+       <h2>SpringGraph</h2>
+       <SpringGraph />
+     </div>
+     <div class="cardcase">
+       <h2>ReglLayeringTest</h2>
+       <ReglLayeringTest />
+     </div>
+     <div class="cardcase">
+       <h2>ReglBoxShadow</h2>
+       <ReglBoxShadow />
+     </div>
+     <div class="cardcase">
+       <h2>ReglFoil</h2>
+       <ReglFoil />
+     </div>
+     <div class="cardcase">
+       <h2>ReglBadge</h2>
+       <ReglBadge />
+     </div>-->
     <!--    <div class="cardcase">-->
     <!--      <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">-->
     <!--    </div>-->

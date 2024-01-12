@@ -1,5 +1,6 @@
 import createREGL from "regl";
 import {pxRatio} from "../canvas.js";
+import {createImage} from "../resources.js";
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -40,4 +41,23 @@ export function loadTexture(regl, src, extra = {}) {
       reject(error);
     };
   });
+}
+
+/**
+ * Converts a given blob (or file) into a {@link REGL.Texture2D}.
+ * @param {REGL.Regl} regl
+ * @param {Blob} blob
+ * @return {Promise<REGL.Texture2D>}
+ */
+export async function loadTextureFromBlob(regl, blob) {
+  return regl.texture(await loadImageFromBlob(blob));
+}
+
+export async function loadImageFromBlob(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    return await createImage(url);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

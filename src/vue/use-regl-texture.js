@@ -15,4 +15,3 @@ export function useReglTexture($regl, url, extra) {
     return await loadTexture(regl, url, extra);
   });
 }
-
