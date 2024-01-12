@@ -60,5 +60,4 @@ export const routes = [
   ...components.map(quickRoute),
   { path: '/:pathMatch(.*)*', component: RouteNotFound, },
 ];
-console.log('routes', routes);
 export const router = createRouter({history: createWebHistory(), routes});
