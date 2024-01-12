@@ -16,6 +16,7 @@ import AvatarPicker from "./AvatarPicker.vue";
 import {createImage} from "../resources.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
 import {useReglTextSurface} from "../vue/use-regl-text-surface.js";
+import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 
 const $canvas = ref(null);
 const cardSize = new Vec2(400, 564).multiply(2).round();
@@ -72,6 +73,7 @@ const $render = computedAsync(async () => {
     blurSpread: 20,
   });
   const drawPanel = makeTiltedPanelRenderer(regl);
+  const drawSprite = makeSpriteRenderer(regl);
 
   const cardBuffer = regl.framebuffer({
     ...cardSize.multiply(pxRatio).toSize(),
@@ -91,11 +93,17 @@ const $render = computedAsync(async () => {
   }
 
   const drawTexture = makeTextureRenderer(regl);
+  const noDepth = regl({depth: {enable: false}});
   const mixPlusLighter = regl({
-    depth: {enable: false},
     blend: {
       enable: true,
       func: {src: 'src alpha', dst: 'dst alpha'},
+    },
+  });
+  const mixAdditiveBlend = regl({
+    blend: {
+      enable: true,
+      func: {src: 'src alpha', dst: 'one minus src alpha'},
     },
   });
   const drawAvatar = makeAvatarRenderer(regl);
@@ -110,14 +118,29 @@ const $render = computedAsync(async () => {
         ...resources,
         mouse,
         layers: () => {
-          mixPlusLighter(() => {
-            drawTexture({texture: rainBuffer});
+          noDepth(() => {
+            mixPlusLighter(() => {
+              drawTexture({texture: rainBuffer});
+            });
+            if ($avatar.value) {
+              const bufferSize = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight);
+              const avatarPos = bufferSize.multiply([0.5, 0.4]);
+              drawAvatar($avatar.value, avatarSize / 2, avatarPos);
+            }
+            if ($nameSurface.value) {
+              mixAdditiveBlend(() => {
+                const surface = $nameSurface.value;
+                const size = Vec2.fromSize(surface);
+                const targetWidth = cardSize.x - 30;
+                const scale = targetWidth / size.x;
+                drawSprite($nameSurface.value, {
+                  position: cardSize.multiply([0.5, 0.7]),
+                  anchor: 0.5,
+                  scale,
+                });
+              });
+            }
           });
-          if ($avatar.value) {
-            const bufferSize = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight);
-            const avatarPos = bufferSize.multiply([0.5, 0.4]);
-            drawAvatar($avatar.value, avatarSize / 2, avatarPos);
-          }
         },
       });
     });

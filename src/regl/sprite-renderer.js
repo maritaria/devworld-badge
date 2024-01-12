@@ -1,5 +1,8 @@
+import {Vec2} from "../Vec2.js";
+
 /**
  * @param {REGL.Regl} regl
+ * @return {function(sprite: REGL.Texture2D, opts?: {position?: Vec2, size?: Vec2, scale?: number, anchor?: Vec2}):void}
  */
 export function makeSpriteRenderer(regl) {
   const compiled = regl({
@@ -42,10 +45,23 @@ export function makeSpriteRenderer(regl) {
     `,
   });
 
-  return function renderSprites(sprite, position, size) {
+  return function renderSprites(sprite, {
+    position = Vec2.zero,
+    size = Vec2.fromSize(sprite),
+    scale = 1,
+    anchor = Vec2.zero,
+  } = {}) {
+    size = Vec2.parse(size).multiply(scale);
+    if (anchor && anchor !== Vec2.zero) {
+      position = position.subtract(size.multiply(anchor));
+    }
+
     compiled({
       sprite,
-      spriteBox: [...position, ...size],
+      spriteBox: [
+        ...Vec2.parse(position),
+        ...size,
+      ],
     })
   }
 }

@@ -142,6 +142,12 @@ Vec2.prototype = {
   withLength(length) {
     return this.multiply(length / this.length);
   },
+  withX(x) {
+    return this.constructor(x, this.y);
+  },
+  withY(y) {
+    return this.constructor(this.x, y);
+  },
   /** @return {Vec2} */
   normalized() {
     return this.withLength(1);
