@@ -162,6 +162,9 @@ Vec2.prototype = {
     yield this.x;
     yield this.y;
   },
+  toArray() {
+    return [this[0], this[1]];
+  },
   /** @return {number} */
   get [0]() {
     return this.x;
