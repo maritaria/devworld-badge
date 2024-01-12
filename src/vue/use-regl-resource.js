@@ -8,7 +8,7 @@ import {loadTexture} from "../regl/utilities.js";
  * @param {REGL.Texture2DOptions} extra
  * @return {import('vue').Ref<REGL.Texture2D>}
  */
-export function useReglTexture($regl, url, extra) {
+export function useReglResource($regl, url, extra) {
   return computedAsync(async () => {
     const regl = unref($regl);
     if (!regl) return;
