@@ -17,14 +17,28 @@ import ReglAvatar from "../components/ReglAvatar.vue";
 import LinearGradientLineExperiment from "../components/LinearGradientLineExperiment.vue";
 import CanvasTextRenderer from "../components/CanvasTextRenderer.vue";
 import RouteNotFound from "../components/RouteNotFound.vue";
+import DevWorldBadges from "../components/DevWorldBadges.vue";
+import DevWorldCircuit from "../components/DevWorldCircuit.vue";
+import DevWorldNeon from "../components/DevWorldNeon.vue";
+import DevWorldTicket from "../components/DevWorldTicket.vue";
+import DevWorldStandaloneBadge from "../components/DevWorldStandaloneBadge.vue";
+
+function nameof(component) {
+  return component.__name ?? component.__file.match(/([^/\\]+)\.\w+$/)[1];
+}
 
 function quickRoute(component) {
-  return {path: `/${component.__name}`, component, meta: {showNav: true}};
+  return {path: `/${nameof(component)}`, component, meta: {showNav: true}};
 }
 
 const components = [
   AvatarPicker,
   CanvasTextRenderer,
+  DevWorldBadges,
+  DevWorldCircuit,
+  DevWorldNeon,
+  DevWorldStandaloneBadge,
+  DevWorldTicket,
   LinearGradientLineExperiment,
   ReglAvatar,
   ReglBadge,
