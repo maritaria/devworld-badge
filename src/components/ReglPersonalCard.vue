@@ -11,7 +11,7 @@ import {makeOffscreenCanvas, pxRatio} from "../canvas.js";
 import {makeMatrixRainRenderer} from "../regl/matrix-rain-renderer.js";
 import {makePlusLighterMixer} from "../regl/plus-lighter-mixer.js";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
-import {loadImageFromBlob, loadTextureFromBlob} from "../regl/utilities.js";
+import {frameLoop, loadImageFromBlob, loadTextureFromBlob} from "../regl/utilities.js";
 import AvatarPicker from "./AvatarPicker.vue";
 import {createImage} from "../resources.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
@@ -137,16 +137,17 @@ watchEffect((onCleanup) => {
   const regl = unref($regl);
   const render = unref($render);
   if (regl && render) {
-    const handle = regl.frame(() => {
+    const cancel = frameLoop(regl, () => {
       render({
         // Convert [0..1] screen coords to [-1..1] gl space
         mouse: [
           mouse.x * 2 - 1,
           -(mouse.y * 2 - 1),
         ],
-      })
+      });
     });
-    onCleanup(() => handle.cancel());
+
+    onCleanup(cancel);
   }
 });
 

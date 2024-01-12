@@ -61,3 +61,33 @@ export async function loadImageFromBlob(blob) {
     URL.revokeObjectURL(url);
   }
 }
+
+export function frameLoop(regl, fn) {
+  const handle = regl.frame(() => {
+    try {
+      fn();
+    } catch (primary) {
+      try {
+        safeCancel(handle);
+      } catch (secondary) {
+        console.error('Error ocurred in safeCancel!', secondary);
+      }
+      throw primary;
+    }
+  });
+  return () => safeCancel(handle);
+}
+
+function safeCancel(handle) {
+  try {
+    handle.cancel();
+  } catch (err) {
+    if (typeof err?.message === 'string') {
+      if (err.message.includes('cannot cancel a frame twice')) {
+        // Surpress the error
+        return;
+      }
+    }
+    throw err;
+  }
+}
