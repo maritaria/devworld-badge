@@ -33,7 +33,7 @@ const length = computed(() => linearGradientLength(box.width, box.height, angle.
 
 function drawArrow(vector, origin, props) {
   vector = unref(vector);
-  origin = Vec2.coerceArgs(unref(origin) ?? 0);
+  origin = Vec2.parse(unref(origin) ?? 0);
   const end = origin.add(vector);
   return {
     ...props,

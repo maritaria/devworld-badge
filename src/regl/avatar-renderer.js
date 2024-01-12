@@ -18,7 +18,7 @@ export function makeAvatarRenderer(regl) {
       texture: regl.prop('texture'),
       textureSize: (_, props) => [props.texture.width, props.texture.height],
       screen: (context) => [context.drawingBufferWidth, context.drawingBufferHeight],
-      center: (context, props) => props.center ? Vec2.coerceArgs(props.center).toArray() : [context.drawingBufferWidth / 2, context.drawingBufferHeight / 2],
+      center: (context, props) => props.center ? Vec2.parse(props.center).toArray() : [context.drawingBufferWidth / 2, context.drawingBufferHeight / 2],
       radius: (context, props) => props.radius ?? Math.min(context.drawingBufferWidth, context.drawingBufferHeight) / 2,
     },
     depth: {

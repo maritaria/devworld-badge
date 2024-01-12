@@ -48,7 +48,7 @@ Vec2.fromSize = function ({width, height}) {
  * @param vector
  * @return {Vec2}
  */
-Vec2.coerceArgs = function (...vector) {
+Vec2.parse = function (...vector) {
   if (vector.length === 0) throw new TypeError('Cannot produce Vec2 from 0 arguments');
   if (vector.length >= 3) throw new TypeError('Cannot produce Vec2 from more than 2 arguments');
   if (vector.length === 2) return new Vec2(...vector);
@@ -75,7 +75,7 @@ Vec2.coerceArgs = function (...vector) {
 /**
  * @type {(function(...[*]): Vec2)}
  */
-Vec2.fromObject = Vec2.coerceArgs;
+Vec2.fromObject = Vec2.parse;
 
 Vec2.prototype = {
   constructor: Vec2,
@@ -99,22 +99,22 @@ Vec2.prototype = {
   // Arithmetic
   /** @return {Vec2} */
   add(...vector) {
-    const other = Vec2.coerceArgs(...vector);
+    const other = Vec2.parse(...vector);
     return new this.constructor(this.x + other.x, this.y + other.y);
   },
   /** @return {Vec2} */
   subtract(...vector) {
-    const other = Vec2.coerceArgs(...vector);
+    const other = Vec2.parse(...vector);
     return new this.constructor(this.x - other.x, this.y - other.y);
   },
   /** @return {Vec2} */
   multiply(...vector) {
-    const other = Vec2.coerceArgs(...vector);
+    const other = Vec2.parse(...vector);
     return new this.constructor(this.x * other.x, this.y * other.y);
   },
   /** @return {Vec2} */
   divide(...vector) {
-    const other = Vec2.coerceArgs(...vector);
+    const other = Vec2.parse(...vector);
     return new this.constructor(this.x / other.x, this.y / other.y);
   },
   // Modify
