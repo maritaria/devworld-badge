@@ -15,6 +15,7 @@ import {loadImageFromBlob, loadTextureFromBlob} from "../regl/utilities.js";
 import AvatarPicker from "./AvatarPicker.vue";
 import {createImage} from "../resources.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
+import {useReglTextSurface} from "../vue/use-regl-text-surface.js";
 
 const $canvas = ref(null);
 const cardSize = new Vec2(400, 564).multiply(2).round();
@@ -58,6 +59,7 @@ function useMouseTilt(mouse) {
     };
   });
 }
+
 
 const $render = computedAsync(async () => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
@@ -149,6 +151,12 @@ watchEffect((onCleanup) => {
 });
 
 const $name = ref('Bram Kamies');
+const $nameSurface = useReglTextSurface($regl, $name, {
+  font: '40px monospace',
+  shadowBlur: 5,
+  shadowColor: 'deepskyblue',
+  shadowRepeats: 5,
+});
 /** @type {import('vue').Ref<HTMLImageElement|Blob|null>} */
 const $avatarSource = ref(null);
 /** @type {import('vue').Ref<REGL.Texture2D | null>} */
@@ -177,6 +185,8 @@ watchEffect(async () => {
 
 watchEffect(() => void console.log('$name', $name.value));
 watchEffect(() => void console.log('$avatar', $avatar.value));
+
+
 
 </script>
 <template>
