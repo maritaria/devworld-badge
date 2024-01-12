@@ -31,6 +31,7 @@ import ReglAvatar from "./components/ReglAvatar.vue";
 import SilhouettePicker from "./components/AvatarPicker.vue";
 import ReglPersonalCard from "./components/ReglPersonalCard.vue";
 import CanvasTextRenderer from "./components/CanvasTextRenderer.vue";
+import NavigationMenu from "./components/NavigationMenu.vue";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 
@@ -67,109 +68,8 @@ provide('cards.face', selectedFace);
 </script>
 
 <template>
-  <details>
-    <summary>
-      <h1 id="settings">Settings</h1>
-    </summary>
-    <form style="margin-bottom:30px" id="settings">
-      <fieldset name="pointerLogicGroup">
-        <legend>Tilt all cards</legend>
-        <label>
-          <input type="radio" name="autoPointer" value="disabled" v-model="autoPointer">
-          Tilt on hover
-        </label>
-        <label>
-          <input type="radio" name="autoPointer" value="static" v-model="autoPointer">
-          Tilt with fixed position
-        </label>
-        <label>
-          <input type="radio" name="autoPointer" value="circle" v-model="autoPointer">
-          Tilt with circle pattern
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Card face</legend>
-        <select v-model="selectedFace">
-          <option v-for="face in faces" :value="face.url">
-            {{ face.label }}
-          </option>
-        </select>
-      </fieldset>
-    </form>
-  </details>
-  <h1 id="samples"><a href="#samples">Samples</a></h1>
-  <div class="cardlist">
-    <div class="cardcase">
-      <h2>ReglPersonalCard</h2>
-      <ReglPersonalCard />
-    </div>
-    <div class="cardcase">
-      <h2>CanvasTextRenderer</h2>
-      <CanvasTextRenderer />
-    </div>
-    <div class="cardcase">
-       <h2>ReglTiltedCard</h2>
-       <ReglTiltedCard />
-     </div>
-     <div class="cardcase">
-       <h2>ReglAvatar</h2>
-       <ReglAvatar />
-     </div>
-     <div class="cardcase">
-       <h2>SilhouettePicker</h2>
-       <SilhouettePicker />
-     </div>
-     <div class="cardcase">
-       <h2>ReglMatrixRain</h2>
-       <ReglMatrixRain />
-     </div>
-     <div class="cardcase">
-       <h2>ReglPlusLighter</h2>
-       <ReglPlusLighter />
-     </div>
-     <div class="cardcase">
-       <h2>ReglNeonText</h2>
-       <ReglNeonText />
-     </div>
-     <div class="cardcase">
-       <h2>ReglCube</h2>
-       <ReglCube />
-     </div>
-     <div class="cardcase">
-       <h2>ReglTiltedPanel</h2>
-       <ReglTiltedPanel />
-     </div>
-     <div class="cardcase">
-       <h2>Recorder</h2>
-       <ReglRecorder />
-     </div>
-     <div class="cardcase">
-       <h2>SpringGraph</h2>
-       <SpringGraph />
-     </div>
-     <div class="cardcase">
-       <h2>ReglLayeringTest</h2>
-       <ReglLayeringTest />
-     </div>
-     <div class="cardcase">
-       <h2>ReglBoxShadow</h2>
-       <ReglBoxShadow />
-     </div>
-     <div class="cardcase">
-       <h2>ReglFoil</h2>
-       <ReglFoil />
-     </div>
-     <div class="cardcase">
-       <h2>ReglBadge</h2>
-       <ReglBadge />
-     </div>-->
-    <!--    <div class="cardcase">-->
-    <!--      <img src="./assets/doc/niki-devworld-badge-sample-3.jpg" style="width:400px;">-->
-    <!--    </div>-->
-  </div>
-  <!--    <h2>LinearGradientLineExperiment</h2>-->
-  <!--    <LinearGradientLineExperiment />-->
-  <div style="min-height:100vh"></div>
+  <NavigationMenu />
+  <router-view />
 </template>
 
 <style>

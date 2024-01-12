@@ -22,3 +22,8 @@ body {
 canvas {
   touch-action: none;
 }
+
+a {
+  /* Make links use the active text color, as the default may have bad contrast. */
+  color: inherit;
+}

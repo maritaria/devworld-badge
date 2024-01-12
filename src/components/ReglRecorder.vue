@@ -108,7 +108,7 @@ onMounted(() => {
     console.log('recorder: start');
     recordedChunks.splice(0, recordedChunks.length);
   };
-  recorder.ondataavailable = function(event) {
+  recorder.ondataavailable = function (event) {
     if (event.data.size > 0) {
       recordedChunks.push(event.data);
       console.log('recorder: data-available', event.data.type, recordedChunks.length, 'chunks');
@@ -142,9 +142,10 @@ function stopRecording() {
 
 <template>
   <canvas ref="$canvas"></canvas>
+  <br>
   <button type="button" @click="startRecording">Start recording</button>
   <button type="button" @click="stopRecording">Stop recording</button>
-  <span>Recorder: {{$recorder?.state}}</span>
+  <span>Recorder: {{ $recorder?.state }}</span>
 </template>
 
 <style scoped>

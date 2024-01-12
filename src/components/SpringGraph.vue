@@ -10,10 +10,12 @@ const $spring = useSpring(() => $value.value);
 </script>
 
 <template>
-  <span>Value: {{ $value }}</span>
-  <input type="range" min="0" max="100" v-model="$value">
-  <span>Spring: {{ $spring }}</span>
-  <input type="range" min="0" max="100" :value="$spring">
+  <div style="display:flex;flex-direction: column">
+    <span>Value: {{ $value }}</span>
+    <input type="range" min="0" max="100" v-model="$value">
+    <span>Spring: {{ $spring }}</span>
+    <input type="range" min="0" max="100" :value="$spring">
+  </div>
 </template>
 
 <style scoped>
