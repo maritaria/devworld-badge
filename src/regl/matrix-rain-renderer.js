@@ -7,9 +7,7 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
   /** @type {CanvasRenderingContext2D|null} */
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
-  ctx.shadowBlur = 5;
-  ctx.shadowColor = 'lightgreen';
-  ctx.font = `bold ${fontSize * 1.2}px monospace`;
+
   // State
   const columns = initColumns(width, height, fontSize);
   let timestamp = 0;
@@ -34,6 +32,13 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
         }
       }
     }
+
+    // Init render state
+    ctx.reset();
+    ctx.globalAlpha = 0.8;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = 'lightgreen';
+    ctx.font = `bold ${fontSize * 1.2}px monospace`;
 
     // Clear the canvas
     ctx.clearRect(0, 0, width, height);

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
+import {computed, ref, unref, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {computedAsync, noop} from "@vueuse/core";
 import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
@@ -9,13 +9,10 @@ import {Vec2} from "../Vec2.js";
 import {useSpring} from "../vue/use-spring.js";
 import {makeOffscreenCanvas, pxRatio} from "../canvas.js";
 import {makeMatrixRainRenderer} from "../regl/matrix-rain-renderer.js";
-import {makePlusLighterMixer} from "../regl/plus-lighter-mixer.js";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
-import {frameLoop, loadImageFromBlob, loadTextureFromBlob} from "../regl/utilities.js";
+import {frameLoop, loadImageFromBlob} from "../regl/utilities.js";
 import AvatarPicker from "./AvatarPicker.vue";
-import {createImage} from "../resources.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
-import {useReglTextSurface} from "../vue/use-regl-text-surface.js";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {useScrambledText} from "../vue/use-scrambled-text.js";
 
@@ -82,17 +79,40 @@ const $render = computedAsync(async () => {
     ...cardBufferSize.toSize(),
   });
 
-  const rainCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
-  const rainRender = makeMatrixRainRenderer(rainCanvas, 15 * pxRatio);
-  rainCanvas.getContext('2d').globalAlpha = 0.6;
-  const rainBuffer = regl.texture(rainCanvas);
+  const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
+  const overlay = overlayCanvas.getContext('2d');
+  const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * pxRatio);
+  const overlayBuffer = regl.texture(overlayCanvas);
+
   let last = performance.now();
 
-  function rainDraw() {
+  function drawRain() {
     const now = performance.now();
     rainRender(now - last);
-    rainBuffer(rainCanvas);
+    overlayBuffer(overlayCanvas);
     last = now;
+  }
+
+  function drawName() {
+    overlay.reset();
+    overlay.clearRect(0, 0, overlay.canvas.width, overlay.canvas.height);
+    overlay.font = '40px monospace';
+    overlay.fillStyle = 'white';
+    overlay.textAlign = 'center';
+    overlay.shadowBlur = 20;
+    overlay.shadowColor = 'deepskyblue';
+
+    const scale = 3;
+    overlay.scale(scale, scale);
+    const shadowRepeats = 5;
+    const screen = Vec2.fromSize(overlay.canvas).divide(scale);
+    const center = screen.multiply(0.5, 0.7);
+
+    for (let i = 0; i < shadowRepeats; i++) {
+      overlay.fillText($scramble.value, center.x, center.y);
+    }
+
+    overlayBuffer(overlayCanvas);
   }
 
   const drawTexture = makeTextureRenderer(regl);
@@ -112,9 +132,7 @@ const $render = computedAsync(async () => {
   const drawAvatar = makeAvatarRenderer(regl);
 
   return function Render({mouse} = {}) {
-    // 1. Update and prepare the matrix rain layer
-    rainDraw();
-    // 2. Render the card to a framebuffer
+    // 1. Draw the card content
     cardBuffer.use(() => {
       regl.clear({depth: 1});
       drawCard({
@@ -123,31 +141,23 @@ const $render = computedAsync(async () => {
         layers: () => {
           noDepth(() => {
             mixPlusLighter(() => {
-              drawTexture({texture: rainBuffer});
+              drawRain();
+              drawTexture({texture: overlayBuffer});
             });
             if ($avatar.value) {
               const bufferSize = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight);
               const avatarPos = bufferSize.multiply([0.5, 0.4]);
               drawAvatar($avatar.value, avatarSize / 2, avatarPos);
             }
-            if ($nameSurface.value) {
-              mixAdditiveBlend(() => {
-                const surface = $nameSurface.value;
-                const size = new Vec2(surface.width, $nameSurfaceInfo.value.actualBoundingBoxAscent);
-
-                // TODO: Improve performance by allowing sprite rendering using source rects. Then avoid resizing the canvas for reglTextSurface.
-                drawSprite($nameSurface.value, {
-                  position: cardBufferSize.multiply([0.5, 0.7]),
-                  anchor: $nameAnchor.value,
-                  scale: 2,
-                });
-              });
-            }
+            mixAdditiveBlend(() => {
+              drawName();
+              drawTexture({texture: overlayBuffer});
+            });
           });
         },
       });
     });
-    // 3. Render the panel with the card on it.
+    // 2. Render the panel with the card on it.
     regl.clear({depth: 1});
     drawPanel({
       tilt: props.value.tilt,
@@ -177,47 +187,8 @@ watchEffect((onCleanup) => {
   }
 });
 
-const $settings = reactive({
-  text: {
-    font: '40px monospace',
-    padding: 5,
-  },
-});
-
 const $name = ref('Bram Kamies');
-const nameFont = '40px monospace';
 const $scramble = useScrambledText($name);
-const [$nameSurface, $nameSurfaceInfo] = useReglTextSurface($regl, $scramble, {
-  font: $settings.text.font,
-  padding: $settings.text.padding,
-  shadowBlur: 5,
-  shadowColor: 'deepskyblue',
-  shadowRepeats: 5,
-});
-const nameFinalSizeCanvas = makeOffscreenCanvas(1, 1);
-const $nameFinalSize = computed(() => {
-  const ctx = nameFinalSizeCanvas.getContext('2d');
-  if (!ctx) throw new Error('Failed to create 2d');
-  ctx.font = $settings.text.font;
-  const {
-    actualBoundingBoxAscent: top,
-    actualBoundingBoxDescent: bottom,
-    actualBoundingBoxLeft: left,
-    actualBoundingBoxRight: right,
-  } = ctx.measureText($name.value);
-  return new Vec2(
-      left + right + $settings.text.padding * 2,
-      top + bottom + $settings.text.padding * 2,
-  );
-});
-const $nameAnchor = computed(() => {
-  const {
-    actualBoundingBoxAscent: top,
-    actualBoundingBoxDescent: bottom,
-  } = $nameSurfaceInfo.value;
-  const padding = $settings.text.padding;
-  return [0.5, top / (top+bottom + padding*2)];
-});
 
 /** @type {import('vue').Ref<HTMLImageElement|Blob|null>} */
 const $avatarSource = ref(null);

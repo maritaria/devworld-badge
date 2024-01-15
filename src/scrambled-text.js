@@ -12,15 +12,26 @@ export function ScrambledText({
   this.target = '';
   this.text = [];
   this.settled = [];
-  this.settleChance = 0.6;
+  this.resizeChance = this.unsettleChance = this.settleChance = 0.6;
   this.scrambleChance = 0.04;
   this.isScrambling = false;
+  this.locked = false;
 }
 
 ScrambledText.prototype = {
+  reset() {
+    this.text = [];
+    this.settled = [];
+  },
+  reveal() {
+    this.text = this.target.split('');
+    this.settled = Array.from(this.text, (_, i) => i);
+  },
   update() {
     this.updateCharacters();
-    if (this.isScrambling) {
+    if (this.locked) {
+      return;
+    } else if (this.isScrambling) {
       this.unsettle();
     } else if (this.text.length !== this.target.length) {
       this.resize();
@@ -37,7 +48,7 @@ ScrambledText.prototype = {
     }
   },
   unsettle() {
-    if (roll(this.settleChance)) {
+    if (roll(this.unsettleChance)) {
       if (this.text.length <= 1) {
         this.isScrambling = false;
       } else if (this.settled.length) {
@@ -48,7 +59,7 @@ ScrambledText.prototype = {
     }
   },
   resize() {
-    if (roll(this.settleChance)) {
+    if (roll(this.resizeChance)) {
       if (this.text.length < this.target.length) {
         this.text.push('');
       } else {
