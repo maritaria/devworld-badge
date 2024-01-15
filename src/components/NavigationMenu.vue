@@ -1,10 +1,25 @@
 <script setup>
 import {routes} from "../vue/router.js";
+import {computed, ref, watchEffect} from "vue";
+import {useRoute} from "vue-router";
 
 const items = routes.filter(route => route.meta?.showNav);
+
+/** @type {import('vue').Ref<null|HTMLDetailsElement>} */
+const $details = ref(null);
+const $route = useRoute();
+watchEffect(() => {
+  if ($route.matched.length === 0) {
+    const element = $details.value;
+    if (element) {
+      element.open = true;
+    }
+  }
+});
+
 </script>
 <template>
-  <details>
+  <details ref="$details">
     <summary>Navigation</summary>
     <nav>
       <ul>
