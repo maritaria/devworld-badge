@@ -167,7 +167,7 @@ Vec2.prototype = {
     yield this.y;
   },
   toArray() {
-    return [this[0], this[1]];
+    return [this.x, this.y];
   },
   /** @return {number} */
   get [0]() {
