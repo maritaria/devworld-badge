@@ -18,11 +18,11 @@ import {useScrambledText} from "../vue/use-scrambled-text.js";
 
 const $canvas = ref(null);
 const cardSize = new Vec2(400, 564).multiply(2).round();
-const avatarSize = 400;
+const avatarSize = 400 * pxRatio;
 const distancePassive = 1.5;
 const distanceHover = 1.2;
 const $regl = useRegl($canvas, {
-  ...cardSize.toSize(), pixelRatio: 1,
+  ...cardSize.toSize(),
   attributes: {
     // Needed for the corner renderer, as it only affects the alpha channel.
     premultipliedAlpha: false,
