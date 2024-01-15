@@ -1,4 +1,5 @@
 import {round, toDegrees, toRadians} from "./math.js";
+import {createError} from "./error.js";
 
 /**
  * @class
@@ -63,7 +64,11 @@ Vec2.parse = function (...vector) {
   if ('x' in arg && 'y' in arg) {
     return new Vec2(arg.x, arg.y);
   }
-  throw new TypeError('Failed to coerce argument into Vec2 instance');
+  throw createError({
+    constructor: TypeError,
+    message: 'Failed to coerce argument into Vec2 instance',
+    data: arg,
+  });
 }
 /**
  * @type {(function(...[*]): Vec2)}
