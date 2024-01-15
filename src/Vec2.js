@@ -15,13 +15,6 @@ function Vec2(x, y = x) {
   });
 }
 
-Vec2.zero = new Vec2(0);
-Vec2.one = new Vec2(1);
-Vec2.left = new Vec2(-1, 0);
-Vec2.right = new Vec2(1, 0);
-Vec2.up = new Vec2(0, -1);
-Vec2.down = new Vec2(0, 1);
-
 /**
  * @param {number} degrees
  * @param {number} length
@@ -143,10 +136,10 @@ Vec2.prototype = {
     return this.multiply(length / this.length);
   },
   withX(x) {
-    return this.constructor(x, this.y);
+    return new this.constructor(x, this.y);
   },
   withY(y) {
-    return this.constructor(this.x, y);
+    return new this.constructor(this.x, y);
   },
   /** @return {Vec2} */
   normalized() {
@@ -192,5 +185,13 @@ Vec2.prototype = {
   },
   [Symbol.toStringTag]: 'Vec2',
 };
+
+// Static
+Vec2.zero = new Vec2(0);
+Vec2.one = new Vec2(1);
+Vec2.left = new Vec2(-1, 0);
+Vec2.right = new Vec2(1, 0);
+Vec2.up = new Vec2(0, -1);
+Vec2.down = new Vec2(0, 1);
 
 export {Vec2};

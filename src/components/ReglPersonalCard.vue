@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, unref, watch, watchEffect} from 'vue';
+import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {computedAsync, noop} from "@vueuse/core";
 import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
@@ -17,6 +17,7 @@ import {createImage} from "../resources.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
 import {useReglTextSurface} from "../vue/use-regl-text-surface.js";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
+import {useScrambledText} from "../vue/use-scrambled-text.js";
 
 const $canvas = ref(null);
 const cardSize = new Vec2(400, 564).multiply(2).round();
@@ -24,7 +25,7 @@ const avatarSize = 400;
 const distancePassive = 1.5;
 const distanceHover = 1.2;
 const $regl = useRegl($canvas, {
-  ...cardSize.toSize(),
+  ...cardSize.toSize(), pixelRatio: 1,
   attributes: {
     // Needed for the corner renderer, as it only affects the alpha channel.
     premultipliedAlpha: false,
@@ -75,8 +76,10 @@ const $render = computedAsync(async () => {
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
 
+  const cardBufferSize = cardSize.multiply(pxRatio);
+
   const cardBuffer = regl.framebuffer({
-    ...cardSize.multiply(pxRatio).toSize(),
+    ...cardBufferSize.toSize(),
   });
 
   const rainCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
@@ -130,13 +133,13 @@ const $render = computedAsync(async () => {
             if ($nameSurface.value) {
               mixAdditiveBlend(() => {
                 const surface = $nameSurface.value;
-                const size = Vec2.fromSize(surface);
-                const targetWidth = cardSize.x - 30;
-                const scale = targetWidth / size.x;
+                const size = new Vec2(surface.width, $nameSurfaceInfo.value.actualBoundingBoxAscent);
+
+                // TODO: Improve performance by allowing sprite rendering using source rects. Then avoid resizing the canvas for reglTextSurface.
                 drawSprite($nameSurface.value, {
-                  position: cardSize.multiply([0.5, 0.7]),
-                  anchor: 0.5,
-                  scale,
+                  position: cardBufferSize.multiply([0.5, 0.7]),
+                  anchor: $nameAnchor.value,
+                  scale: 2,
                 });
               });
             }
@@ -174,13 +177,48 @@ watchEffect((onCleanup) => {
   }
 });
 
+const $settings = reactive({
+  text: {
+    font: '40px monospace',
+    padding: 5,
+  },
+});
+
 const $name = ref('Bram Kamies');
-const $nameSurface = useReglTextSurface($regl, $name, {
-  font: '40px monospace',
+const nameFont = '40px monospace';
+const $scramble = useScrambledText($name);
+const [$nameSurface, $nameSurfaceInfo] = useReglTextSurface($regl, $scramble, {
+  font: $settings.text.font,
+  padding: $settings.text.padding,
   shadowBlur: 5,
   shadowColor: 'deepskyblue',
   shadowRepeats: 5,
 });
+const nameFinalSizeCanvas = makeOffscreenCanvas(1, 1);
+const $nameFinalSize = computed(() => {
+  const ctx = nameFinalSizeCanvas.getContext('2d');
+  if (!ctx) throw new Error('Failed to create 2d');
+  ctx.font = $settings.text.font;
+  const {
+    actualBoundingBoxAscent: top,
+    actualBoundingBoxDescent: bottom,
+    actualBoundingBoxLeft: left,
+    actualBoundingBoxRight: right,
+  } = ctx.measureText($name.value);
+  return new Vec2(
+      left + right + $settings.text.padding * 2,
+      top + bottom + $settings.text.padding * 2,
+  );
+});
+const $nameAnchor = computed(() => {
+  const {
+    actualBoundingBoxAscent: top,
+    actualBoundingBoxDescent: bottom,
+  } = $nameSurfaceInfo.value;
+  const padding = $settings.text.padding;
+  return [0.5, top / (top+bottom + padding*2)];
+});
+
 /** @type {import('vue').Ref<HTMLImageElement|Blob|null>} */
 const $avatarSource = ref(null);
 /** @type {import('vue').Ref<REGL.Texture2D | null>} */

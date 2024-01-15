@@ -14,7 +14,18 @@ export function useScrambledText($target, {
     instance.isScrambling = false;
     tick();
   });
-  useIntervalFn(tick, interval);
+
+  let elapsed = 0;
+  useRafFn(({delta})=> {
+    elapsed += delta;
+    let interval = 50;
+    while (elapsed > interval) {
+      elapsed -= interval;
+      tick();
+    }
+  });
+
+  // useIntervalFn(tick, 1);
   return $output;
 
   function tick() {

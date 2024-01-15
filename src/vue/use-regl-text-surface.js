@@ -1,6 +1,6 @@
 import {makeOffscreenCanvas} from "../canvas.js";
 import {useReglTexture} from "./use-regl-texture.js";
-import {toValue, unref, watchEffect} from "vue";
+import {ref, toValue, unref, watchEffect} from "vue";
 
 /**
  * @param {import('vue').Ref<REGL.Regl>} $regl
@@ -11,12 +11,12 @@ import {toValue, unref, watchEffect} from "vue";
  * @param {?number} shadowBlur
  * @param {?number} padding
  * @param {?number} shadowRepeats
- * @return {ComputedRef<REGL.Texture2D | null>}
+ * @return {[import('vue').ComputedRef<REGL.Texture2D | null>, import('vue').Ref<TextMetrics>]}
  */
 export function useReglTextSurface($regl, $text, {
   font = '12px monospace',
   color = 'white',
-  shadowColor,
+  shadowColor = color,
   shadowBlur = 0,
   shadowRepeats = 1,
   padding = shadowBlur,
@@ -26,6 +26,7 @@ export function useReglTextSurface($regl, $text, {
   if (!ctx) throw new Error('Failed to create 2d context for useCanvasTextRenderer');
 
   const $texture = useReglTexture($regl);
+  const $info = ref(null);
 
   function configure() {
     ctx.font = font ?? `12px monospace`;
@@ -47,7 +48,7 @@ export function useReglTextSurface($regl, $text, {
       actualBoundingBoxDescent: bottom,
       actualBoundingBoxLeft: left,
       actualBoundingBoxRight: right,
-    } = ctx.measureText(text);
+    } = $info.value = ctx.measureText(text);
 
     // 2. Size the canvas
     canvas.width = left + right + padding * 2;
@@ -62,5 +63,5 @@ export function useReglTextSurface($regl, $text, {
     // 4. Transfer pixels to the texture
     texture(canvas);
   });
-  return $texture;
+  return [$texture, $info];
 }

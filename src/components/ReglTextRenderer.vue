@@ -19,7 +19,7 @@ function configureSurface(ctx) {
   ctx.shadowBlur = 5;
 }
 
-const $surface = useReglTextSurface($regl, $text, {
+const [$surface] = useReglTextSurface($regl, $text, {
   font: '40px monospace',
   shadowBlur: 5,
   shadowColor: 'deepskyblue',

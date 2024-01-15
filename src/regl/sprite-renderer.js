@@ -14,7 +14,15 @@ export function makeSpriteRenderer(regl) {
     },
     uniforms: {
       sprite: regl.prop('sprite'),
-      spriteBox: regl.prop('spriteBox'),
+      spriteBox: (context, props) => {
+        const screen = new Vec2(context.drawingBufferWidth, context.drawingBufferHeight);
+        const size = Vec2.parse(props.size);
+        const offset = Vec2.zero.subtract(size).multiply(props.anchor);
+        return [
+          ...offset.add(props.position),
+          ...size,
+        ];
+      },
       screen: (context) => [context.drawingBufferWidth, context.drawingBufferHeight],
     },
     // language=GLSL
@@ -51,17 +59,11 @@ export function makeSpriteRenderer(regl) {
     scale = 1,
     anchor = Vec2.zero,
   } = {}) {
-    size = Vec2.parse(size).multiply(scale);
-    if (anchor && anchor !== Vec2.zero) {
-      position = position.subtract(size.multiply(anchor));
-    }
-
     compiled({
       sprite,
-      spriteBox: [
-        ...Vec2.parse(position),
-        ...size,
-      ],
+      position,
+      size: Vec2.parse(size).multiply(scale),
+      anchor,
     })
   }
 }
