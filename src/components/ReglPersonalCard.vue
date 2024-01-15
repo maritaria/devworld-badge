@@ -227,11 +227,4 @@ watchEffect(async () => {
     <AvatarPicker v-model="$avatarSource" />
   </form>
   <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto;max-width:80vw" />
-  <h1>To-do list</h1>
-  <ol>
-    <li><input type="checkbox" readonly>Display name</li>
-    <li><input type="checkbox" readonly>Fix touch gestures on mobile</li>
-    <li><input type="checkbox" readonly>Fix avatar pixelation (specifically of the preset images)</li>
-    <li><input type="checkbox" readonly checked>Fix upload button not visible on mobile</li>
-  </ol>
 </template>
