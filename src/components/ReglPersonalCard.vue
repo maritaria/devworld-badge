@@ -17,7 +17,7 @@ import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {useScrambledText} from "../vue/use-scrambled-text.js";
 
 const $canvas = ref(null);
-const cardSize = new Vec2(400, 564).multiply(2).round();
+const cardSize = new Vec2(600, 846);
 const avatarSize = 400 * pxRatio;
 const distancePassive = 1.5;
 const distanceHover = 1.2;
@@ -66,9 +66,9 @@ const $render = computedAsync(async () => {
   const resources = await loadCardResources(regl);
   const drawCard = makeCardRenderer(regl, {
     ...cardSize.toSize(),
-    cornerRadius: 60,
-    blurRadius: 40,
-    blurSpread: 20,
+    cornerRadius: 60 * pxRatio,
+    blurRadius: 40 * pxRatio,
+    blurSpread: 20 * pxRatio,
   });
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
@@ -96,7 +96,7 @@ const $render = computedAsync(async () => {
   function drawName() {
     overlay.reset();
     overlay.clearRect(0, 0, overlay.canvas.width, overlay.canvas.height);
-    overlay.font = '40px monospace';
+    overlay.font = `${20*pxRatio}px monospace`;
     overlay.fillStyle = 'white';
     overlay.textAlign = 'center';
     overlay.shadowBlur = 20;
