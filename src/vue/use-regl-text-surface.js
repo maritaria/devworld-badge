@@ -1,6 +1,5 @@
 import {makeOffscreenCanvas} from "../canvas.js";
-import {useReglTexture} from "./use-regl-texture.js";
-import {ref, toValue, unref, watchEffect} from "vue";
+import {computed, ref, toValue, unref, watchEffect} from "vue";
 
 /**
  * @param {import('vue').Ref<REGL.Regl>} $regl
@@ -25,7 +24,8 @@ export function useReglTextSurface($regl, $text, {
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Failed to create 2d context for useCanvasTextRenderer');
 
-  const $texture = useReglTexture($regl);
+  /** @type {ComputedRef<REGL.Regl|null>} */
+  const $texture = computed(() => $regl.value?.texture() ?? null);
   const $info = ref(null);
 
   function configure() {
