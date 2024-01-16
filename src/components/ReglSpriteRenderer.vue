@@ -1,11 +1,11 @@
 <script setup>
 import {computed, ref, unref, watchEffect} from "vue";
 import {useRegl} from "../vue/use-regl.js";
-import {useReglResource} from "../vue/use-regl-resource.js";
 import spriteUrl from "../assets/silhouette_1.jpeg";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {noop} from "@vueuse/core";
 import {Vec2} from "../Vec2.js";
+import {useReglTexture} from "../vue/use-regl-texture.js";
 
 const $canvas = ref(null);
 const $regl = useRegl($canvas, {
@@ -13,7 +13,7 @@ const $regl = useRegl($canvas, {
   height: 300,
   pixelRatio: 1,
 });
-const $sprite = useReglResource($regl, spriteUrl);
+const $sprite = useReglTexture($regl, spriteUrl);
 
 const $render = computed(() => {
   const regl = unref($regl);

@@ -2,7 +2,6 @@
 import {computed, ref, toValue, unref, watchEffect} from "vue";
 import {makeOffscreenCanvas} from "../canvas.js";
 import {useRegl} from "../vue/use-regl.js";
-import {useReglTexture} from "../vue/use-regl-texture.js";
 import {noop} from "@vueuse/core";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
 import {useReglTextSurface} from "../vue/use-regl-text-surface.js";

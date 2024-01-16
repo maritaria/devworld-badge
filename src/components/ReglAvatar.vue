@@ -10,13 +10,13 @@ import {loadTexture} from "../regl/utilities.js";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
 import {Vec2} from "../Vec2.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
-import {useReglResource} from "../vue/use-regl-resource.js";
+import {useReglTexture} from "../vue/use-regl-texture.js";
 
 const $canvas = ref(null);
 const $regl = useRegl($canvas, {width: 300, height: 500});
 
-const $background = useReglResource($regl, backgroundUrl);
-const $avatar = useReglResource($regl, avatarUrl);
+const $background = useReglTexture($regl, backgroundUrl);
+const $avatar = useReglTexture($regl, avatarUrl);
 
 watchEffect(async () => {
   const regl = unref($regl);
