@@ -31,7 +31,7 @@ const $regl = useRegl($canvas, {
 });
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
-const props = useMouseTilt(mouse);
+const $tilt = useMouseTilt(mouse);
 
 function useMouseTilt(mouse) {
   const tilt = computed(() => {
@@ -160,8 +160,8 @@ const $render = computedAsync(async () => {
     // 2. Render the panel with the card on it.
     regl.clear({depth: 1});
     drawPanel({
-      tilt: props.value.tilt,
-      distance: props.value.distance,
+      tilt: $tilt.value.tilt,
+      distance: $tilt.value.distance,
       texture: cardBuffer,
       scale: cardSize.normalized(),
     });
