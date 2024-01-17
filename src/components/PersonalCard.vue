@@ -80,6 +80,8 @@ const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize(
 const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
 const overlay = overlayCanvas.getContext('2d');
 const $overlayBuffer = useReglTexture($regl, overlayCanvas);
+const $scramble = useScrambledText(() => props.title);
+const $avatar = useReglTexture($regl, () => props.avatar);
 
 const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
@@ -214,13 +216,6 @@ watchEffect((onCleanup) => {
     onCleanup(cancel);
   }
 });
-
-const $scramble = useScrambledText(() => props.title);
-
-/** @type {import('vue').Ref<HTMLImageElement|Blob|null>} */
-const $avatarSource = computed(() => props.avatar);
-/** @type {import('vue').Ref<REGL.Texture2D | null>} */
-const $avatar = useReglTexture($regl, $avatarSource);
 
 </script>
 <template>
