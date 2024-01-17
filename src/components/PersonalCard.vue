@@ -18,7 +18,7 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import backgroundUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
-
+import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 
 const props = defineProps({
   title: {type: String},
@@ -76,13 +76,18 @@ function useMouseTilt(mouse) {
 
 const $background = useReglTexture($regl, backgroundUrl);
 const $foil = useReglTexture($regl, foilUrl, {flipY: true});
-
+const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize());
+const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
+const overlay = overlayCanvas.getContext('2d');
+const $overlayBuffer = useReglTexture($regl, overlayCanvas)
 
 const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
   const background = unref($background);
   const foil = unref($foil);
-  if (!regl || !background || !foil) return;
+  const cardBuffer = unref($cardBuffer);
+  const overlayBuffer = unref($overlayBuffer);
+  if (!regl || !background || !foil || !cardBuffer || !overlayBuffer) return;
 
   const drawCard = makeCardRenderer(regl, {
     ...cardSize.toSize(),
@@ -92,20 +97,9 @@ const $render = computed(() => {
   });
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
-
-  const cardBufferSize = cardSize.multiply(pxRatio);
-
-  const cardBuffer = regl.framebuffer({
-    ...cardBufferSize.toSize(),
-  });
-
-  const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
-  const overlay = overlayCanvas.getContext('2d');
   const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * pxRatio);
-  const overlayBuffer = regl.texture(overlayCanvas);
 
   let last = performance.now();
-
   function drawRain() {
     const now = performance.now();
     rainRender(now - last);
