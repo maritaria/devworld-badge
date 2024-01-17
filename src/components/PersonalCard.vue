@@ -157,12 +157,16 @@ const $render = computed(() => {
     },
   });
 
+  let bgCounter = background.counter;
   return function Render({mouse} = {}) {
+    const backgroundChanged = background.counter != bgCounter;
+    bgCounter = background.counter;
     // 1. Draw the card content
     cardBuffer.use(() => {
       regl.clear({depth: 1});
       drawCard({
         image: background,
+        imageChanged: backgroundChanged,
         foil,
         mouse,
         layers: () => {

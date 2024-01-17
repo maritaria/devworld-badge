@@ -41,7 +41,7 @@ export function makeCardRenderer(regl, {
 
   let stage1 = null;
   return function RenderCard(props) {
-    initStage1(props.image);
+    initStage1(props);
     drawFoil({
       card: stage1,
       foil: props.foil,
@@ -51,8 +51,8 @@ export function makeCardRenderer(regl, {
     drawCorners({cornerRadius});
   };
 
-  function initStage1(image) {
-    if (stage1) return;
+  function initStage1({image, imageChanged}) {
+    if (stage1 && !imageChanged) return;
     stage1 = regl.framebuffer(width, height);
     stage1.use(() => {
       regl.clear({depth: 1});
