@@ -16,13 +16,13 @@ import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {useScrambledText} from "../vue/use-scrambled-text.js";
 import {useReglTexture} from "../vue/use-regl-texture.js";
 
-import backgroundUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
-import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 
 const props = defineProps({
   title: {type: String},
   avatar: {type: [Blob, HTMLImageElement]},
+  background: {type: [String, Blob, HTMLImageElement]},
+  foil: {type: [String, Blob, HTMLImageElement]},
 });
 
 const $canvas = ref(null);
@@ -74,8 +74,8 @@ function useMouseTilt(mouse) {
   });
 }
 
-const $background = useReglTexture($regl, backgroundUrl);
-const $foil = useReglTexture($regl, foilUrl, {flipY: true});
+const $background = useReglTexture($regl, () => props.background);
+const $foil = useReglTexture($regl, () => props.foil, {flipY: true});
 const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize());
 const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
 const overlay = overlayCanvas.getContext('2d');
