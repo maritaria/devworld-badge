@@ -10,7 +10,7 @@ import PersonalCard from "./PersonalCard.vue";
 //     4.
 
 const $name = ref('Bram Kamies');
-const $avatarSource = ref(null);
+const $avatar = ref(null);
 
 </script>
 <template>
@@ -20,7 +20,7 @@ const $avatarSource = ref(null);
       <input type="text" v-model="$name" placeholder="Bram Kamies">
     </label>
     <span>Picture:</span>
-    <AvatarPicker v-model="$avatarSource" />
+    <AvatarPicker v-model="$avatar" />
   </form>
-  <PersonalCard :title="$name" :avatar="$avatarSource" />
+  <PersonalCard :title="$name" :avatar="$avatar" />
 </template>
