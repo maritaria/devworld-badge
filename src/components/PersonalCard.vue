@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, unref, watchEffect} from 'vue';
+import {computed, ref, toValue, unref, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {computedAsync, noop} from "@vueuse/core";
 import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
@@ -16,6 +16,8 @@ import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {useScrambledText} from "../vue/use-scrambled-text.js";
 import PersonalCard from "./PersonalCard.vue";
+import {createImage} from "../resources.js";
+import {useReglTexture} from "../vue/use-regl-texture.js";
 
 const props = defineProps({
   title: {type: String},
@@ -204,28 +206,7 @@ const $scramble = useScrambledText(() => props.title);
 /** @type {import('vue').Ref<HTMLImageElement|Blob|null>} */
 const $avatarSource = computed(() => props.avatar);
 /** @type {import('vue').Ref<REGL.Texture2D | null>} */
-const $avatar = computedAsync(async () => {
-  const regl = unref($regl);
-  return regl.texture(avatarSize.x, avatarSize.y);
-});
-
-watchEffect(async () => {
-  const avatar = unref($avatar);
-  let source = unref($avatarSource);
-  if (!avatar || !source) return;
-
-  if (source instanceof Blob) {
-    // Convert Blob to HTMLImageElement
-    let loadedSource = await loadImageFromBlob(source);
-    if ($avatarSource.value !== source) {
-      // Bail: source changed during await.
-      return;
-    }
-    source = loadedSource;
-  }
-  console.assert(source instanceof HTMLImageElement, '$avatarSource type not supported', source);
-  avatar(source);
-});
+const $avatar = useReglTexture($regl, $avatarSource);
 
 </script>
 <template>
