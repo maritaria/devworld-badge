@@ -80,7 +80,7 @@ const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize(
 const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
 const overlay = overlayCanvas.getContext('2d');
 const $overlayBuffer = useReglTexture($regl, overlayCanvas);
-const $scramble = useScrambledText(() => props.title);
+const $title = useScrambledText(() => props.title);
 const $avatar = useReglTexture($regl, () => props.avatar);
 
 const $render = computed(() => {
@@ -138,7 +138,7 @@ const $render = computed(() => {
   function drawName() {
     const screen = Vec2.fromSize(overlay.canvas);
     drawTexts([
-      {text: $scramble.value, fontSize: 20, ...screen.multiply(0.5, 0.8)},
+      {text: $title.value, fontSize: 20, ...screen.multiply(0.5, 0.8)},
       // {text: $scramble.value, fontSize: 10, ...screen.multiply(0.5, 0.86)},
     ]);
   }
