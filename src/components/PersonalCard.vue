@@ -116,7 +116,7 @@ const $render = computed(() => {
 
     overlay.fillStyle = 'white';
     overlay.textAlign = 'center';
-    overlay.shadowBlur = 20*pxRatio;
+    overlay.shadowBlur = 20 * pxRatio;
     overlay.shadowColor = 'deepskyblue';
 
     const shadowRepeats = 5;
@@ -126,7 +126,7 @@ const $render = computed(() => {
     for (const {text, x, y, fontSize} of lines) {
       overlay.font = `${fontSize * pxRatio}px monospace`;
       for (let i = 0; i < shadowRepeats; i++) {
-        overlay.fillText(text, x/scale, y/scale);
+        overlay.fillText(text, x / scale, y / scale);
       }
     }
 
