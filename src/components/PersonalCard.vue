@@ -79,7 +79,7 @@ const $foil = useReglTexture($regl, foilUrl, {flipY: true});
 const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize());
 const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
 const overlay = overlayCanvas.getContext('2d');
-const $overlayBuffer = useReglTexture($regl, overlayCanvas)
+const $overlayBuffer = useReglTexture($regl, overlayCanvas);
 
 const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
