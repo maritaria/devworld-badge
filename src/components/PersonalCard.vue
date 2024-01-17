@@ -98,8 +98,11 @@ const $render = computed(() => {
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
   const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * pxRatio);
+  const drawTexture = makeTextureRenderer(regl);
+  const drawAvatar = makeAvatarRenderer(regl);
 
   let last = performance.now();
+
   function drawRain() {
     const now = performance.now();
     rainRender(now - last);
@@ -107,29 +110,37 @@ const $render = computed(() => {
     last = now;
   }
 
-  function drawName() {
+  function drawTexts(lines) {
     overlay.reset();
     overlay.clearRect(0, 0, overlay.canvas.width, overlay.canvas.height);
-    overlay.font = `${20 * pxRatio}px monospace`;
+
     overlay.fillStyle = 'white';
     overlay.textAlign = 'center';
-    overlay.shadowBlur = 20;
+    overlay.shadowBlur = 20*pxRatio;
     overlay.shadowColor = 'deepskyblue';
 
+    const shadowRepeats = 5;
     const scale = 3;
     overlay.scale(scale, scale);
-    const shadowRepeats = 5;
-    const screen = Vec2.fromSize(overlay.canvas).divide(scale);
-    const center = screen.multiply(0.5, 0.7);
 
-    for (let i = 0; i < shadowRepeats; i++) {
-      overlay.fillText($scramble.value, center.x, center.y);
+    for (const {text, x, y, fontSize} of lines) {
+      overlay.font = `${fontSize * pxRatio}px monospace`;
+      for (let i = 0; i < shadowRepeats; i++) {
+        overlay.fillText(text, x/scale, y/scale);
+      }
     }
 
     overlayBuffer(overlayCanvas);
   }
 
-  const drawTexture = makeTextureRenderer(regl);
+  function drawName() {
+    const screen = Vec2.fromSize(overlay.canvas);
+    drawTexts([
+      {text: $scramble.value, fontSize: 20, ...screen.multiply(0.5, 0.8)},
+      // {text: $scramble.value, fontSize: 10, ...screen.multiply(0.5, 0.86)},
+    ]);
+  }
+
   const noDepth = regl({depth: {enable: false}});
   const mixPlusLighter = regl({
     blend: {
@@ -143,7 +154,6 @@ const $render = computed(() => {
       func: {src: 'src alpha', dst: 'one minus src alpha'},
     },
   });
-  const drawAvatar = makeAvatarRenderer(regl);
 
   return function Render({mouse} = {}) {
     // 1. Draw the card content
@@ -160,9 +170,12 @@ const $render = computed(() => {
               drawTexture({texture: overlayBuffer});
             });
             if ($avatar.value) {
-              const bufferSize = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight);
-              const avatarPos = bufferSize.multiply([0.5, 0.4]);
-              drawAvatar($avatar.value, avatarSize / 2, avatarPos);
+              const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply([0.5, 0.5]);
+              drawAvatar(
+                  $avatar.value,
+                  avatarSize / 2,
+                  pos
+              );
             }
             mixAdditiveBlend(() => {
               drawName();
