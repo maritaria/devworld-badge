@@ -19,7 +19,7 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 
 const props = defineProps({
-  title: {type: String},
+  title: {type: String, default: ''},
   avatar: {type: [Blob, HTMLImageElement]},
   background: {type: [String, Blob, HTMLImageElement]},
   foil: {type: [String, Blob, HTMLImageElement]},
