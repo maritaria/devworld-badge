@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref, unref, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
-import {computedAsync, noop} from "@vueuse/core";
+import {noop} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {makeTiltedPanelRenderer} from "../regl/panel-renderer.js";
