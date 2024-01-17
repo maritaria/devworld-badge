@@ -1,21 +1,26 @@
-import {computed, toValue, unref, watchEffect} from "vue";
+import {computed, ref, toValue, unref, watch, watchEffect} from "vue";
 import {computedAsync} from "@vueuse/core";
 import {loadImageFromBlob} from "../regl/utilities.js";
 import {createImage} from "../resources.js";
+import {FramebufferOptions} from "regl";
+import {autoDestroy} from "./regl-auto-destroy.js";
 
 /**
- * Provide a {REGL.Texture2D} that is bound to a given source.
+ * Provide a {@link REGL.Texture2D} that is bound to a given source.
  * The created texture reactively updates if the source is changed.
  * Note that the source is watched in a shallow manner.
  *
  * @param {import('vue').Ref<REGL.Regl>} $regl
  * @param {import('vue').MaybeRefOrGetter<REGL.TextureImageData|Blob|string>} $src
  * @param {REGL.Texture2DOptions?} options
- * @return {ComputedRef<REGL.Texture2D|undefined>}
+ * @return {import('vue').Ref<(REGL.Texture2D&{counter:number})|undefined>}
  */
 export function useReglTexture($regl, $src, options) {
-  /** @type {ComputedRef<REGL.Texture2D|undefined>} */
-  const $texture = computed(() => unref($regl)?.texture());
+  /** @type {import('vue').Ref<REGL.Texture2D|undefined>} */
+  const $texture = ref(null);
+  autoDestroy($texture);
+
+  // Load image data from $src
   const $image = computedAsync(async () => {
     const src = toValue($src);
     if (!src) return undefined;
@@ -28,12 +33,24 @@ export function useReglTexture($regl, $src, options) {
       return src;
     }
   });
-  watchEffect(async (cleanup) => {
-    const texture = $texture.value;
-    const image = $image.value;
-    if (texture && image) {
-      texture({data: image, ...options});
+
+  // Patch $texture when loaded image updates
+  watchEffect(() => {
+    const regl = unref($regl);
+    const image = unref($image);
+    if (!regl || !image) return;
+
+    const init = {data: image, ...options};
+    if ($texture.value) {
+      // Update texture
+      $texture.value(init);
+      $texture.value.counter++;
+    } else {
+      // Init texture
+      $texture.value = regl.texture(init);
+      $texture.value.counter = 0;
     }
   });
+
   return $texture;
 }

@@ -1,8 +1,8 @@
 <script setup>
-import {computed, ref, toValue, unref, watchEffect} from 'vue';
+import {computed, ref, unref, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {computedAsync, noop} from "@vueuse/core";
-import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
+import {makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {makeTiltedPanelRenderer} from "../regl/panel-renderer.js";
 import {Vec2} from "../Vec2.js";
@@ -10,14 +10,15 @@ import {useSpring} from "../vue/use-spring.js";
 import {makeOffscreenCanvas, pxRatio} from "../canvas.js";
 import {makeMatrixRainRenderer} from "../regl/matrix-rain-renderer.js";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
-import {frameLoop, loadImageFromBlob} from "../regl/utilities.js";
-import AvatarPicker from "./AvatarPicker.vue";
+import {frameLoop} from "../regl/utilities.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
 import {useScrambledText} from "../vue/use-scrambled-text.js";
-import PersonalCard from "./PersonalCard.vue";
-import {createImage} from "../resources.js";
 import {useReglTexture} from "../vue/use-regl-texture.js";
+
+import backgroundUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
+import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
+
 
 const props = defineProps({
   title: {type: String},
@@ -73,11 +74,16 @@ function useMouseTilt(mouse) {
   });
 }
 
+const $background = useReglTexture($regl, backgroundUrl);
+const $foil = useReglTexture($regl, foilUrl, {flipY: true});
 
-const $render = computedAsync(async () => {
+
+const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
-  if (!regl) return;
-  const resources = await loadCardResources(regl);
+  const background = unref($background);
+  const foil = unref($foil);
+  if (!regl || !background || !foil) return;
+
   const drawCard = makeCardRenderer(regl, {
     ...cardSize.toSize(),
     cornerRadius: 60 * pxRatio,
@@ -110,7 +116,7 @@ const $render = computedAsync(async () => {
   function drawName() {
     overlay.reset();
     overlay.clearRect(0, 0, overlay.canvas.width, overlay.canvas.height);
-    overlay.font = `${20*pxRatio}px monospace`;
+    overlay.font = `${20 * pxRatio}px monospace`;
     overlay.fillStyle = 'white';
     overlay.textAlign = 'center';
     overlay.shadowBlur = 20;
@@ -150,7 +156,8 @@ const $render = computedAsync(async () => {
     cardBuffer.use(() => {
       regl.clear({depth: 1});
       drawCard({
-        ...resources,
+        image: background,
+        foil,
         mouse,
         layers: () => {
           noDepth(() => {
