@@ -26,7 +26,9 @@ const props = defineProps({
   avatar: {type: [Blob, HTMLImageElement]},
   background: {type: [String, Blob, HTMLImageElement]},
   foil: {type: [String, Blob, HTMLImageElement]},
-  glow: {type: String, default: ''},
+  glow: {type: String, default: 'deepskyblue'},
+  textColor: {type: String, default: 'white'},
+  textShadow: {type: String},
 });
 
 const $glowColor = computed(() => {
@@ -137,10 +139,10 @@ const $render = computed(() => {
     overlay.reset();
     overlay.clearRect(0, 0, width, height);
 
-    overlay.fillStyle = 'white';
+    overlay.fillStyle = props.textColor;
     overlay.textAlign = 'center';
     overlay.shadowBlur = 20;
-    overlay.shadowColor = 'deepskyblue';
+    overlay.shadowColor = props.textShadow ?? props.glow;
 
     const shadowRepeats = 5;
     const xCenter = width / 2;

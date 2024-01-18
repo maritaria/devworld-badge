@@ -8,14 +8,15 @@ import TexturePicker from "../components/TexturePicker.vue";
 import AvatarPicker from "../components/AvatarPicker.vue";
 import {colorToHex, rgbaToHex} from "../colors.js";
 
-const $title = ref('');
-const $subtitle = ref('');
+const $title = ref('Line 1');
+const $subtitle = ref('Line 2');
 const $background = ref(null);
 const $foil = ref(foilUrl);
 const $avatar = ref(null);
 const $glow = ref('deepskyblue');
+const $textColor = ref('white');
 
-const glowPresets = [
+const colorPresets = [
   'black',
   'white',
   'deepskyblue',
@@ -41,7 +42,7 @@ watchLog('$glow', $glow);
           Color:
           <input type="color" v-model="$glow">
         </label>
-        <button v-for="preset in glowPresets" :key="preset" type="button" @click.prevent="$glow = colorToHex(preset)">
+        <button v-for="preset in colorPresets" :key="preset" type="button" @click.prevent="$glow = colorToHex(preset)">
           <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
         </button>
       </fieldset>
@@ -56,6 +57,9 @@ watchLog('$glow', $glow);
         <label>
           Color: <input type="color" v-model="$textColor">
         </label>
+        <button v-for="preset in colorPresets" :key="preset" type="button" @click.prevent="$textColor = colorToHex(preset)">
+          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
+        </button>
       </fieldset>
       <fieldset>
         <legend>Avatar</legend>
@@ -72,6 +76,7 @@ watchLog('$glow', $glow);
           :title="$title"
           :subtitle="$subtitle"
           :glow="$glow"
+          :textColor="$textColor"
       />
     </div>
   </div>
