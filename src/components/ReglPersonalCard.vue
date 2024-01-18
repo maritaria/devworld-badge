@@ -13,6 +13,7 @@ import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 //     4.
 
 const $name = ref('Bram Kamies');
+const $subtitle = ref('Developer')
 const $avatar = ref(null);
 const $background = ref(backgroundUrl);
 
@@ -23,8 +24,17 @@ const $background = ref(backgroundUrl);
       Name:
       <input type="text" v-model="$name" placeholder="Bram Kamies">
     </label>
+    <label>
+      Title:
+      <input type="text" v-model="$subtitle" placeholder="For example job title, country of origin">
+    </label>
     <span>Picture:</span>
     <AvatarPicker v-model="$avatar" />
   </form>
-  <PersonalCard :title="$name" :avatar="$avatar" :background="backgroundUrl" :foil="foilUrl" />
+  <PersonalCard :title="$name" :subtitle="$subtitle" :avatar="$avatar" :background="backgroundUrl" :foil="foilUrl" />
 </template>
+<style scoped>
+label {
+  display: block;
+}
+</style>

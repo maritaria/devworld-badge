@@ -20,6 +20,7 @@ import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 
 const props = defineProps({
   title: {type: String, default: ''},
+  subtitle: {type: String, default: ''},
   avatar: {type: [Blob, HTMLImageElement]},
   background: {type: [String, Blob, HTMLImageElement]},
   foil: {type: [String, Blob, HTMLImageElement]},
@@ -78,9 +79,11 @@ const $background = useReglTexture($regl, () => props.background);
 const $foil = useReglTexture($regl, () => props.foil, {flipY: true});
 const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize());
 const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
-const overlay = overlayCanvas.getContext('2d');
+const overlay = /** @type {CanvasRenderingContext2D} */ overlayCanvas.getContext('2d');
+overlay.textRendering = 'optimizeSpeed';
 const $overlayBuffer = useReglTexture($regl, overlayCanvas);
 const $title = useScrambledText(() => props.title);
+const $subtitle = useScrambledText(() => props.subtitle);
 const $avatar = useReglTexture($regl, () => props.avatar);
 
 const $render = computed(() => {
@@ -112,35 +115,38 @@ const $render = computed(() => {
     last = now;
   }
 
-  function drawTexts(lines) {
+  function drawName() {
+    const title = unref($title);
+    const subtitle = unref($subtitle);
+    if (!title && !subtitle) return;
+    const {width, height} = overlay.canvas;
     overlay.reset();
-    overlay.clearRect(0, 0, overlay.canvas.width, overlay.canvas.height);
+    overlay.clearRect(0, 0, width, height);
 
     overlay.fillStyle = 'white';
     overlay.textAlign = 'center';
-    overlay.shadowBlur = 20 * pxRatio;
+    overlay.shadowBlur = 20;
     overlay.shadowColor = 'deepskyblue';
 
     const shadowRepeats = 5;
-    const scale = 3;
-    overlay.scale(scale, scale);
+    const xCenter = width / 2;
 
-    for (const {text, x, y, fontSize} of lines) {
-      overlay.font = `${fontSize * pxRatio}px monospace`;
+    // Perf: Calling fillText with empty string is much slower than with actual text
+    if (title) {
+      overlay.font = `${60 * pxRatio}px monospace`;
+      const y = height * 0.8;
       for (let i = 0; i < shadowRepeats; i++) {
-        overlay.fillText(text, x / scale, y / scale);
+        overlay.fillText(title, xCenter, y);
       }
     }
-
+    if (subtitle) {
+      overlay.font = `${30 * pxRatio}px monospace`;
+      const y = height * 0.86;
+      for (let i = 0; i < shadowRepeats; i++) {
+        overlay.fillText(subtitle, xCenter, y);
+      }
+    }
     overlayBuffer(overlayCanvas);
-  }
-
-  function drawName() {
-    const screen = Vec2.fromSize(overlay.canvas);
-    drawTexts([
-      {text: $title.value, fontSize: 20, ...screen.multiply(0.5, 0.8)},
-      // {text: $scramble.value, fontSize: 10, ...screen.multiply(0.5, 0.86)},
-    ]);
   }
 
   const noDepth = regl({depth: {enable: false}});
