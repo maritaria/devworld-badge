@@ -41,7 +41,7 @@ function onFilePick(event) {
   };
   options.unshift(entry);
   handles.push(entry.url);
-  $selected.value = options;
+  $selected.value = entry;
 }
 
 onUnmounted(() => {
