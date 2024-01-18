@@ -3,10 +3,12 @@ import {computed, ref} from "vue";
 import PersonalCard from "../components/PersonalCard.vue";
 import {watchLog} from "../vue/development.js";
 import {htmlToDataUrl} from "../resources.js";
+import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 import TexturePicker from "../components/TexturePicker.vue";
 import AvatarPicker from "../components/AvatarPicker.vue";
 import {colorToHex, rgbaToHex} from "../colors.js";
+import ColorBadge from "../components/ColorBadge.vue";
 
 const $title = ref('Line 1');
 const $subtitle = ref('Line 2');
@@ -30,6 +32,13 @@ const colorPresets = [
   'yellow',
 ];
 
+const backgroundPresets = [
+  {label: 'DevWorld Sample Badge v3', value: badgeUrl},
+];
+const foilPresets = [
+  {label: 'DevWorld Sample Badge v3', value: foilUrl},
+];
+
 watchLog('$glow', $glow);
 
 </script>
@@ -43,7 +52,7 @@ watchLog('$glow', $glow);
           <input type="color" v-model="$glow">
         </label>
         <button v-for="preset in colorPresets" :key="preset" type="button" @click.prevent="$glow = colorToHex(preset)">
-          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
+          <ColorBadge :color="preset" /> <code>{{ preset }}</code>
         </button>
       </fieldset>
       <fieldset>
@@ -65,8 +74,8 @@ watchLog('$glow', $glow);
         <legend>Avatar</legend>
         <AvatarPicker v-model="$avatar" />
       </fieldset>
-      <TexturePicker legend="Background" fieldname="background" v-model="$background" />
-      <TexturePicker legend="Foil" fieldname="foil" v-model="$foil" />
+      <TexturePicker legend="Background" fieldname="background" v-model="$background" :presets="backgroundPresets" />
+      <TexturePicker legend="Foil" fieldname="foil" v-model="$foil" :presets="foilPresets" />
     </form>
     <div class="card-canvas">
       <PersonalCard
@@ -96,10 +105,5 @@ label {
   flex-shrink: 0;
   min-width: 600px;
 }
-
-canvas {
-  /*object-fit: contain;*/
-}
-
 
 </style>

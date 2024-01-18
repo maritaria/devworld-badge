@@ -1,20 +1,46 @@
 <script setup>
 import {computed, ref, watch, watchEffect} from "vue";
 import {watchLog} from "../vue/development.js";
+import {colorToHex} from "../colors.js";
+import ColorBadge from "./ColorBadge.vue";
 
-defineProps({
+const props = defineProps({
   legend: {type: String, default: null},
-  fieldname: {type:String, default: ''},
+  fieldname: {type: String, default: ''},
+  presets: {type: Array}, // {label: 'Preset: v3', value: 'asdf'}
 });
 const $model = defineModel();
 
-const $type = ref('none');
-const $color = ref('#000000');
+const $presets = computed(() => {
+  const entries = [
+    {label: 'Transparent', value: 'transparent'},
+    {label: 'Black', value: 'black'},
+    {label: 'Gray', value: 'gray'},
+    {label: 'White', value: 'white'},
+    ...(Array.isArray(props.presets) ? props.presets : []),
+  ];
+  return entries.map(entry => ({
+    key: `preset-${entry.value}`,
+    hex: tryParseColor(entry.value),
+    ...entry,
+  }));
+
+  function tryParseColor(color) {
+    try {
+      return colorToHex(color);
+    } catch {
+      return 'transparent';
+    }
+  }
+});
+
+const $type = ref('preset-transparent');
+const $preset = ref('#000000');
 const $file = ref(null);
-const $background = computed( () => {
+const $background = computed(() => {
   const type = $type.value;
-  if (type.startsWith('color')) {
-    return encodeColorSvg($color.value);
+  if (type.startsWith('preset')) {
+    return encodeColorSvg($preset.value);
   }
 
   switch (type) {
@@ -41,45 +67,25 @@ function encodeColorSvg(color) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
 }
 
-function onBgFilePick(event) {
-  $file.value = event.target.files[0] ?? null;
-  $type.value = 'file';
-}
-
-function onBgColorPick(event) {
-  $type.value = 'color';
-}
-
 </script>
 
 <template>
   <fieldset>
-    <legend>{{legend}}</legend>
-    <label>
-      <input type="radio" :name="fieldname" value="color-transparent" v-model="$type" @change="$color = 'transparent'">
-      Transparent
-    </label>
-    <label>
-      <input type="radio" :name="fieldname" value="color-black" v-model="$type" @change="$color = 'black'">
-      Black
-    </label>
-    <label>
-      <input type="radio" :name="fieldname" value="color-gray" v-model="$type" @change="$color = 'gray'">
-      Gray
-    </label>
-    <label>
-      <input type="radio" :name="fieldname" value="color-white" v-model="$type" @change="$color = 'white'">
-      White
+    <legend>{{ legend }}</legend>
+    <label v-for="{label, value, key} in $presets" :key="key">
+      <input type="radio" :name="fieldname" :value="key" v-model="$type" @change="$preset = value">
+      {{ label }}
+      <ColorBadge :color="value" dark />
     </label>
     <label>
       <input type="radio" :name="fieldname" value="color" v-model="$type">
       Color
-      <input type="color" v-model="$color" @input="onBgColorPick">
+      <input type="color" v-model="$preset" @input="$type = 'color'">
     </label>
     <label>
       <input type="radio" :name="fieldname" value="file" v-model="$type">
       Image:
-      <input type="file" accept="image/*" @change="onBgFilePick">
+      <input type="file" accept="image/*" @change="$type = 'file'; $file = $event.target.files[0];">
     </label>
   </fieldset>
 </template>
