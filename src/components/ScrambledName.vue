@@ -8,7 +8,7 @@ const props = defineProps({
   text: {default: ''},
 });
 
-const $text = useScrambledText(() => props.text);
+const $text = useScrambledText(() => props.text).text;
 
 </script>
 

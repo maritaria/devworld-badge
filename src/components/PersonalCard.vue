@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, unref, watchEffect} from 'vue';
+import {computed, reactive, ref, unref, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {noop} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
@@ -13,7 +13,7 @@ import {makeTextureRenderer} from "../regl/texture-renderer.js";
 import {frameLoop} from "../regl/utilities.js";
 import {makeAvatarRenderer} from "../regl/avatar-renderer.js";
 import {makeSpriteRenderer} from "../regl/sprite-renderer.js";
-import {useScrambledText} from "../vue/use-scrambled-text.js";
+import {syncScramblers, useScrambledText} from "../vue/use-scrambled-text.js";
 import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
@@ -84,6 +84,7 @@ overlay.textRendering = 'optimizeSpeed';
 const $overlayBuffer = useReglTexture($regl, overlayCanvas);
 const $title = useScrambledText(() => props.title);
 const $subtitle = useScrambledText(() => props.subtitle);
+syncScramblers($title.state, $subtitle.state);
 const $avatar = useReglTexture($regl, () => props.avatar);
 
 const $render = computed(() => {
@@ -116,8 +117,8 @@ const $render = computed(() => {
   }
 
   function drawName() {
-    const title = unref($title);
-    const subtitle = unref($subtitle);
+    const title = unref($title.text);
+    const subtitle = unref($subtitle.text);
     if (!title && !subtitle) return;
     const {width, height} = overlay.canvas;
     overlay.reset();
