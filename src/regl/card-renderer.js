@@ -18,6 +18,7 @@ export async function loadCardResources(regl) {
  *   image: REGL.Texture2D,
  *   foil: REGL.Texture2D,
  *   mouse?: [number, number],
+ *   glowColor?: [number,number,number,number],
  * }} RenderCardProps
  * @typedef {function(props: RenderCardProps): void} RenderCardFn
  */
@@ -51,13 +52,13 @@ export function makeCardRenderer(regl, {
     drawCorners({cornerRadius});
   };
 
-  function initStage1({image, imageChanged}) {
-    if (stage1 && !imageChanged) return;
+  function initStage1({image, glowColor, baseChanged}) {
+    if (stage1 && !baseChanged) return;
     stage1 = regl.framebuffer(width, height);
     stage1.use(() => {
       regl.clear({depth: 1});
       drawImage({image});
-      drawShadow({cornerRadius});
+      drawShadow({cornerRadius, glowColor});
     });
   }
 }
@@ -123,6 +124,9 @@ function makeShadowRenderer(regl, blurRadius = 20, blurSpread = 10) {
         ];
       },
       cornerRadius: regl.prop('cornerRadius'),
+      glowColor: (_, props) => {
+        return props.glowColor ?? [0, 0xBF / 0xFF, 1];
+      },
     },
     // Additive blending
     blend: {
@@ -147,6 +151,7 @@ function makeShadowRenderer(regl, blurRadius = 20, blurSpread = 10) {
       varying vec2 uv;
       uniform vec2 screen;
       uniform float cornerRadius;
+      uniform vec3 glowColor;
 
       float sdRoundedBox(in vec2 centerDelta, in vec2 size, in float cornerRadius) {
         // Source: https://iquilezles.org/articles/distfunctions2d/
@@ -218,8 +223,7 @@ function makeShadowRenderer(regl, blurRadius = 20, blurSpread = 10) {
 
         // --border-glow-inside: deepskyblue; // .dev-world.blue
         // box-shadow: var(--border-glow-inside) 0 0 20px 10px inset;
-        vec3 deepskyblue = vec3(0.0, 191.0 / 255.0, 1.0);// #00BFFF
-        vec3 boxShadow = insetBoxShadow(pixel, vec2(0), screen, cornerRadius, deepskyblue);
+        vec3 boxShadow = insetBoxShadow(pixel, vec2(0), screen, cornerRadius, glowColor);
 
         // Write out the color, should be additively blended
         gl_FragColor += vec4(boxShadow, 1.0);

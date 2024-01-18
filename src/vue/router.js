@@ -24,6 +24,7 @@ import DevWorldTicket from "../components/DevWorldTicket.vue";
 import DevWorldStandaloneBadge from "../components/DevWorldStandaloneBadge.vue";
 import ReglTextRenderer from "../components/ReglTextRenderer.vue";
 import ReglSpriteRenderer from "../components/ReglSpriteRenderer.vue";
+import DevWorldCardBuilder from "../pages/DevWorldCardBuilder.vue";
 
 function nameof(component) {
   return component.__name ?? component.__file.match(/([^/\\]+)\.\w+$/)[1];
@@ -37,6 +38,7 @@ const components = [
   AvatarPicker,
   CanvasTextRenderer,
   DevWorldBadges,
+  DevWorldCardBuilder,
   DevWorldCircuit,
   DevWorldNeon,
   DevWorldStandaloneBadge,

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive, ref, unref, watchEffect} from 'vue';
+import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {noop} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
@@ -17,6 +17,8 @@ import {syncScramblers, useScrambledText} from "../vue/use-scrambled-text.js";
 import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
+import {colorToRgba} from "../colors.js";
+import {watchLog} from "../vue/development.js";
 
 const props = defineProps({
   title: {type: String, default: ''},
@@ -24,6 +26,12 @@ const props = defineProps({
   avatar: {type: [Blob, HTMLImageElement]},
   background: {type: [String, Blob, HTMLImageElement]},
   foil: {type: [String, Blob, HTMLImageElement]},
+  glow: {type: String, default: ''},
+});
+
+const $glowColor = computed(() => {
+  if (!props.glow) return undefined;
+  return Array.from(colorToRgba(props.glow).slice(0, 3)).map(c => c / 0xFF);
 });
 
 const $canvas = ref(null);
@@ -86,6 +94,11 @@ const $title = useScrambledText(() => props.title);
 const $subtitle = useScrambledText(() => props.subtitle);
 syncScramblers($title.state, $subtitle.state);
 const $avatar = useReglTexture($regl, () => props.avatar);
+
+let baseDirty = false;
+watch($glowColor, () => {
+  baseDirty = true;
+});
 
 const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
@@ -164,16 +177,17 @@ const $render = computed(() => {
     },
   });
 
-  let bgCounter = background.counter;
+  let prevBgCounter = background.counter;
   return function Render({mouse} = {}) {
-    const backgroundChanged = background.counter != bgCounter;
-    bgCounter = background.counter;
+    const backgroundChanged = background.counter != prevBgCounter;
+    prevBgCounter = background.counter;
     // 1. Draw the card content
     cardBuffer.use(() => {
       regl.clear({depth: 1});
       drawCard({
+        baseChanged: backgroundChanged || baseDirty,
         image: background,
-        imageChanged: backgroundChanged,
+        glowColor: $glowColor.value,
         foil,
         mouse,
         layers: () => {
@@ -206,6 +220,7 @@ const $render = computed(() => {
       texture: cardBuffer,
       scale: cardSize.normalized(),
     });
+    baseDirty = false;
   }
 }, noop);
 
@@ -230,5 +245,5 @@ watchEffect((onCleanup) => {
 
 </script>
 <template>
-  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto;max-width:80vw" />
+  <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto" />
 </template>
