@@ -3,6 +3,9 @@ import CardBase from "./CardBase.vue";
 import Foil from "./Foil.vue";
 import MatrixRunes from "./MatrixRunes.vue";
 import MatrixShine from "./MatrixShine.vue";
+import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
+import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
+
 </script>
 
 <template>
@@ -11,9 +14,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Default</h2>
       <CardBase>
         <div class="dev-world">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -21,9 +24,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Lightgreen</h2>
       <CardBase>
         <div class="dev-world lightgreen">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -31,9 +34,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Lawngreen</h2>
       <CardBase>
         <div class="dev-world lawngreen">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -41,9 +44,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Red</h2>
       <CardBase>
         <div class="dev-world red">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -51,9 +54,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Blue</h2>
       <CardBase>
         <div class="dev-world blue">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -61,9 +64,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Yellow</h2>
       <CardBase>
         <div class="dev-world yellow">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -71,9 +74,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>Purple</h2>
       <CardBase>
         <div class="dev-world purple">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
         </div>
       </CardBase>
     </div>
@@ -81,9 +84,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>MatrixRunes</h2>
       <CardBase>
         <div class="dev-world blue">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
           <MatrixRunes />
         </div>
       </CardBase>
@@ -92,9 +95,9 @@ import MatrixShine from "./MatrixShine.vue";
       <h2>MatrixShine</h2>
       <CardBase>
         <div class="dev-world blue">
-          <img src="../assets/doc/niki-devworld-badge-sample-3.jpg">
+          <img :src="badgeUrl">
           <div class="inset extra" ref="$inset"></div>
-          <Foil foil="../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg" />
+          <Foil :foil="foilUrl" />
           <MatrixShine />
         </div>
       </CardBase>
