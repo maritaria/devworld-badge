@@ -1,7 +1,5 @@
 <script setup>
-import {computed, ref, watch, watchEffect} from "vue";
-import {watchLog} from "../vue/development.js";
-import {colorToHex} from "../colors.js";
+import {computed, ref, toValue, watch, watchEffect} from "vue";
 import ColorBadge from "./ColorBadge.vue";
 
 const props = defineProps({
@@ -11,39 +9,52 @@ const props = defineProps({
 });
 const $model = defineModel();
 
+/**
+ * @typedef {{
+ *   label:string,
+ *   value:string,
+ *   type:'color'|'url',
+ * }} PresetEntry
+ */
+
+/** @type {ComputedRef<(PresetEntry & {key:string})[]>} */
 const $presets = computed(() => {
   const entries = [
-    {label: 'Transparent', value: 'transparent'},
-    {label: 'Black', value: 'black'},
-    {label: 'Gray', value: 'gray'},
-    {label: 'White', value: 'white'},
+    {label: 'Transparent', value: 'transparent', type: 'color'},
+    {label: 'Black', value: 'black', type: 'color'},
+    {label: 'Gray', value: 'gray', type: 'color'},
+    {label: 'White', value: 'white', type: 'color'},
     ...(Array.isArray(props.presets) ? props.presets : []),
   ];
   return entries.map(entry => ({
     key: `preset-${entry.value}`,
-    hex: tryParseColor(entry.value),
     ...entry,
   }));
-
-  function tryParseColor(color) {
-    try {
-      return colorToHex(color);
-    } catch {
-      return 'transparent';
-    }
-  }
 });
 
 const $type = ref('preset-transparent');
-const $preset = ref('#000000');
+/** @type {import('vue').Ref<null|PresetEntry>} */
+const $preset = ref($presets.value[0]);
 const $file = ref(null);
+const $color = ref('');
 const $background = computed(() => {
   const type = $type.value;
   if (type.startsWith('preset')) {
-    return encodeColorSvg($preset.value);
+    const entry = $preset.value;
+    switch (entry?.type) {
+      case 'color':
+        return encodeColorSvg(entry.value);
+      case "url":
+        return entry.value;
+      case "computed":
+        return toValue(entry.value);
+      default:
+        return undefined;
+    }
   }
-
   switch (type) {
+    case 'color':
+      return encodeColorSvg($color.value);
     case 'file':
       return $file.value;
     case 'none':
@@ -72,15 +83,15 @@ function encodeColorSvg(color) {
 <template>
   <fieldset>
     <legend>{{ legend }}</legend>
-    <label v-for="{label, value, key} in $presets" :key="key">
-      <input type="radio" :name="fieldname" :value="key" v-model="$type" @change="$preset = value">
-      {{ label }}
-      <ColorBadge :color="value" dark />
+    <label v-for="entry in $presets" :key="entry.key">
+      <input type="radio" :name="fieldname" :value="entry.key" v-model="$type" @change="$preset = entry">
+      {{ entry.label }}
+      <ColorBadge v-if="entry.type=='color'" :color="entry.value" dark />
     </label>
     <label>
       <input type="radio" :name="fieldname" value="color" v-model="$type">
       Color
-      <input type="color" v-model="$preset" @input="$type = 'color'">
+      <input type="color" v-model="$color" @input="$type = 'color'">
     </label>
     <label>
       <input type="radio" :name="fieldname" value="file" v-model="$type">
