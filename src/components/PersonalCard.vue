@@ -18,7 +18,6 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 import {colorToRgba} from "../colors.js";
-import {watchLog} from "../vue/development.js";
 
 const props = defineProps({
   title: {type: String, default: ''},
@@ -255,7 +254,6 @@ watchEffect((onCleanup) => {
     onCleanup(cancel);
   }
 });
-
 </script>
 <template>
   <canvas ref="$canvas" @mousemove="onMouseMove" @mouseleave="onMouseLeave" style="height:auto" />

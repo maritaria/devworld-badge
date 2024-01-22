@@ -1,7 +1,6 @@
 <script setup>
 import {onUnmounted, ref, unref} from "vue";
 import PersonalCard from "../components/PersonalCard.vue";
-import {watchLog} from "../vue/development.js";
 import {createImage} from "../resources.js";
 import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
 import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
@@ -35,8 +34,6 @@ const $avatar = ref(null);
 const $glow = ref('deepskyblue');
 const $textColor = ref('white');
 const $textOutline = ref('transparent');
-
-watchLog('$background', $background);
 
 const colorPresets = [
     'transparent',
@@ -188,8 +185,6 @@ const foilPresets = [
   {label: 'DevWorld Sample Badge v3', value: foilUrl, type: 'url'},
   {label: 'Automaticly convert background', value: $backgroundAutoFoil, type: 'computed'}
 ];
-
-watchLog('$glow', $glow);
 
 </script>
 <template>
