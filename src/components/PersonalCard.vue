@@ -29,6 +29,8 @@ const props = defineProps({
   glow: {type: String, default: 'deepskyblue'},
   textColor: {type: String, default: 'white'},
   textShadow: {type: String},
+  textStrokeWidth: {type: Number, default: 0},
+  textStrokeColor: {type: String, default: 'white'},
 });
 
 const $glowColor = computed(() => {
@@ -152,6 +154,16 @@ const $render = computed(() => {
       const y = height * 0.8;
       for (let i = 0; i < shadowRepeats; i++) {
         overlay.fillText(title, xCenter, y);
+      }
+      if (props.textStrokeWidth && props.textStrokeColor !== '#00000000') {
+        const oldBlur = overlay.shadowBlur;
+        overlay.shadowBlur = 0;
+        overlay.lineWidth = props.textStrokeWidth * pxRatio;
+        overlay.strokeStyle = props.textStrokeColor;
+        overlay.strokeText(title, xCenter, y);
+
+        overlay.fillText(title, xCenter, y);
+        overlay.shadowBlur = oldBlur;
       }
     }
     if (subtitle) {
