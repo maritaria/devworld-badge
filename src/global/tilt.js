@@ -1,5 +1,3 @@
-document.querySelectorAll('[js-tilt]').forEach(setupTiltByMouse);
-
 /** @param {HTMLElement} element */
 function setupTiltByMouse(element) {
   element.addEventListener('mousemove', onMouseMove);
