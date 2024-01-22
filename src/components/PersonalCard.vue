@@ -134,7 +134,6 @@ const $render = computed(() => {
   function drawName() {
     const title = unref($title.text);
     const subtitle = unref($subtitle.text);
-    if (!title && !subtitle) return;
     const {width, height} = overlay.canvas;
     overlay.reset();
     overlay.clearRect(0, 0, width, height);
