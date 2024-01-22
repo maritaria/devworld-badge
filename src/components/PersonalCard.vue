@@ -210,7 +210,7 @@ const $render = computed(() => {
               drawTexture({texture: overlayBuffer});
             });
             if ($avatar.value) {
-              const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply([0.5, 0.5]);
+              const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply([0.5, 0.45]);
               drawAvatar(
                   $avatar.value,
                   avatarSize / 2,
