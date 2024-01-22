@@ -10,6 +10,7 @@ import {clamp, computedAsync, noop} from "@vueuse/core";
 import {loadCardResources, makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {useRegl} from "../vue/use-regl.js";
+import {applyTilt} from "../tilt.js";
 
 const $canvas = ref(null);
 

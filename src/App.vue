@@ -2,6 +2,7 @@
 import {computed, provide, ref, watchEffect} from "vue";
 import {useInterval, useLocalStorage} from "@vueuse/core";
 import NavigationMenu from "./components/NavigationMenu.vue";
+import {applyTilt} from "./tilt.js";
 
 const autoPointer = useLocalStorage('cards.autoPointer', 'disabled');
 

@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
+import {setupTiltByMouse} from "../tilt.js";
 
 defineProps(['wrap-class']);
 

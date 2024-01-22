@@ -1,5 +1,5 @@
 /** @param {HTMLElement} element */
-function setupTiltByMouse(element) {
+export function setupTiltByMouse(element) {
   element.addEventListener('mousemove', onMouseMove);
   element.addEventListener('mouseleave', onMouseLeave);
 
@@ -22,7 +22,7 @@ function setupTiltByMouse(element) {
   }
 }
 
-function applyTilt(element, percent) {
+export function applyTilt(element, percent) {
   if (percent) {
     const center = {
       x: percent.x - 50,
