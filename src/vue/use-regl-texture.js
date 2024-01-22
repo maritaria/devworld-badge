@@ -2,7 +2,6 @@ import {computed, ref, toValue, unref, watch, watchEffect} from "vue";
 import {computedAsync} from "@vueuse/core";
 import {loadImageFromBlob} from "../regl/utilities.js";
 import {createImage} from "../resources.js";
-import {FramebufferOptions} from "regl";
 import {autoDestroy} from "./regl-auto-destroy.js";
 
 /**
