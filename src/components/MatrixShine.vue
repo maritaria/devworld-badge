@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watchEffect} from "vue";
-import {useRafFn, useResizeObserver} from "@vueuse/core";
+import {clamp, useRafFn, useResizeObserver} from "@vueuse/core";
 
 // Based on https://codepen.io/yaclive/pen/EayLYO
 
@@ -90,7 +90,7 @@ function colorDroplet(y, col) {
   const head = [255, 255, 255];
   const body = [0, 255, 0];
   const tail = [0, 0, 0];
-  const headLength = Math.clamp(col.maxLength / 3, 3, 10);
+  const headLength = clamp(col.maxLength / 3, 3, 10);
   if (y <= 0) return head;
   if (y < 5) {
     return lerpColor(y / 5, head, body);

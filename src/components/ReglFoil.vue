@@ -6,6 +6,7 @@ import foilUrl from '../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg';
 import {linearGradientLength} from "../linear-gradient.js";
 import {Vec2} from "../Vec2.js";
 import {applyTilt} from "../tilt.js";
+import {remap} from "../math.js";
 
 const $canvas = ref(null);
 
@@ -303,8 +304,8 @@ function onMouseMove(event) {
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
   };
-  mouse.x = Math.remap(absolute.x, 0, rect.width, -1, 1);
-  mouse.y = Math.remap(absolute.y, 0, rect.height, 1, -1);
+  mouse.x = remap(absolute.x, 0, rect.width, -1, 1);
+  mouse.y = remap(absolute.y, 0, rect.height, 1, -1);
 }
 
 /** @param {MouseEvent} event */
