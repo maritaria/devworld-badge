@@ -53,6 +53,10 @@ export async function loadTextureFromBlob(regl, blob) {
   return regl.texture(await loadImageFromBlob(blob));
 }
 
+/**
+ * @param {Blob} blob
+ * @return {Promise<HTMLImageElement>}
+ */
 export async function loadImageFromBlob(blob) {
   const url = URL.createObjectURL(blob);
   try {

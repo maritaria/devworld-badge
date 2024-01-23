@@ -1,5 +1,5 @@
 <script setup>
-import {onUnmounted, ref, unref} from "vue";
+import {computed, onUnmounted, ref, unref} from "vue";
 import PersonalCard from "../components/PersonalCard.vue";
 import {createImage} from "../resources.js";
 import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
@@ -37,6 +37,18 @@ const $textOutline = ref(colorToHex('transparent'));
 const $textShadow = ref(colorToHex('deepskyblue'));
 const sizeCard = [600, 846];
 const sizeSquare = [400, 400];
+const $sizeBg = computed(() => {
+  const img = unref($backgroundImage);
+  if (!img) return undefined;
+  const {width,height} = img;
+  return [width, height];
+});
+const $sizeBgScaled = computed(() => {
+  if (pxRatio === 1) return undefined;
+  const size = unref($sizeBg);
+  if (!size) return undefined;
+  return size.map(v => Math.max(1, Math.ceil(v / pxRatio)));
+});
 const $size = ref(sizeCard);
 
 const colorPresets = [
@@ -62,27 +74,22 @@ const colorPresets = [
   'darkviolet',
 ];
 
-const $backgroundAutoFoil = computedAsync(async (onCancel) => {
+/** @type {import('vue').Ref<HTMLImageElement|undefined>} */
+const $backgroundImage = computedAsync(async () => {
   const background = unref($background);
   if (!background) return;
 
-  // 1. Load background
-
-  console.log('Background:', background);
-  // A) "data:image/svg+xml;..."
-  // B) "/src/path/to/img.png"
-  // C) File {...}
-
-  const img = (background instanceof Blob)
+  return (background instanceof Blob)
       ? await loadImageFromBlob(background)
       : await createImage(background);
+});
 
+const $backgroundAutoFoil = computed(() => {
+  const img = unref($backgroundImage);
+  if (!img) return;
   const {width, height} = img;
-
   console.log('Converting background, size:', width, 'x', height);
 
-
-  // 2. Process background
   const canvas = document.createElement('canvas');
   canvas.style.position = 'fixed';
   canvas.style.top = '0';
@@ -186,6 +193,14 @@ const foilPresets = [
         <label>
           <input type="radio" name="size" :value="sizeSquare" v-model="$size">
           Square ({{sizeSquare[0]}}x{{sizeSquare[1]}})
+        </label>
+        <label v-if="$sizeBg">
+          <input type="radio" name="size" :value="$sizeBg" v-model="$size">
+          Auto ({{$sizeBg[0]}}x{{$sizeBg[1]}})
+        </label>
+        <label v-if="$sizeBgScaled">
+          <input type="radio" name="size" :value="$sizeBgScaled" v-model="$size">
+          Auto ({{$sizeBgScaled[0]}}x{{$sizeBgScaled[1]}})
         </label>
       </fieldset>
       <fieldset>
