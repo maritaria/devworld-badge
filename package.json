@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    "import": "./dist/devworld-badge.js",
+  },
+  "types": "./src/library.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

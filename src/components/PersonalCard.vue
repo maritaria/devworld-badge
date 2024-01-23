@@ -18,21 +18,24 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 import {colorToRgba} from "../colors.js";
-
+const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBAAA=';
 const props = defineProps({
+  cardSize: {type: Array, default: () => [600, 846]},
+  distancePassive: {type: Number, default: 1.5},
+  distanceHover: {type: Number, default: 1.2},
+  // Card
+  background: {type: [String, Blob, HTMLImageElement]},
+  foil: {type: [String, Blob, HTMLImageElement], default: transparentPixel},
+  glow: {type: String, default: 'deepskyblue'},
+  // Text
   title: {type: String, default: ''},
   subtitle: {type: String, default: ''},
-  avatar: {type: [Blob, HTMLImageElement]},
-  background: {type: [String, Blob, HTMLImageElement]},
-  foil: {type: [String, Blob, HTMLImageElement]},
-  glow: {type: String, default: 'deepskyblue'},
   textColor: {type: String, default: 'white'},
   textShadowColor: {type: String},
   textStrokeWidth: {type: Number, default: 0},
   textStrokeColor: {type: String, default: 'white'},
-  cardSize: {type: Array, default: () => [600, 846]},
-  distancePassive: {type: Number, default: 1.5},
-  distanceHover: {type: Number, default: 1.2},
+  // Avatar
+  avatar: {type: [Blob, HTMLImageElement]},
   avatarSize: {type: Number, default: 400},
 });
 const $cardSize = computed(() => new Vec2(...props.cardSize));
@@ -146,7 +149,8 @@ const $drawCard = computed(() => {
 watchEffect(() => {
   const drawCard = unref($drawCard);
   if (!drawCard) return;
-  drawCard.notifyResize($cardSize.value.x, $cardSize.value.y);
+  const {x, y} = unref($cardSize);
+  drawCard.notifyResize(x, y);
 });
 
 watch($glowColor, () => {
