@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive, ref, toRaw, unref, watch, watchEffect} from 'vue';
+import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {noop} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
