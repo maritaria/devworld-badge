@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "import": "./dist/devworld-badge.js",
+    "import": "./dist/devworld-badge.js"
   },
   "types": "./src/library.d.ts",
   "scripts": {
