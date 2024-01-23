@@ -34,6 +34,11 @@ const $avatar = ref(null);
 const $glow = ref('deepskyblue');
 const $textColor = ref('white');
 const $textOutline = ref('transparent');
+const sizeCard = [600, 846];
+const sizeSquare = [400, 400];
+const $size = ref(sizeCard);
+
+
 
 const colorPresets = [
     'transparent',
@@ -58,21 +63,12 @@ const colorPresets = [
   'darkviolet',
 ];
 
-/**
- * @type {null|HTMLCanvasElement}
- */
-let prevCanvas = null;
-onUnmounted(() => {
-  prevCanvas?.remove();
-  prevCanvas = null;
-});
 const $backgroundAutoFoil = computedAsync(async (onCancel) => {
   const background = unref($background);
   if (!background) return;
 
   // 1. Load background
 
-  console.group('$backgroundAutoFoil');
   console.log('Background:', background);
   // A) "data:image/svg+xml;..."
   // B) "/src/path/to/img.png"
@@ -97,8 +93,6 @@ const $backgroundAutoFoil = computedAsync(async (onCancel) => {
   canvas.style.width = `${width / pxRatio}px`;
   canvas.style.height = `${height / pxRatio}px`;
   canvas.style.border = '1px solid white';
-  prevCanvas?.remove();
-  // document.body.appendChild(prevCanvas = canvas);
   const ctx = canvas.getContext('2d');
   console.assert(!!ctx, 'Failed to create 2d context');
   ctx.drawImage(img, 0, 0);
@@ -151,12 +145,6 @@ const $backgroundAutoFoil = computedAsync(async (onCancel) => {
 
   ctx.putImageData(pixels, 0, 0);
 
-  onCancel(() => console.log('cancelled'));
-
-  console.log('Done');
-  console.groupEnd();
-
-
   function threshold(x, boundary, grace) {
     // 0..boundary..1
     // 0..boundary-grace => 0
@@ -190,6 +178,17 @@ const foilPresets = [
 <template>
   <div class="card-builder">
     <form>
+      <fieldset>
+        <legend>Canvas</legend>
+        <label>
+          <input type="radio" name="size" :value="sizeCard" v-model="$size">
+          Square ({{sizeCard[0]}}x{{sizeCard[1]}})
+        </label>
+        <label>
+          <input type="radio" name="size" :value="sizeSquare" v-model="$size">
+          Square ({{sizeSquare[0]}}x{{sizeSquare[1]}})
+        </label>
+      </fieldset>
       <fieldset>
         <legend>Glow</legend>
         <label>
@@ -250,6 +249,7 @@ const foilPresets = [
           :textColor="$textColor"
           :textStrokeColor="$textOutline"
           :textStrokeWidth="4"
+          :cardSize="$size"
       />
     </div>
   </div>

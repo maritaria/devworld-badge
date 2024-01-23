@@ -4,15 +4,24 @@ import {clamp} from "@vueuse/core";
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 export function makeMatrixRainRenderer(canvas, fontSize = 10) {
-  const {width, height} = canvas;
+
   /** @type {CanvasRenderingContext2D|null} */
   const ctx = canvas.getContext('2d');
   if (ctx === null) throw new Error('Failed to obtain "2d" context');
 
+  let prevWidth = 0;
+  let prevHeight = 0;
+
   // State
-  const columns = initColumns(width, height, fontSize);
+  let columns = [];
   let timestamp = 0;
   return function renderMatrixRain(delta = 1 / 60) {
+    let {width, height} = canvas;
+    if (width !== prevWidth || height !== prevHeight) {
+      columns = initColumns(width, height, fontSize);
+      prevWidth = width;
+      prevHeight = height;
+    }
     timestamp += delta;
     const maxY = Math.floor(height / fontSize);
 

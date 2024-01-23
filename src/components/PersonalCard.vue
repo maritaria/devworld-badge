@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
+import {computed, reactive, ref, toRaw, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {noop} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
@@ -30,25 +30,39 @@ const props = defineProps({
   textShadow: {type: String},
   textStrokeWidth: {type: Number, default: 0},
   textStrokeColor: {type: String, default: 'white'},
+  cardSize: {type: Array, default: () => [600, 846]},
+  distancePassive: {type: Number, default: 1.5},
+  distanceHover: {type: Number, default: 1.2},
+  avatarSize: {type: Number, default: 400},
 });
+const $cardSize = computed(() => new Vec2(...props.cardSize));
 
 const $glowColor = computed(() => {
   if (!props.glow) return undefined;
   return Array.from(colorToRgba(props.glow).slice(0, 3)).map(c => c / 0xFF);
 });
 
+/** @type {import('vue').Ref<HTMLCanvasElement|null>} */
 const $canvas = ref(null);
-const cardSize = new Vec2(600, 846);
-const avatarSize = 400 * pxRatio;
-const distancePassive = 1.5;
-const distanceHover = 1.2;
 const $regl = useRegl($canvas, {
-  ...cardSize.toSize(),
+  ...$cardSize.value.toSize(),
   attributes: {
     // Needed for the corner renderer, as it only affects the alpha channel.
     premultipliedAlpha: false,
     antialias: true,
   },
+});
+
+watchEffect(() => {
+  const canvas = unref($canvas);
+  const cardSize = unref($cardSize);
+  if (!canvas || !cardSize) return;
+  canvas.width = cardSize.x * pxRatio;
+  canvas.height = cardSize.y * pxRatio;
+  canvas.style.width = `${cardSize.x}px`;
+  canvas.style.height = `${cardSize.y}px`;
+  $regl.value?.({viewport: {}})(() => {
+  });
 });
 
 // todo:
@@ -71,7 +85,7 @@ function useMouseTilt(mouse) {
   });
   const springX = useSpring(() => tilt.value.x);
   const springY = useSpring(() => tilt.value.y);
-  const distance = useSpring(() => mouse.hover ? distanceHover : distancePassive, {
+  const distance = useSpring(() => mouse.hover ? props.distanceHover : props.distancePassive, {
     stiffness: 1 / 20,
     damping: 1 / 8,
   });
@@ -88,8 +102,25 @@ function useMouseTilt(mouse) {
 
 const $background = useReglTexture($regl, () => props.background);
 const $foil = useReglTexture($regl, () => props.foil, {flipY: true});
-const $cardBuffer = useReglFramebuffer($regl, cardSize.multiply(pxRatio).toSize());
-const overlayCanvas = makeOffscreenCanvas(cardSize.x, cardSize.y);
+const $cardBuffer = useReglFramebuffer($regl, $cardSize.value.multiply(pxRatio).toSize());
+
+watchEffect(() => {
+  const buffer = $cardBuffer.value;
+  if (!buffer) return;
+  const size = $cardSize.value.multiply(pxRatio);
+  buffer.resize(size.x, size.y);
+});
+
+const overlayCanvas = makeOffscreenCanvas($cardSize.value.x, $cardSize.value.y);
+watchEffect(() => {
+  const size = $cardSize.value;
+  overlayCanvas.width = size.x * pxRatio;
+  overlayCanvas.height = size.y * pxRatio;
+  if (overlayCanvas.style) {
+    overlayCanvas.style.width = `${size.x}px`;
+    overlayCanvas.style.height = `${size.y}px`;
+  }
+});
 const overlay = /** @type {CanvasRenderingContext2D} */ overlayCanvas.getContext('2d');
 overlay.textRendering = 'optimizeSpeed';
 const $overlayBuffer = useReglTexture($regl, overlayCanvas);
@@ -103,6 +134,26 @@ watch($glowColor, () => {
   baseDirty = true;
 });
 
+const $drawCard = computed(() => {
+  const regl = unref($regl);
+  if (!regl) return null;
+
+  const drawCard = makeCardRenderer(regl, {
+    ...$cardSize.value.toSize(),
+    cornerRadius: 60 * pxRatio,
+    blurRadius: 40 * pxRatio,
+    blurSpread: 20 * pxRatio,
+  });
+
+  return drawCard;
+});
+
+watchEffect(() => {
+  const drawCard = unref($drawCard);
+  if (!drawCard) return;
+  drawCard.notifyResize($cardSize.value.x, $cardSize.value.y);
+});
+
 const $render = computed(() => {
   const regl = /** @type {REGL.Regl} */ unref($regl);
   const background = unref($background);
@@ -111,12 +162,7 @@ const $render = computed(() => {
   const overlayBuffer = unref($overlayBuffer);
   if (!regl || !background || !foil || !cardBuffer || !overlayBuffer) return;
 
-  const drawCard = makeCardRenderer(regl, {
-    ...cardSize.toSize(),
-    cornerRadius: 60 * pxRatio,
-    blurRadius: 40 * pxRatio,
-    blurSpread: 20 * pxRatio,
-  });
+  const drawCard = $drawCard.value;
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
   const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * pxRatio);
@@ -212,7 +258,7 @@ const $render = computed(() => {
               const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply([0.5, 0.45]);
               drawAvatar(
                   $avatar.value,
-                  avatarSize / 2,
+                  props.avatarSize * pxRatio / 2,
                   pos
               );
             }
@@ -230,7 +276,7 @@ const $render = computed(() => {
       tilt: $tilt.value.tilt,
       distance: $tilt.value.distance,
       texture: cardBuffer,
-      scale: cardSize.normalized(),
+      scale: $cardSize.value.normalized(),
     });
     baseDirty = false;
   }

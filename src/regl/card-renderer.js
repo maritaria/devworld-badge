@@ -20,7 +20,11 @@ export async function loadCardResources(regl) {
  *   mouse?: [number, number],
  *   glowColor?: [number,number,number,number],
  * }} RenderCardProps
- * @typedef {function(props: RenderCardProps): void} RenderCardFn
+ * @typedef {{
+ *   markBaseDirty: (() => void),
+ *   notifyResize: ((w:number,h:number) => void),
+ * }} RenderCardExt
+ * @typedef {(function(props: RenderCardProps): void) & RenderCardExt} RenderCardFn
  */
 
 /**
@@ -41,7 +45,8 @@ export function makeCardRenderer(regl, {
   const drawCorners = makeCornerRenderer(regl);
 
   let stage1 = null;
-  return function RenderCard(props) {
+
+  function RenderCard(props) {
     initStage1(props);
     drawFoil({
       card: stage1,
@@ -61,6 +66,17 @@ export function makeCardRenderer(regl, {
       drawShadow({cornerRadius, glowColor});
     });
   }
+
+  RenderCard.notifyResize = (newWidth, newHeight) => {
+    width = newWidth;
+    height = newHeight;
+    if (stage1) {
+      stage1.destroy();
+      stage1 = null;
+    }
+  };
+
+  return RenderCard;
 }
 
 /**
