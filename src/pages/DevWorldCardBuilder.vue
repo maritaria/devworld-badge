@@ -11,6 +11,7 @@ import ColorBadge from "../components/ColorBadge.vue";
 import {computedAsync} from "@vueuse/core";
 import {loadImageFromBlob} from "../regl/utilities.js";
 import {pxRatio} from "../canvas.js";
+import {Vec2} from "../Vec2.js";
 
 const $title = ref('Line 1');
 const $subtitle = ref('Line 2');
@@ -35,7 +36,7 @@ const $glow = ref(colorToHex('deepskyblue'));
 const $textColor = ref(colorToHex('white'));
 const $textOutline = ref(colorToHex('transparent'));
 const $textShadow = ref(colorToHex('deepskyblue'));
-const sizeCard = [600, 846];
+const sizeDefault = [600, 846];
 const sizeSquare = [400, 400];
 const $sizeBg = computed(() => {
   const img = unref($backgroundImage);
@@ -44,12 +45,16 @@ const $sizeBg = computed(() => {
   return [width, height];
 });
 const $sizeBgScaled = computed(() => {
-  if (pxRatio === 1) return undefined;
-  const size = unref($sizeBg);
-  if (!size) return undefined;
-  return size.map(v => Math.max(1, Math.ceil(v / pxRatio)));
+  const size = Vec2.parse(unref($sizeBg) ?? [0,0]);
+  if (size.isZero) return undefined;
+
+  const maxSize = 800;
+  const longSide = Math.max(size.x, size.y);
+  if (longSide < maxSize) return undefined;
+
+  return size.multiply(maxSize / longSide).round().toArray();
 });
-const $size = ref(sizeCard);
+const $size = ref(sizeDefault);
 
 const colorPresets = [
     'transparent',
@@ -187,20 +192,20 @@ const foilPresets = [
       <fieldset>
         <legend>Canvas</legend>
         <label>
-          <input type="radio" name="size" :value="sizeCard" v-model="$size">
-          Square ({{sizeCard[0]}}x{{sizeCard[1]}})
+          <input type="radio" name="size" :value="sizeDefault" v-model="$size">
+          Default ({{ sizeDefault[0] }}x{{ sizeDefault[1] }})
         </label>
         <label>
           <input type="radio" name="size" :value="sizeSquare" v-model="$size">
-          Square ({{sizeSquare[0]}}x{{sizeSquare[1]}})
-        </label>
-        <label v-if="$sizeBg">
-          <input type="radio" name="size" :value="$sizeBg" v-model="$size">
-          Auto ({{$sizeBg[0]}}x{{$sizeBg[1]}})
+          Square ({{ sizeSquare[0]}}x{{sizeSquare[1]}})
         </label>
         <label v-if="$sizeBgScaled">
           <input type="radio" name="size" :value="$sizeBgScaled" v-model="$size">
-          Auto ({{$sizeBgScaled[0]}}x{{$sizeBgScaled[1]}})
+          Scaled background ({{ $sizeBgScaled[0]}}x{{$sizeBgScaled[1]}})
+        </label>
+        <label v-if="$sizeBg">
+          <input type="radio" name="size" :value="$sizeBg" v-model="$size">
+          Full background ({{ $sizeBg[0]}}x{{$sizeBg[1]}})
         </label>
       </fieldset>
       <fieldset>
