@@ -39,8 +39,6 @@ const sizeCard = [600, 846];
 const sizeSquare = [400, 400];
 const $size = ref(sizeCard);
 
-
-
 const colorPresets = [
     'transparent',
   'black',
@@ -243,12 +241,12 @@ const foilPresets = [
           <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
         </button>
       </fieldset>
+      <TexturePicker legend="Background" fieldname="background" v-model="$background" :presets="backgroundPresets" />
+      <TexturePicker legend="Foil" fieldname="foil" v-model="$foil" :presets="foilPresets" />
       <fieldset>
         <legend>Avatar</legend>
         <AvatarPicker v-model="$avatar" />
       </fieldset>
-      <TexturePicker legend="Background" fieldname="background" v-model="$background" :presets="backgroundPresets" />
-      <TexturePicker legend="Foil" fieldname="foil" v-model="$foil" :presets="foilPresets" />
     </form>
     <div class="card-canvas">
       <PersonalCard
