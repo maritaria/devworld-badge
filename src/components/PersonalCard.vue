@@ -27,7 +27,7 @@ const props = defineProps({
   foil: {type: [String, Blob, HTMLImageElement]},
   glow: {type: String, default: 'deepskyblue'},
   textColor: {type: String, default: 'white'},
-  textShadow: {type: String},
+  textShadowColor: {type: String},
   textStrokeWidth: {type: Number, default: 0},
   textStrokeColor: {type: String, default: 'white'},
   cardSize: {type: Array, default: () => [600, 846]},
@@ -186,9 +186,9 @@ const $render = computed(() => {
 
     overlay.fillStyle = props.textColor;
     overlay.textAlign = 'center';
-    if (props.textShadow) {
+    if (props.textShadowColor) {
       overlay.shadowBlur = 20;
-      overlay.shadowColor = props.textShadow;
+      overlay.shadowColor = props.textShadowColor;
     }
 
     const xCenter = width / 2;
@@ -261,7 +261,7 @@ const $render = computed(() => {
             }
             mixAdditiveBlend(() => {
               drawName();
-              const shadowRepeats = props.textShadow ? 5 : 1;
+              const shadowRepeats = props.textShadowColor ? 5 : 1;
               for (let i = 0; i < shadowRepeats; i++) {
                 drawTexture({texture: overlayBuffer});
               }
