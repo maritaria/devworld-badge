@@ -129,11 +129,6 @@ const $subtitle = useScrambledText(() => props.subtitle);
 syncScramblers($title.state, $subtitle.state);
 const $avatar = useReglTexture($regl, () => props.avatar);
 
-let baseDirty = false;
-watch($glowColor, () => {
-  baseDirty = true;
-});
-
 const $drawCard = computed(() => {
   const regl = unref($regl);
   if (!regl) return null;
@@ -152,6 +147,10 @@ watchEffect(() => {
   const drawCard = unref($drawCard);
   if (!drawCard) return;
   drawCard.notifyResize($cardSize.value.x, $cardSize.value.y);
+});
+
+watch($glowColor, () => {
+  $drawCard.value?.notifyBaseDirty();
 });
 
 const $render = computed(() => {
@@ -237,13 +236,14 @@ const $render = computed(() => {
 
   let prevBgCounter = background.counter;
   return function Render({mouse} = {}) {
-    const backgroundChanged = background.counter != prevBgCounter;
-    prevBgCounter = background.counter;
+    if (background.counter != prevBgCounter) {
+      drawCard.notifyBaseDirty();
+      prevBgCounter = background.counter;
+    }
     // 1. Draw the card content
     cardBuffer.use(() => {
       regl.clear({depth: 1});
       drawCard({
-        baseChanged: backgroundChanged || baseDirty,
         image: background,
         glowColor: $glowColor.value,
         foil,
@@ -278,7 +278,6 @@ const $render = computed(() => {
       texture: cardBuffer,
       scale: $cardSize.value.normalized(),
     });
-    baseDirty = false;
   }
 }, noop);
 

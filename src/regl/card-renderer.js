@@ -21,7 +21,7 @@ export async function loadCardResources(regl) {
  *   glowColor?: [number,number,number,number],
  * }} RenderCardProps
  * @typedef {{
- *   markBaseDirty: (() => void),
+ *   notifyBaseDirty: (() => void),
  *   notifyResize: ((w:number,h:number) => void),
  * }} RenderCardExt
  * @typedef {(function(props: RenderCardProps): void) & RenderCardExt} RenderCardFn
@@ -57,8 +57,8 @@ export function makeCardRenderer(regl, {
     drawCorners({cornerRadius});
   };
 
-  function initStage1({image, glowColor, baseChanged}) {
-    if (stage1 && !baseChanged) return;
+  function initStage1({image, glowColor}) {
+    if (stage1) return;
     stage1 = regl.framebuffer(width, height);
     stage1.use(() => {
       regl.clear({depth: 1});
@@ -67,13 +67,17 @@ export function makeCardRenderer(regl, {
     });
   }
 
-  RenderCard.notifyResize = (newWidth, newHeight) => {
-    width = newWidth;
-    height = newHeight;
+  RenderCard.notifyBaseDirty = () => {
     if (stage1) {
       stage1.destroy();
       stage1 = null;
     }
+  };
+
+  RenderCard.notifyResize = (newWidth, newHeight) => {
+    width = newWidth;
+    height = newHeight;
+    RenderCard.notifyBaseDirty();
   };
 
   return RenderCard;
