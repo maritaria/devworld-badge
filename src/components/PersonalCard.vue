@@ -191,16 +191,13 @@ const $render = computed(() => {
       overlay.shadowColor = props.textShadow;
     }
 
-    const shadowRepeats = props.textShadow ? 5 : 1;
     const xCenter = width / 2;
 
     // Perf: Calling fillText with empty string is much slower than with actual text
     if (title) {
       overlay.font = `${60 * pxRatio}px monospace`;
       const y = height * 0.8;
-      for (let i = 0; i < shadowRepeats; i++) {
-        overlay.fillText(title, xCenter, y);
-      }
+      overlay.fillText(title, xCenter, y);
       if (props.textStrokeWidth && props.textStrokeColor !== '#00000000') {
         const oldBlur = overlay.shadowBlur;
         overlay.shadowBlur = 0;
@@ -215,9 +212,7 @@ const $render = computed(() => {
     if (subtitle) {
       overlay.font = `${30 * pxRatio}px monospace`;
       const y = height * 0.86;
-      for (let i = 0; i < shadowRepeats; i++) {
-        overlay.fillText(subtitle, xCenter, y);
-      }
+      overlay.fillText(subtitle, xCenter, y);
     }
     overlayBuffer(overlayCanvas);
   }
@@ -266,7 +261,10 @@ const $render = computed(() => {
             }
             mixAdditiveBlend(() => {
               drawName();
-              drawTexture({texture: overlayBuffer});
+              const shadowRepeats = props.textShadow ? 5 : 1;
+              for (let i = 0; i < shadowRepeats; i++) {
+                drawTexture({texture: overlayBuffer});
+              }
             });
           });
         },
