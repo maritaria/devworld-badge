@@ -1,3 +1,6 @@
+// Install with:
+// cp src/gl-matrix.d.ts node_modules/gl-matrix/index.d.ts
+
 declare module "gl-matrix" {
 
 // prettier-ignore
