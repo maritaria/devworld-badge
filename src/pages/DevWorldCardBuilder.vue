@@ -34,6 +34,7 @@ const $avatar = ref(null);
 const $glow = ref('deepskyblue');
 const $textColor = ref('white');
 const $textOutline = ref('transparent');
+const $textShadow = ref('deepskyblue');
 const sizeCard = [600, 846];
 const sizeSquare = [400, 400];
 const $size = ref(sizeCard);
@@ -230,6 +231,17 @@ const foilPresets = [
         >
           <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
         </button>
+        <label>
+          Shadow: <input type="color" v-model="$textShadow">
+        </label>
+        <button
+            v-for="preset in colorPresets"
+            :key="preset"
+            type="button"
+            @click.prevent="$textShadow = colorToHex(preset)"
+        >
+          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
+        </button>
       </fieldset>
       <fieldset>
         <legend>Avatar</legend>
@@ -247,6 +259,7 @@ const foilPresets = [
           :subtitle="$subtitle"
           :glow="$glow"
           :textColor="$textColor"
+          :textShadow="$textShadow"
           :textStrokeColor="$textOutline"
           :textStrokeWidth="4"
           :cardSize="$size"
