@@ -186,10 +186,12 @@ const $render = computed(() => {
 
     overlay.fillStyle = props.textColor;
     overlay.textAlign = 'center';
-    overlay.shadowBlur = 20;
-    overlay.shadowColor = props.textShadow ?? props.glow;
+    if (props.textShadow) {
+      overlay.shadowBlur = 20;
+      overlay.shadowColor = props.textShadow;
+    }
 
-    const shadowRepeats = 5;
+    const shadowRepeats = props.textShadow ? 5 : 1;
     const xCenter = width / 2;
 
     // Perf: Calling fillText with empty string is much slower than with actual text
