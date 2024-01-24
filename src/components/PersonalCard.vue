@@ -1,7 +1,7 @@
 <script setup>
-import {computed, reactive, ref, unref, watch, watchEffect} from 'vue';
+import {computed, reactive, ref, toValue, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
-import {noop} from "@vueuse/core";
+import {noop, useNow} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
 import {useMousePosition} from "../vue/use-mouse-position.js";
 import {makeTiltedPanelRenderer} from "../regl/panel-renderer.js";
@@ -18,6 +18,7 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 import {colorToRgba} from "../colors.js";
+
 const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBAAA=';
 const props = defineProps({
   canvasSize: {type: Array, default: () => [600, 846]},
@@ -71,7 +72,8 @@ watchEffect(() => {
   canvas.height = height * pxRatio;
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
-  $regl.value?.({viewport: {}})(() => {});
+  $regl.value?.({viewport: {}})(() => {
+  });
 });
 
 // todo:
@@ -81,12 +83,46 @@ watchEffect(() => {
 //     4.
 
 const {mouse, onMouseMove, onMouseLeave} = useMousePosition();
-const $tilt = useMouseTilt(mouse);
+
+const virtualMouse = usePassiveMouseMovement(mouse);
+
+const $tilt = useMouseTilt(virtualMouse);
+
+function usePassiveMouseMovement(mouse) {
+  const $now = useNow({interval: 'requestAnimationFrame'});
+  const $unhovered = ref(new Date());
+
+  watch(() => mouse.hover, (hovered) => {
+    if (!hovered) {
+      $unhovered.value = $now.value;
+    }
+  });
+
+  return computed(() => {
+    if (mouse.hover) {
+      return mouse;
+    } else {
+      const t = ($now.value - $unhovered.value) / 1000;
+      const scale = [1, 0.4];
+      const offset = [0, 0.3];
+      const pos = new Vec2(Math.sin(t), -Math.cos(t))
+          .multiply(scale)
+          .add(offset)
+          .add(1)
+          .divide(2);
+      return {
+        x: pos.x,
+        y: pos.y,
+        hover: false,
+      };
+    }
+  });
+}
 
 function useMouseTilt(mouse) {
   const tilt = computed(() => {
     // Tilt is expressed in degrees
-    const m = Vec2.fromObject(mouse).subtract(0.5).multiply(-100);
+    const m = Vec2.fromObject(toValue(mouse)).subtract(0.5).multiply(-100);
     return {
       x: m.x / 1.5,
       y: m.y / 2,
