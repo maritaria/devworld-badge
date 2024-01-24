@@ -20,6 +20,7 @@ import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 import {colorToRgba} from "../colors.js";
 const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBAAA=';
 const props = defineProps({
+  canvasSize: {type: Array, default: () => [600, 846]},
   cardSize: {type: Array, default: () => [600, 846]},
   distancePassive: {type: Number, default: 1.5},
   distanceHover: {type: Number, default: 1.2},
@@ -52,7 +53,8 @@ const $glowColor = computed(() => {
 /** @type {import('vue').Ref<HTMLCanvasElement|null>} */
 const $canvas = ref(null);
 const $regl = useRegl($canvas, {
-  ...$cardSize.value.toSize(),
+  width: props.canvasSize[0],
+  height: props.canvasSize[1],
   attributes: {
     // Needed for the corner renderer, as it only affects the alpha channel.
     premultipliedAlpha: false,
@@ -62,14 +64,14 @@ const $regl = useRegl($canvas, {
 
 watchEffect(() => {
   const canvas = unref($canvas);
-  const cardSize = unref($cardSize);
-  if (!canvas || !cardSize) return;
-  canvas.width = cardSize.x * pxRatio;
-  canvas.height = cardSize.y * pxRatio;
-  canvas.style.width = `${cardSize.x}px`;
-  canvas.style.height = `${cardSize.y}px`;
-  $regl.value?.({viewport: {}})(() => {
-  });
+  if (!canvas) return;
+  const [width, height] = props.canvasSize;
+
+  canvas.width = width * pxRatio;
+  canvas.height = height * pxRatio;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  $regl.value?.({viewport: {}})(() => {});
 });
 
 // todo:
