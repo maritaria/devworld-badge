@@ -30,6 +30,7 @@ export function useSpring($target, {stiffness = 0.15, damping = 0.8, precision =
   const $raf = useRafFn(function useSpring_tick({timestamp}) {
     state.dt = (timestamp - state.lastTime) * 60 / 1000;
     state.dt ||= 1 / 60;
+    state.dt = Math.min(state.dt, 10);
 
     const delta = state.valueTarget - state.valueCurrent;
     const velocity = (state.valueCurrent - state.valuePrevious) / (state.dt || 1 / 60); // guard div by 0
