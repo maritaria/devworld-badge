@@ -95,8 +95,8 @@ function useMouseTilt(mouse) {
   const springX = useSpring(() => tilt.value.x);
   const springY = useSpring(() => tilt.value.y);
   const distance = useSpring(() => mouse.hover ? props.distanceHover : props.distancePassive, {
-    stiffness: 1 / 20,
-    damping: 1 / 8,
+    stiffness: 1 / 40,
+    damping: 1 / 4,
   });
   return computed(() => {
     return {
