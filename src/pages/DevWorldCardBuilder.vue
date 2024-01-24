@@ -2,7 +2,8 @@
 import {computed, onUnmounted, ref, unref} from "vue";
 import PersonalCard from "../components/PersonalCard.vue";
 import {createImage} from "../resources.js";
-import badgeUrl from "../assets/doc/niki-devworld-badge-sample-3.jpg";
+import badge1Url from "../assets/doc/niki-devworld-badge-sample-3.jpg";
+import badge2Url from "../assets/doc/devworld-online-badge.png";
 import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 import TexturePicker from "../components/TexturePicker.vue";
 import AvatarPicker from "../components/AvatarPicker.vue";
@@ -29,9 +30,11 @@ const $subtitle = ref('Line 2');
  *   | null
  * >}
  */
-const $background = ref(badgeUrl);
+const $background = ref(badge1Url);
 const $foil = ref(foilUrl);
 const $avatar = ref(null);
+const $avatarSize = ref(400);
+const [$avatarX, $avatarY, $avatarAnchor] = useAnchor(0.5, 0.8);
 const $glow = ref(colorToHex('deepskyblue'));
 const $textColor = ref(colorToHex('white'));
 const $textOutline = ref(colorToHex('transparent'));
@@ -41,11 +44,12 @@ const sizeSquare = [400, 400];
 const $sizeBg = computed(() => {
   const img = unref($backgroundImage);
   if (!img) return undefined;
-  const {width,height} = img;
+  const {width, height} = img;
   return [width, height];
 });
+const $sizeBgHalf = computed(() => $sizeBg.value ? $sizeBg.value.map(i => Math.ceil(i/2)): undefined);
 const $sizeBgScaled = computed(() => {
-  const size = Vec2.parse(unref($sizeBg) ?? [0,0]);
+  const size = Vec2.parse(unref($sizeBg) ?? [0, 0]);
   if (size.isZero) return undefined;
 
   const maxSize = 800;
@@ -55,26 +59,42 @@ const $sizeBgScaled = computed(() => {
   return size.multiply(maxSize / longSide).round().toArray();
 });
 const $size = ref(sizeDefault);
+const $distancePassive = ref(1.5);
+const $distanceHover = ref(1.2);
+
+const $textAlign = ref('center');
+const [$titleAnchorX, $titleAnchorY, $titleAnchor] = useAnchor(0.5, 0.8);
+const [$subtitleAnchorX, $subtitleAnchorY, $subtitleAnchor] = useAnchor(0.5, 0.86);
+
+function useAnchor(x, y) {
+  const $x = ref(x);
+  const $y = ref(y);
+  const $anchor = computed(() => [$x.value, $y.value]);
+  return [$x, $y, $anchor];
+}
 
 const colorPresets = [
-    'transparent',
+  'transparent',
   'black',
   'white',
   // Red
   'red',
-    // Orange
-    // Yellow
+  // Orange'
+    '#e99d0e',
+    'orange', // #e99d0e
+    'darkorange',
+  // Yellow
   'yellow',
-    // Greens
+  // Greens
   'lawngreen',
   'lime',
   'green',
-    // Blues
+  // Blues
   'lightcyan',
   'aqua',
   'deepskyblue',
-    // Indigo
-    // Violet
+  // Indigo
+  // Violet
   'violet',
   'darkviolet',
 ];
@@ -178,7 +198,8 @@ const $backgroundAutoFoil = computed(() => {
 
 
 const backgroundPresets = [
-  {label: 'DevWorld Sample Badge v3', value: badgeUrl, type: 'url'},
+  {label: 'DevWorld Sample Badge v3', value: badge1Url, type: 'url'},
+  {label: 'DevWorld Sample Badge v4', value: badge2Url, type: 'url'},
 ];
 const foilPresets = [
   {label: 'DevWorld Sample Badge v3', value: foilUrl, type: 'url'},
@@ -190,22 +211,36 @@ const foilPresets = [
   <div class="card-builder">
     <form>
       <fieldset>
-        <legend>Canvas</legend>
+        <legend>Card</legend>
         <label>
           <input type="radio" name="size" :value="sizeDefault" v-model="$size">
           Default ({{ sizeDefault[0] }}x{{ sizeDefault[1] }})
         </label>
         <label>
           <input type="radio" name="size" :value="sizeSquare" v-model="$size">
-          Square ({{ sizeSquare[0]}}x{{sizeSquare[1]}})
+          Square ({{ sizeSquare[0] }}x{{ sizeSquare[1] }})
         </label>
         <label v-if="$sizeBgScaled">
           <input type="radio" name="size" :value="$sizeBgScaled" v-model="$size">
-          Scaled background ({{ $sizeBgScaled[0]}}x{{$sizeBgScaled[1]}})
+          Scaled background ({{ $sizeBgScaled[0] }}x{{ $sizeBgScaled[1] }})
         </label>
         <label v-if="$sizeBg">
           <input type="radio" name="size" :value="$sizeBg" v-model="$size">
-          Full background ({{ $sizeBg[0]}}x{{$sizeBg[1]}})
+          Full background ({{ $sizeBg[0] }}x{{ $sizeBg[1] }})
+        </label>
+        <label v-if="$sizeBgHalf">
+          <input type="radio" name="size" :value="$sizeBgHalf" v-model="$size">
+          Half-sized background ({{ $sizeBgHalf[0] }}x{{ $sizeBgHalf[1] }})
+        </label>
+        <label>
+          Passive:
+          <input type="range" min=".01" max="2" step=".01" v-model.number="$distancePassive">
+          {{ $distancePassive.toFixed(2) }}
+        </label>
+        <label>
+          Hover:
+          <input type="range" min=".01" max="2" step=".01" v-model.number="$distanceHover">
+          {{ $distanceHover.toFixed(2) }}
         </label>
       </fieldset>
       <fieldset>
@@ -214,57 +249,117 @@ const foilPresets = [
           Color:
           <input type="color" v-model="$glow">
         </label>
-        <button v-for="preset in colorPresets" :key="preset" type="button" @click.prevent="$glow = colorToHex(preset)">
-          <ColorBadge :color="preset" />
-          <code>{{ preset }}</code>
-        </button>
+        <div class="buttonlist">
+          <button
+              v-for="preset in colorPresets"
+              :key="preset"
+              type="button"
+              @click.prevent="$glow = colorToHex(preset)"
+          >
+            <ColorBadge :color="preset" />&nbsp;<code>{{ preset }}</code>
+          </button>
+        </div>
       </fieldset>
       <fieldset>
-        <legend>Texts</legend>
+        <legend>Title</legend>
+        <input v-model="$title" placeholder="Your name here">
         <label>
-          Title: <input v-model="$title" placeholder="Your name here">
+          X: <input type="range" v-model="$titleAnchorX" min="0" max="1" step=".01">
+          {{ ($titleAnchorX * 100).toFixed(0) }}
         </label>
         <label>
-          Subtitle: <input v-model="$subtitle" placeholder="Job title, country, or similar">
+          Y: <input type="range" v-model="$titleAnchorY" min="0" max="1" step=".01">
+          {{ ($titleAnchorY * 100).toFixed(0) }}
         </label>
+      </fieldset>
+      <fieldset>
+        <legend>Subtitle</legend>
+        <input v-model="$subtitle" placeholder="Job title, country, or similar">
+        <label>
+          X: <input type="range" v-model="$subtitleAnchorX" min="0" max="1" step=".01">
+          {{ ($subtitleAnchorX * 100).toFixed(0) }}
+        </label>
+        <label>
+          Y: <input type="range" v-model="$subtitleAnchorY" min="0" max="1" step=".01">
+          {{ ($subtitleAnchorY * 100).toFixed(0) }}
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Text alignment</legend>
+        <label>
+          <input type="radio" name="textAlign" value="left" v-model="$textAlign">
+          Left
+        </label>
+        <label>
+          <input type="radio" name="textAlign" value="center" v-model="$textAlign">
+          Center
+        </label>
+        <label>
+          <input type="radio" name="textAlign" value="right" v-model="$textAlign">
+          Right
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Text color</legend>
         <label>
           Color: <input type="color" v-model="$textColor">
         </label>
-        <button
-            v-for="preset in colorPresets"
-            :key="preset"
-            type="button"
-            @click.prevent="$textColor = colorToHex(preset)"
-        >
-          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
-        </button>
+        <div class="buttonlist">
+          <button
+              v-for="preset in colorPresets"
+              :key="preset"
+              type="button"
+              @click.prevent="$textColor = colorToHex(preset)"
+          >
+            <ColorBadge :color="preset" />&nbsp;<code>{{ preset }}</code>
+          </button>
+        </div>
         <label>
           Outline: <input type="color" v-model="$textOutline">
         </label>
-        <button
-            v-for="preset in colorPresets"
-            :key="preset"
-            type="button"
-            @click.prevent="$textOutline = colorToHex(preset)"
-        >
-          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
-        </button>
+        <div class="buttonlist">
+          <button
+              v-for="preset in colorPresets"
+              :key="preset"
+              type="button"
+              @click.prevent="$textOutline = colorToHex(preset)"
+          >
+            <ColorBadge :color="preset" />&nbsp;<code>{{ preset }}</code>
+          </button>
+        </div>
         <label>
           Shadow: <input type="color" v-model="$textShadow">
         </label>
-        <button
-            v-for="preset in colorPresets"
-            :key="preset"
-            type="button"
-            @click.prevent="$textShadow = colorToHex(preset)"
-        >
-          <span style="text-shadow: 0 0px 1px black" :style="`color:${preset}`">■</span> <code>{{ preset }}</code>
-        </button>
+        <div class="buttonlist">
+          <button
+              v-for="preset in colorPresets"
+              :key="preset"
+              type="button"
+              @click.prevent="$textShadow = colorToHex(preset)"
+          >
+            <ColorBadge :color="preset" />&nbsp;<code>{{ preset }}</code>
+          </button>
+        </div>
       </fieldset>
       <TexturePicker legend="Background" fieldname="background" v-model="$background" :presets="backgroundPresets" />
       <TexturePicker legend="Foil" fieldname="foil" v-model="$foil" :presets="foilPresets" />
       <fieldset>
         <legend>Avatar</legend>
+        <label>
+          X:
+          <input type="range" min="0" max="1" step="0.001" v-model.number="$avatarX">
+          {{ ($avatarX*100).toFixed(1) }}
+        </label>
+        <label>
+          Y:
+          <input type="range" min="0" max="1" step="0.001" v-model.number="$avatarY">
+          {{ ($avatarY*100).toFixed(1) }}
+        </label>
+        <label>
+          Size:
+          <input type="range" min="1" max="1000" step="1" v-model.number="$avatarSize">
+          {{ $avatarSize }}
+        </label>
         <AvatarPicker v-model="$avatar" />
       </fieldset>
     </form>
@@ -281,6 +376,13 @@ const foilPresets = [
           :textStrokeColor="$textOutline"
           :textStrokeWidth="4"
           :cardSize="$size"
+          :textAlign="$textAlign"
+          :titleAnchor="$titleAnchor"
+          :subtitleAnchor="$subtitleAnchor"
+          :distance-hover="$distanceHover"
+          :distance-passive="$distancePassive"
+          :avatar-anchor="$avatarAnchor"
+          :avatar-size="$avatarSize"
       />
     </div>
   </div>
@@ -310,6 +412,22 @@ form {
     margin: auto;
     display: block;
   }
+
+  /* Scroll along with the viewport */
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+}
+
+.buttonlist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+input[type=range] {
+  vertical-align: middle;
 }
 
 </style>

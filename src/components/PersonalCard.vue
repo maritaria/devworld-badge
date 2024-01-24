@@ -34,9 +34,13 @@ const props = defineProps({
   textShadowColor: {type: String},
   textStrokeWidth: {type: Number, default: 0},
   textStrokeColor: {type: String, default: 'white'},
+  textAlign: {type: String, default: 'center'},
+  titleAnchor: {type: Array, default: () => [0.5, 0.8]},
+  subtitleAnchor: {type: Array, default: () => [0.5, 0.86]},
   // Avatar
   avatar: {type: [Blob, HTMLImageElement]},
   avatarSize: {type: Number, default: 400},
+  avatarAnchor: {type: Array, default: () => [0.5, 0.45]},
 });
 const $cardSize = computed(() => new Vec2(...props.cardSize));
 
@@ -189,7 +193,7 @@ const $render = computed(() => {
     overlay.clearRect(0, 0, width, height);
 
     overlay.fillStyle = props.textColor;
-    overlay.textAlign = 'center';
+    overlay.textAlign = props.textAlign;
     if (props.textShadowColor) {
       overlay.shadowBlur = 20;
       overlay.shadowColor = props.textShadowColor;
@@ -200,23 +204,25 @@ const $render = computed(() => {
     // Perf: Calling fillText with empty string is much slower than with actual text
     if (title) {
       overlay.font = `${60 * pxRatio}px monospace`;
-      const y = height * 0.8;
-      overlay.fillText(title, xCenter, y);
+      const x = props.titleAnchor[0] * width;
+      const y = props.titleAnchor[1] * height;
+      overlay.fillText(title, x, y);
       if (props.textStrokeWidth && props.textStrokeColor !== '#00000000') {
         const oldBlur = overlay.shadowBlur;
         overlay.shadowBlur = 0;
         overlay.lineWidth = props.textStrokeWidth * pxRatio;
         overlay.strokeStyle = props.textStrokeColor;
-        overlay.strokeText(title, xCenter, y);
+        overlay.strokeText(title, x, y);
 
-        overlay.fillText(title, xCenter, y);
+        overlay.fillText(title, x, y);
         overlay.shadowBlur = oldBlur;
       }
     }
     if (subtitle) {
       overlay.font = `${30 * pxRatio}px monospace`;
-      const y = height * 0.86;
-      overlay.fillText(subtitle, xCenter, y);
+      const x = props.subtitleAnchor[0] * width;
+      const y = props.subtitleAnchor[1] * height;
+      overlay.fillText(subtitle, x, y);
     }
     overlayBuffer(overlayCanvas);
   }
@@ -256,7 +262,7 @@ const $render = computed(() => {
               drawTexture({texture: overlayBuffer});
             });
             if ($avatar.value) {
-              const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply([0.5, 0.45]);
+              const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply(props.avatarAnchor);
               drawAvatar(
                   $avatar.value,
                   props.avatarSize * pxRatio / 2,
