@@ -2,6 +2,7 @@ import { DefineComponent } from "vue";
 
 type TextureResource = string | Blob | HTMLImageElement;
 type ColorStr = string;
+type Anchor = [x: number, y: number];
 
 export const PersonalCard: DefineComponent<{
   cardSize: [width: number, height: number];
@@ -15,9 +16,12 @@ export const PersonalCard: DefineComponent<{
   textColor?: ColorStr;
   textShadowColor?: ColorStr;
   textStrokeWidth?: number;
-  textStrokeColor?: ColorStr;
+  textAlign?: CanvasTextAlign;
+  titleAnchor?: Anchor;
+  subtitleAnchor?: Anchor;
   avatar?: TextureResource;
   avatarSize?: number;
+  avatarAnchor?: Anchor;
 }>;
 
 export const pxRatio: number;
