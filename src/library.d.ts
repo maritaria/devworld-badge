@@ -1,9 +1,9 @@
-import { Component } from "vue";
+import { DefineComponent } from "vue";
 
 type TextureResource = string | Blob | HTMLImageElement;
 type ColorStr = string;
 
-export const PersonalCard: Component<{
+export const PersonalCard: DefineComponent<{
   cardSize: [width: number, height: number];
   distancePassive?: number;
   distanceHover?: number;
