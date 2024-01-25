@@ -119,10 +119,10 @@ function usePassiveMouseMovement(mouse) {
   });
 }
 
-function useMouseTilt(mouse) {
+function useMouseTilt($mouse) {
   const tilt = computed(() => {
     // Tilt is expressed in degrees
-    const m = Vec2.fromObject(toValue(mouse)).subtract(0.5).multiply(-100);
+    const m = Vec2.fromObject(toValue($mouse)).subtract(0.5).multiply(-100);
     return {
       x: m.x / 1.5,
       y: m.y / 2,
@@ -130,7 +130,7 @@ function useMouseTilt(mouse) {
   });
   const springX = useSpring(() => tilt.value.x);
   const springY = useSpring(() => tilt.value.y);
-  const distance = useSpring(() => mouse.hover ? props.distanceHover : props.distancePassive, {
+  const distance = useSpring(() => toValue($mouse).hover ? props.distanceHover : props.distancePassive, {
     stiffness: 1 / 40,
     damping: 1 / 4,
   });
