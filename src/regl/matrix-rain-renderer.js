@@ -86,7 +86,6 @@ function colorDroplet(y, col) {
   const head = [255, 255, 255];
   const body = [50, 255, 0];
   const tail = [0, 0, 0];
-  const headLength = clamp(col.maxLength / 3, 3, 10);
   if (y <= 0) return head;
   if (y < 5) {
     return lerpColor(y / 5, head, body);
