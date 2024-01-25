@@ -13,6 +13,7 @@ export function ScrambledText({
   this.text = [];
   this.settled = [];
   this.resizeChance = this.unsettleChance = this.settleChance = 0.6;
+  this.lengthChangeBonus = 1 / 20;
   this.scrambleChance = 0.04;
   this.locked = false;
   /** @type {'growing'|'settling'|'stable'|'scrambling'|'shrinking'} */
@@ -35,7 +36,7 @@ ScrambledText.prototype = {
     switch (this.state) {
       default:
       case "growing":
-        if (roll(this.resizeChance)) {
+        if (roll(this.resizeChance + this.lengthChangeBonus * this.target.length)) {
           if (this.text.length < this.target.length) {
             this.text.push('');
           } else {
@@ -47,7 +48,7 @@ ScrambledText.prototype = {
         }
         break;
       case "settling":
-        if (roll(this.settleChance)) {
+        if (roll(this.settleChance + this.lengthChangeBonus * this.target.length)) {
           const remaining = this.target.length - this.settled.length;
           let index = Math.floor(Math.random() * remaining);
           while (this.settled.includes(index)) {
@@ -67,7 +68,7 @@ ScrambledText.prototype = {
         }
         break;
       case "scrambling":
-        if (roll(this.unsettleChance)) {
+        if (roll(this.unsettleChance + this.lengthChangeBonus * this.target.length)) {
           const index = Math.floor(Math.random() * this.settled.length);
           this.settled.splice(index, 1);
 
@@ -77,7 +78,7 @@ ScrambledText.prototype = {
         }
         break;
       case "shrinking":
-        if (roll(this.resizeChance)) {
+        if (roll(this.resizeChance + this.lengthChangeBonus * this.target.length)) {
           this.text.splice(0, 1);
           if (!this.text.length) {
             this.state = 'growing';
