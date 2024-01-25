@@ -46,8 +46,9 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
     // Init render state
     ctx.reset();
     ctx.globalAlpha = 0.8;
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = 'lightgreen';
+    // Disabled to optimize rendering time
+    // ctx.shadowBlur = 5;
+    // ctx.shadowColor = 'lightgreen';
     ctx.font = `bold ${fontSize * 1.2}px monospace`;
 
     // Clear the canvas
