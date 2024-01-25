@@ -59,7 +59,7 @@ export function makeMatrixRainRenderer(canvas, fontSize = 10) {
       for (const [dy, char] of col.chars.entries()) {
         const y = (col.y - dy) * fontSize;
         const [r, g, b] = colorDroplet(dy, col);
-        ctx.fillStyle = `rgb(${r},${g},${b}`;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
         ctx.fillText(char, x, y);
       }
     }
