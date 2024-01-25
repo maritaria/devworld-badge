@@ -41,6 +41,7 @@ const $textOutline = ref(colorToHex('transparent'));
 const $textShadow = ref(colorToHex('deepskyblue'));
 const sizeDefault = [600, 846];
 const sizeSquare = [400, 400];
+const sizeHuge = [1920, 1080];
 const $sizeBg = computed(() => {
   const img = unref($backgroundImage);
   if (!img) return undefined;
@@ -219,6 +220,10 @@ const foilPresets = [
         <label>
           <input type="radio" name="size" :value="sizeSquare" v-model="$size">
           Square ({{ sizeSquare[0] }}x{{ sizeSquare[1] }})
+        </label>
+        <label>
+          <input type="radio" name="size" :value="sizeHuge" v-model="$size">
+          Huge ({{ sizeHuge[0] }}x{{ sizeHuge[1] }})
         </label>
         <label v-if="$sizeBgScaled">
           <input type="radio" name="size" :value="$sizeBgScaled" v-model="$size">
