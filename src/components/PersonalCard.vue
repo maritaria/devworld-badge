@@ -172,6 +172,14 @@ const $overlayBuffer = useReglTexture($regl, overlayCanvas);
 const $title = useScrambledText(() => props.title);
 const $subtitle = useScrambledText(() => props.subtitle);
 syncScramblers($title.state, $subtitle.state);
+
+watch(() => [props.title, props.subtitle], () => {
+  $title.state.reset();
+  $subtitle.state.reset();
+  $title.state.locked = false;
+  $subtitle.state.locked = false;
+});
+
 const $avatar = useReglTexture($regl, () => props.avatar);
 
 const $drawCard = computed(() => {

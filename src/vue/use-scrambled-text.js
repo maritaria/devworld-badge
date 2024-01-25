@@ -20,8 +20,7 @@ export function useScrambledText($target, {
 
   watch($target, (target) => {
     $state.target = toValue($target);
-    $state.text = ['a'];
-    $state.settled = [];
+    $state.reset();
     $state.update();
   }, {immediate: true});
 
