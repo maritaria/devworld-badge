@@ -207,12 +207,18 @@ const foilPresets = [
   {label: 'Automaticly convert background', value: $backgroundAutoFoil, type: 'computed'}
 ];
 
+const $pxRatio = ref(1);
+
 </script>
 <template>
   <div class="card-builder">
     <form>
       <fieldset>
         <legend>Card</legend>
+        <label>
+          <input type="range" name="devicePixelRatio" step="1" min="1" max="3" v-model.number="$pxRatio">
+          Pixel ratio ({{$pxRatio}})
+        </label>
         <label>
           <input type="radio" name="size" :value="sizeDefault" v-model="$size">
           Default ({{ sizeDefault[0] }}x{{ sizeDefault[1] }})
@@ -370,6 +376,7 @@ const foilPresets = [
     </form>
     <div class="card-canvas">
       <PersonalCard
+          :device-pixel-ratio="$pxRatio"
           :background="$background"
           :foil="$foil"
           :avatar="$avatar"

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive, ref, toValue, unref, watch, watchEffect} from 'vue';
+import {computed, ref, toValue, unref, watch, watchEffect} from 'vue';
 import {useRegl} from "../vue/use-regl.js";
 import {noop, useNow} from "@vueuse/core";
 import {makeCardRenderer} from "../regl/card-renderer.js";
@@ -18,9 +18,11 @@ import {useReglTexture} from "../vue/use-regl-texture.js";
 
 import {useReglFramebuffer} from "../vue/use-regl-framebuffer.js";
 import {colorToRgba} from "../colors.js";
+import {autoDestroy} from "../vue/regl-auto-destroy.js";
 
 const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBAAA=';
 const props = defineProps({
+  devicePixelRatio: {type: Number, default: () => pxRatio},
   canvasSize: {type: Array, default: () => [600, 846]},
   cardSize: {type: Array, default: () => [600, 846]},
   distancePassive: {type: Number, default: 1.5},
@@ -66,10 +68,10 @@ const $regl = useRegl($canvas, {
 watchEffect(() => {
   const canvas = unref($canvas);
   if (!canvas) return;
-  const [width, height] = props.canvasSize;
+  const {devicePixelRatio, canvasSize: [width, height]} = props;
 
-  canvas.width = width * pxRatio;
-  canvas.height = height * pxRatio;
+  canvas.width = width * devicePixelRatio;
+  canvas.height = height * devicePixelRatio;
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   $regl.value?.({viewport: {}})(() => {
@@ -147,20 +149,20 @@ function useMouseTilt($mouse) {
 
 const $background = useReglTexture($regl, () => props.background);
 const $foil = useReglTexture($regl, () => props.foil, {flipY: true});
-const $cardBuffer = useReglFramebuffer($regl, $cardSize.value.multiply(pxRatio).toSize());
+const $cardBuffer = useReglFramebuffer($regl, $cardSize.value.multiply(props.devicePixelRatio).toSize());
 
 watchEffect(() => {
   const buffer = $cardBuffer.value;
   if (!buffer) return;
-  const size = $cardSize.value.multiply(pxRatio);
+  const size = $cardSize.value.multiply(props.devicePixelRatio);
   buffer.resize(size.x, size.y);
 });
 
 const overlayCanvas = makeOffscreenCanvas($cardSize.value.x, $cardSize.value.y);
 watchEffect(() => {
   const size = $cardSize.value;
-  overlayCanvas.width = size.x * pxRatio;
-  overlayCanvas.height = size.y * pxRatio;
+  overlayCanvas.width = size.x * props.devicePixelRatio;
+  overlayCanvas.height = size.y * props.devicePixelRatio;
   if (overlayCanvas.style) {
     overlayCanvas.style.width = `${size.x}px`;
     overlayCanvas.style.height = `${size.y}px`;
@@ -188,10 +190,12 @@ const $drawCard = computed(() => {
 
   const drawCard = makeCardRenderer(regl, {
     ...$cardSize.value.toSize(),
-    cornerRadius: 60 * pxRatio,
-    blurRadius: 40 * pxRatio,
-    blurSpread: 20 * pxRatio,
+    cornerRadius: 60 * props.devicePixelRatio,
+    blurRadius: 40 * props.devicePixelRatio,
+    blurSpread: 20 * props.devicePixelRatio,
   });
+
+  autoDestroy(() => drawCard);
 
   return drawCard;
 });
@@ -214,11 +218,10 @@ const $render = computed(() => {
   const cardBuffer = unref($cardBuffer);
   const overlayBuffer = unref($overlayBuffer);
   if (!regl || !background || !foil || !cardBuffer || !overlayBuffer) return;
-
   const drawCard = $drawCard.value;
   const drawPanel = makeTiltedPanelRenderer(regl);
   const drawSprite = makeSpriteRenderer(regl);
-  const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * pxRatio);
+  const rainRender = makeMatrixRainRenderer(overlayCanvas, 15 * props.devicePixelRatio);
   const drawTexture = makeTextureRenderer(regl);
   const drawAvatar = makeAvatarRenderer(regl);
 
@@ -249,14 +252,14 @@ const $render = computed(() => {
 
     // Perf: Calling fillText with empty string is much slower than with actual text
     if (title) {
-      overlay.font = `${60 * pxRatio}px monospace`;
+      overlay.font = `${60 * props.devicePixelRatio}px monospace`;
       const x = props.titleAnchor[0] * width;
       const y = props.titleAnchor[1] * height;
       overlay.fillText(title, x, y);
       if (props.textStrokeWidth && props.textStrokeColor !== '#00000000') {
         const oldBlur = overlay.shadowBlur;
         overlay.shadowBlur = 0;
-        overlay.lineWidth = props.textStrokeWidth * pxRatio;
+        overlay.lineWidth = props.textStrokeWidth * props.devicePixelRatio;
         overlay.strokeStyle = props.textStrokeColor;
         overlay.strokeText(title, x, y);
 
@@ -265,7 +268,7 @@ const $render = computed(() => {
       }
     }
     if (subtitle) {
-      overlay.font = `${30 * pxRatio}px monospace`;
+      overlay.font = `${30 * props.devicePixelRatio}px monospace`;
       const x = props.subtitleAnchor[0] * width;
       const y = props.subtitleAnchor[1] * height;
       overlay.fillText(subtitle, x, y);
@@ -311,7 +314,7 @@ const $render = computed(() => {
               const pos = new Vec2(regl._gl.drawingBufferWidth, regl._gl.drawingBufferHeight).multiply(props.avatarAnchor);
               drawAvatar(
                   $avatar.value,
-                  props.avatarSize * pxRatio / 2,
+                  props.avatarSize * props.devicePixelRatio / 2,
                   pos
               );
             }

@@ -80,6 +80,8 @@ export function makeCardRenderer(regl, {
     RenderCard.notifyBaseDirty();
   };
 
+  RenderCard.destroy = RenderCard.notifyBaseDirty;
+
   return RenderCard;
 }
 
