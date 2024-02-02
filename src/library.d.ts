@@ -6,6 +6,7 @@ type Anchor = [x: number, y: number];
 
 export const PersonalCard: DefineComponent<{
   cardSize: [width: number, height: number];
+  devicePixelRatio?: number;
   distancePassive?: number;
   distanceHover?: number;
   background: TextureResource;
