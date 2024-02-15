@@ -107,7 +107,6 @@ import foilUrl from "../assets/doc/niki-devworld-badge-sample-3-foil-v3.jpg";
 
 <style scoped>
 .dev-world {
-  width: 400px; /* height: 563.8 */
 
   display: grid;
 

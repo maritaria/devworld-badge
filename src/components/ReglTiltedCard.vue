@@ -13,7 +13,7 @@ import {makePlusLighterMixer} from "../regl/plus-lighter-mixer.js";
 import {makeTextureRenderer} from "../regl/texture-renderer.js";
 
 const $canvas = ref(null);
-const cardSize = new Vec2(400, 564).multiply(2).round();
+const cardSize = new Vec2(400, 564).multiply(1.6).round();
 const distancePassive = 1.5;
 const distanceHover = 1.2;
 const $regl = useRegl($canvas, {

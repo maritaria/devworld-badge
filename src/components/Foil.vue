@@ -40,14 +40,13 @@ const maskUrl = computed(() => props.mask ? `url(${props.mask})` : undefined);
   --mask: v-bind(maskUrl);
   --foil: v-bind(foilUrl);
 
-  --foil-brightness: 0.6; /* .card.metal */
   --card-opacity: var(--glare-opacity);
 
   background-image: var(--layer-3), var(--layer-2), var(--layer-1);
   background-blend-mode: soft-light, difference;
   background-size: 120% 120%, 200% 200%, cover;
   background-position: center center, var(--pointer-x) var(--pointer-y), center center;
-  filter: brightness(var(--foil-brightness)) contrast(1.5) saturate(1);
+  filter: brightness(0.6) contrast(1.5) saturate(1);
   mix-blend-mode: color-dodge;
   opacity: calc((1.5 * var(--card-opacity)) - var(--pointer-from-center));
 
